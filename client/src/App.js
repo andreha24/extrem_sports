@@ -1,8 +1,14 @@
-function App() {
+import React from "react";
+
+import Home from "./containers/Home";
+
+import "./styles/global.scss";
+
+const App = () => {
   return (
-    <div className="App">
-      start
-    </div>
+    <>
+      <Home />
+    </>
   );
 }
 
