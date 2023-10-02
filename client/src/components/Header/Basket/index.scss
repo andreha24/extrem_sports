@@ -1,0 +1,13 @@
+.basket-wrapper{
+  width: 100%;
+  background-color: red;
+  height: 100vh;
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: 10;
+
+  @media (min-width: 768px) {
+    width: 400px;
+  }
+}
