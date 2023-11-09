@@ -22,6 +22,6 @@ Intro.propTypes = {
   paragraph: PropTypes.string,
   text: PropTypes.string,
   backgroundImage: PropTypes.string,
-}
+};
 
 export default Intro;

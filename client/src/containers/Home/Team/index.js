@@ -9,35 +9,32 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "./index.scss";
 
-const Team = () => {
-
-  return (
-    <div className="team__wrapper">
-      <h1> Our Team </h1>
-      <Slider {...sliderSettings}>
-        {team.map(({
-                          id,
-                          name,
-                          position,
-                          desc,
-                        }) => (
-          <div key={id} className="team__container">
-            <div className="team__container__info">
-              <div className="team__container__info__user">
-                <img src={feedback} alt="user" />
-                <div>
-                  <span>{name}</span>
-                  <span>{position}</span>
-                </div>
+const Team = () => (
+  <div className="team__wrapper">
+    <h1> Our Team </h1>
+    <Slider {...sliderSettings}>
+      {team.map(({
+        id,
+        name,
+        position,
+        desc,
+      }) => (
+        <div key={id} className="team__container">
+          <div className="team__container__info">
+            <div className="team__container__info__user">
+              <img src={feedback} alt="user" />
+              <div>
+                <span>{name}</span>
+                <span>{position}</span>
               </div>
-
-              <span>{desc}</span>
             </div>
+
+            <span>{desc}</span>
           </div>
-        ))}
-      </Slider>
-    </div>
-  );
-};
+        </div>
+      ))}
+    </Slider>
+  </div>
+);
 
 export default Team;

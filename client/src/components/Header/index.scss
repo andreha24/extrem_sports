@@ -67,6 +67,10 @@
         opacity: 1;
         color: white;
       }
+
+      &:not(.active){
+        opacity: 0.5;
+      }
     }
   }
 
@@ -128,28 +132,23 @@
     }
   }
 
-  &__login__block {
+  &__log-btn{
     display: none;
-    align-items: center;
-    justify-content: space-between;
-    width: 150px;
+    text-decoration: none;
+    color: black;
+    border: 2px solid;
+    padding: 5px;
+    border-radius: 10px;
+    transition: background-color 0.4s;
 
     @media (min-width: 768px) {
-      display: flex;
+      display: block;
     }
 
-    &__log{
-      text-decoration: none;
-      color: black;
-      border: 2px solid;
-      padding: 5px;
-      border-radius: 10px;
-      transition: background-color 0.4s;
-
-      &:hover{
-        background-color: bisque;
-      }
+    &:hover{
+      background-color: bisque;
     }
+  }
 
     &__basket{
       display: flex;
@@ -167,4 +166,3 @@
       }
     }
   }
-}
