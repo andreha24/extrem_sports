@@ -1,5 +1,4 @@
 .form-container {
-  height: 100vh;
   width: 100%;
   flex-direction: column;
   position: relative;
@@ -7,19 +6,25 @@
   align-items: center;
   justify-content: center;
 
+  @media (min-width: 768px) {
+    height: 100vh;
+  }
+
   &__paragraph {
     font-size: var(--font--size--paragraph);
     text-decoration: none;
     color: black;
+    margin: 20px 0;
   }
 
   &__wrapper {
     width: 90%;
     box-shadow: 0 10px 20px rgba(0, 0, 0, .2);
     border-radius: 5px;
+    margin-bottom: 20px;
 
     @media (min-width: 768px) {
-      width: 400px;
+      width: 600px;
     }
   }
 

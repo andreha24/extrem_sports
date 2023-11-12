@@ -1,9 +1,15 @@
-const express = require('express');
+const express = require("express");
+const cors = require("cors");
 const app = express();
-const port = 5000;
 
-app.get("/api", (req, res) => {
-  res.json({"users": ["one", "two", "three"]})
-})
+app.use(express.json());
+app.use(cors());
 
-app.listen(port, () => console.log(`Listening on port ${port}`));
+const userRouter = require("./router/authRouter");
+const coachRouter = require("./router/coachRouter");
+
+app.use("/api", userRouter);
+
+app.listen(process.env.PORT_SERVER, async () => {
+  console.log(`Listening on port ${process.env.PORT_SERVER}`);
+});

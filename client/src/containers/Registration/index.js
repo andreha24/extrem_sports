@@ -10,6 +10,8 @@ import validateEmail from "../../utils/validators/validateEmail";
 import composeValidators from "../../utils/validators/composeValidators";
 import usePassword from "../../hooks/usePassword";
 
+import "./index.scss";
+
 const Registration = () => {
   const [selectedRole, setSelectedRole] = useState(null);
   const { togglePassword, isPasswordVisible } = usePassword();
@@ -36,79 +38,86 @@ const Registration = () => {
       linkToName="Log in"
       paragraphName="Registration"
     >
-      <FormField
-        name="name"
-        validators={required}
-        type="text"
-      />
 
-      <FormField
-        name="lastname"
-        validators={required}
-        type="text"
-      />
+      <div className="inputs-wrapper">
+        <div className="inputs-wrapper__block">
+          <FormField
+            name="name"
+            validators={required}
+            type="text"
+          />
 
-      <FormField
-        name="age"
-        validators={required}
-        type="text"
-      />
+          <FormField
+            name="lastname"
+            validators={required}
+            type="text"
+          />
 
-      <FormField
-        name="country"
-        validators={required}
-        type="text"
-      />
+          <FormField
+            name="age"
+            validators={required}
+            type="text"
+          />
 
-      <FormField
-        name="city"
-        validators={required}
-        type="text"
-      />
+          <FormField
+            name="country"
+            validators={required}
+            type="text"
+          />
 
-      <Field
-        name="sport_type"
-        component="select"
-        validate={required}
-      >
-        <option value="" disabled>Type of sport</option>
-        <option value="climbing">Climbing</option>
-        <option value="skydiving">Skydiving</option>
-        <option value="diving">Diving</option>
-      </Field>
+          <FormField
+            name="city"
+            validators={required}
+            type="text"
+          />
+        </div>
 
-      <FormField
-        name="experience"
-        validators={required}
-        type="text"
-      />
+        <div className="inputs-wrapper__block">
+          <Field
+            name="sport_type"
+            component="select"
+            validate={required}
+          >
+            <option value="" disabled>Type of sport</option>
+            <option value="climbing">Climbing</option>
+            <option value="skydiving">Skydiving</option>
+            <option value="diving">Diving</option>
+          </Field>
 
-      <Field
-        name="role"
-        component="select"
-        validate={required}
-        onChange={(event) => { changeRole(event.target.value); }}
-        initialValue={selectedRole}
-      >
-        <option value="" disabled>Role</option>
-        <option value="Athlete">Athlete</option>
-        <option value="Coach">Coach</option>
-      </Field>
+          <FormField
+            name="experience"
+            validators={required}
+            type="text"
+          />
 
-      <FormField
-        name="mail"
-        validators={composeValidators(required, validateEmail)}
-        type="text"
-      />
+          <Field
+            name="role"
+            component="select"
+            validate={required}
+            onChange={(event) => { changeRole(event.target.value); }}
+            initialValue={selectedRole}
+          >
+            <option value="" disabled>Role</option>
+            <option value="Athlete">Athlete</option>
+            <option value="Coach">Coach</option>
+          </Field>
 
-      <FormField
-        name="password"
-        validators={composeValidators(required, minLength)}
-        hasButton
-        type={isPasswordVisible ? "text" : "password"}
-        togglePassword={togglePassword}
-        viewPassword={isPasswordVisible}
-      />
+          <FormField
+            name="mail"
+            validators={composeValidators(required, validateEmail)}
+            type="text"
+          />
+
+          <FormField
+            name="password"
+            validators={composeValidators(required, minLength)}
+            hasButton
+            type={isPasswordVisible ? "text" : "password"}
+            togglePassword={togglePassword}
+            viewPassword={isPasswordVisible}
+          />
+        </div>
+      </div>
     </FormWrapper>
   );
 };
