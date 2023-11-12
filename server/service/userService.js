@@ -52,8 +52,7 @@ class UserService {
     const userDto = new UserDto(user.recordset[0])
     const token = tokenService.generateToken({ ...userDto });
 
-    return { token, user: userDto }
-  }
+    return { token, user: userDto }}
 
   async changeUserInfo(name, lastname, experience, sport_type, country, city, email, userId) {
     try {
