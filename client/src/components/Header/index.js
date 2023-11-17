@@ -3,6 +3,8 @@ import { CSSTransition } from "react-transition-group";
 import { Link } from "react-router-dom";
 
 import Navigation from "./Navigation";
+import logout from "../../utils/auth/logout";
+import checkToken from "../../utils/auth/checkToken";
 import burgerMenu from "../../assets/burger-menu.png";
 import { ReactComponent as Logo } from "../../assets/logo.svg";
 
@@ -38,7 +40,8 @@ const Header = () => {
 
       <Navigation className="header__nav__menu" />
 
-      <Link to="/login" className="header__log-btn">Log in</Link>
+      {checkToken() !== null ? <Link to="/login" className="header__log-btn" onClick={logout}>Log out</Link>
+        : <Link to="/login" className="header__log-btn">Log in</Link>}
     </header>
   );
 };

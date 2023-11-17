@@ -2,13 +2,14 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 
+const authRouter = require("./router/authRouter");
+const userRouter = require("./router/userRouter");
+const authMiddleware = require("./middlewares/authMiddleware");
+
 app.use(express.json());
 app.use(cors());
-
-const userRouter = require("./router/authRouter");
-const coachRouter = require("./router/coachRouter");
-
-app.use("/api", userRouter);
+app.use('/api', authRouter);
+app.use('/api', userRouter)
 
 app.listen(process.env.PORT_SERVER, async () => {
   console.log(`Listening on port ${process.env.PORT_SERVER}`);

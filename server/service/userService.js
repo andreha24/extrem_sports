@@ -6,41 +6,26 @@ const UserDto = require('../dtos/userDto');
 const ApiError = require("../exeptions/apiErrors");
 const dbConfig = require("../dbConnection");
 
-const pool = await sql.connect(dbConfig);
 
 class UserService {
-  async registration(name, role, lastname, experience, sport_type, country, city, email, password) {
-    console.log(name, role, lastname, experience, sport_type, country, city, email, password);
-
-    await pool.request().query(`INSERT INTO User (name, lastname, role, experience, sport_type, country, city, email, password) 
-    VALUES ('${name}','${lastname}', '${experience}', '${sport_type}', '${country}', '${city}', '${role}', '${email}', '${password}')`);
+  async registration(name, lastname, age, experience, sport_type, country, city, mail, password, role) {
+    const pool = await sql.connect(dbConfig);
 
     const hashPassword = await bcrypt.hash(password, 3);
 
-    const candidate = await sql.query`SELECT * FROM Users WHERE e_mail = ${email} AND password = ${password}`;
+    const candidate = await pool.request().query(`SELECT * FROM [User] WHERE mail = ${mail} AND password = ${password}`);
     if (candidate.recordset.length > 0) {
-      throw ApiError.BadRequest(`Пользователь с почтовым адресом ${email} уже существует`);
+      throw ApiError.BadRequest(`Пользователь с почтовым адресом ${mail} уже существует`);
     }
 
-    const query = role ? `INSERT INTO Users (Name, e_mail, password, role)
-    VALUES ('${name}', '${email}', '${hashPassword}', '${role}')`
-      : `INSERT INTO Users (Name, e_mail, password) VALUES ('${name}', '${email}', '${hashPassword}')`;
-
-    const user = await sql.query(query);
-
-    const newUser = await sql.query`SELECT * FROM Users WHERE e_mail = ${email}`;
-
-    const userDto = new UserDto(newUser.recordset[0]);
-
-    const token = tokenService.generateToken({ ...userDto });
-
-    return { token, user: userDto };
+    await pool.request().query(`INSERT INTO [User] (name, lastname, age, experience, sport_type, role, country, city, mail, password) 
+    VALUES ('${name}','${lastname}', ${age}, ${experience}, '${sport_type}', '${role}', '${country}', '${city}', '${mail}', '${hashPassword}')`);
   }
 
   async login(mail, password) {
+    const pool = await sql.connect(dbConfig);
 
-    const user = await sql.query`SELECT * FROM Users WHERE e_mail = ${mail}`;
-
+    const user = await pool.request().query(`SELECT * FROM [User] WHERE mail = '${mail}'`);
     if (user.recordset.length === 0) {
       throw ApiError.BadRequest(`Пользователь с ${mail} не найден`);
     }
@@ -49,10 +34,13 @@ class UserService {
     if (!isPassEquals) {
       throw ApiError.BadRequest(`Неверный пароль`);
     }
+
     const userDto = new UserDto(user.recordset[0])
     const token = tokenService.generateToken({ ...userDto });
+    const userRole =  await pool.request().query(`SELECT role FROM [User] WHERE mail = '${mail}'`);
 
-    return { token, user: userDto }}
+    return { token, role: userRole.recordset[0].role }
+  }
 
   async changeUserInfo(name, lastname, experience, sport_type, country, city, email, userId) {
     try {
@@ -76,7 +64,10 @@ class UserService {
 
   async getAllUsers(){
     try {
-      await pool.request().query(`SELECT * FROM User`);
+      const pool = await sql.connect(dbConfig);
+      const allUsers = await pool.request().query(`SELECT * FROM [User]`);
+
+      return allUsers.recordset;
     } catch (error) {
       console.error(error);
       throw error;

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Field } from "react-final-form";
 import axios from "axios";
 
@@ -16,15 +17,18 @@ const Registration = () => {
   const [selectedRole, setSelectedRole] = useState(null);
   const { togglePassword, isPasswordVisible } = usePassword();
 
+  const navigate = useNavigate();
+
   const changeRole = (value) => {
     setSelectedRole(value);
   };
 
   const sendUserData = (values) => {
-    console.log(values);
     axios.post("http://localhost:5000/api/registration", values)
       .then((response) => {
         console.log("User registration successful", response);
+        alert("User registration successful");
+        navigate("/login");
       })
       .catch((error) => {
         console.error("Error registering user", error);
@@ -98,8 +102,8 @@ const Registration = () => {
             initialValue={selectedRole}
           >
             <option value="" disabled>Role</option>
-            <option value="Athlete">Athlete</option>
-            <option value="Coach">Coach</option>
+            <option value="athlete">Athlete</option>
+            <option value="coach">Coach</option>
           </Field>
 
           <FormField

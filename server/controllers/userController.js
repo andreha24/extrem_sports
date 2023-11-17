@@ -10,8 +10,8 @@ class UserControllers {
       if (!errors.isEmpty()) {
         return next(ApiError.BadRequest("Ошибка при валидации", errors.array()));
       }
-      const { name, lastname, experience, sport_type, country, city, email, password } = req.body;
-      const userData = await userService.registration(name, lastname, experience, sport_type, country, city, email, password);
+      const { name, lastname, age, role, experience, sport_type, country, city, mail, password } = req.body;
+      const userData = await userService.registration(name, lastname, age, experience, sport_type, country, city, mail, password, role );
       return res.json(userData);
     } catch (e) {
       next(e);
@@ -31,7 +31,7 @@ class UserControllers {
 
   async getUser(req, res, next) {
     try {
-      const { userId } = req.body;
+      const { userId } = req.params;
       await userService.getUser(userId);
       return res.json(req.user)
     } catch (e) {
@@ -41,8 +41,8 @@ class UserControllers {
 
   async getAllUsers(req, res, next) {
     try {
-      await userService.getAllUsers();
-      // return res.json(req.user)
+      const allUser = await userService.getAllUsers();
+      return res.json(allUser);
     } catch (e) {
       next(e)
     }

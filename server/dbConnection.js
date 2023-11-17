@@ -7,6 +7,8 @@ const dbConfig = {
   password: process.env.USER_PASSWORD,
   database: process.env.DATABASE_NAME,
   options: {
+    trustedConnection: true,
+    encrypt: true,
     trustServerCertificate: true,
   }
 };

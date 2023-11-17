@@ -1,4 +1,6 @@
 import React from "react";
+import axios from "axios";
+// import { useNavigate } from "react-router-dom";
 
 import FormField from "../../components/FormWrapper/Field";
 import FormWrapper from "../../components/FormWrapper";
@@ -6,13 +8,29 @@ import required from "../../utils/validators/isRequired";
 import minLength from "../../utils/validators/minLength";
 import validateEmail from "../../utils/validators/validateEmail";
 import composeValidators from "../../utils/validators/composeValidators";
+import setAuthToken from "../../utils/auth/setAuthToken";
 import usePassword from "../../hooks/usePassword";
 
 const Login = () => {
   const { isPasswordVisible, togglePassword } = usePassword();
 
+  // const navigate = useNavigate();
+
   const sendUserData = (values) => {
-    console.log(values);
+    axios.post("http://localhost:5000/api/login", values)
+      .then((response) => {
+        console.log(response.data);
+        const { token, role } = response.data;
+        localStorage.setItem("token", token);
+        localStorage.setItem("role", role);
+        setAuthToken(token);
+        alert("Welcome");
+        // navigate("/");
+      })
+      .catch((error) => {
+        console.error("Error login user", error);
+        alert("Incorrect mail or password");
+      });
   };
 
   return (

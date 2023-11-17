@@ -3,14 +3,13 @@ const { body } = require("express-validator");
 const router = Router();
 
 const userController = require("../controllers/userController");
-// const authMiddleware = require("../middlewares/authMiddleware");
 
 router.post("/registration",
-  // body("mail").isEmail(),
-  // body("password").isLength({ min: 8, max: 32 }),
+  body("mail").isEmail(),
+  body("password").isLength({ min: 8, max: 32 }),
   userController.registration)
     .post("/login", userController.login)
-    // .get("/", authMiddleware, userController.getUser)
+    .get("/", userController.getUser)
     .patch("/changeUserData",
       body("mail").isEmail(),
       body("password").isLength({ min: 8, max: 32 }),

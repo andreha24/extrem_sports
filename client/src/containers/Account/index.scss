@@ -1,0 +1,35 @@
+@import "src/styles/mixins";
+
+.user-wrapper{
+  padding: var(--general--padding-768);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+
+  @media (min-width: 992px) {
+    padding: var(--general--padding-992);
+    justify-content: space-around;
+  }
+
+  &__photo{
+    width: 300px;
+    border-radius: 30px;
+
+    @media (min-width: 992px) {
+      width: 370px;
+    }
+  }
+
+  .user-form{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    flex-basis: 450px;
+    gap: 15px;
+
+    &__btn{
+      @include btn-theme();
+    }
+  }
+}
