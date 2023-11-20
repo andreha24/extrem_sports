@@ -13,13 +13,18 @@ class UserService {
 
     const hashPassword = await bcrypt.hash(password, 3);
 
-    const candidate = await pool.request().query(`SELECT * FROM [User] WHERE mail = ${mail} AND password = ${password}`);
+    const candidate = await pool
+      .request()
+      .query(`SELECT * FROM [User] WHERE mail = '${mail}' AND password = '${password}'`);
+
     if (candidate.recordset.length > 0) {
       throw ApiError.BadRequest(`Пользователь с почтовым адресом ${mail} уже существует`);
     }
 
-    await pool.request().query(`INSERT INTO [User] (name, lastname, age, experience, sport_type, role, country, city, mail, password) 
-    VALUES ('${name}','${lastname}', ${age}, ${experience}, '${sport_type}', '${role}', '${country}', '${city}', '${mail}', '${hashPassword}')`);
+    await pool
+      .request()
+      .query(`INSERT INTO [User] (name, lastname, age, experience, sport_type, role, country, city, mail, password) 
+            VALUES ('${name}','${lastname}', ${age}, ${experience}, '${sport_type}', '${role}', '${country}', '${city}', '${mail}', '${hashPassword}')`);
   }
 
   async login(mail, password) {
@@ -53,9 +58,12 @@ class UserService {
     }
   }
 
-  async getUser(userId){
+  async getUser(token){
     try {
-      await pool.request().query(`SELECT * FROM User WHERE id = ${userId}`);
+      const userId = tokenService.getUserIdFromToken(token);
+      const pool = await sql.connect(dbConfig);
+      const user = await pool.request().query(`SELECT * FROM [User] WHERE id = ${userId}`);
+      return user.recordset[0];
     } catch (error) {
       console.error(error);
       throw error;

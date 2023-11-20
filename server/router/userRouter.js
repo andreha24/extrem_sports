@@ -4,8 +4,8 @@ const router = Router();
 const userController = require("../controllers/userController");
 const authMiddleware = require("../middlewares/authMiddleware");
 
-router.get("/user", userController.getUser)
-  .get("/users", authMiddleware, userController.getAllUsers)
+router.get("/user", authMiddleware, userController.getUser)
+  .get("/users", userController.getAllUsers)
   .get("/bannedUsers", userController.getBannedUsers)
   .patch("/addBannedUser", userController.addBannedUser)
   .delete("/deleteBannedUser", userController.removeBannedUser)

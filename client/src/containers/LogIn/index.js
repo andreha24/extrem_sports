@@ -1,6 +1,6 @@
 import React from "react";
 import axios from "axios";
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import FormField from "../../components/FormWrapper/Field";
 import FormWrapper from "../../components/FormWrapper";
@@ -14,7 +14,7 @@ import usePassword from "../../hooks/usePassword";
 const Login = () => {
   const { isPasswordVisible, togglePassword } = usePassword();
 
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const sendUserData = (values) => {
     axios.post("http://localhost:5000/api/login", values)
@@ -25,7 +25,7 @@ const Login = () => {
         localStorage.setItem("role", role);
         setAuthToken(token);
         alert("Welcome");
-        // navigate("/");
+        navigate("/");
       })
       .catch((error) => {
         console.error("Error login user", error);

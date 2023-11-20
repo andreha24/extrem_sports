@@ -1,11 +1,37 @@
 @import "src/styles/mixins";
 
+.link-log-wrapper{
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--general--padding-768);
+  text-align: center;
+
+  .link-log{
+    background: lightgray;
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    border-radius: 20px;
+
+    &-btn{
+      margin-left: 10px;
+      @include btn-theme();
+    }
+  }
+
+}
+
 .user-wrapper{
   padding: var(--general--padding-768);
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 20px;
+  align-items: center;
 
   @media (min-width: 992px) {
     padding: var(--general--padding-992);

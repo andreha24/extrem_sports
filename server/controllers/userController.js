@@ -31,9 +31,9 @@ class UserControllers {
 
   async getUser(req, res, next) {
     try {
-      const { userId } = req.params;
-      await userService.getUser(userId);
-      return res.json(req.user)
+      const token = req.headers.authorization.split(" ")[1];
+      const user = await userService.getUser(token);
+      return res.json(user)
     } catch (e) {
       next(e)
     }
