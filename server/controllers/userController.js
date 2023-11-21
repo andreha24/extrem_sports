@@ -10,8 +10,8 @@ class UserControllers {
       if (!errors.isEmpty()) {
         return next(ApiError.BadRequest("Ошибка при валидации", errors.array()));
       }
-      const { name, lastname, age, role, experience, sport_type, country, city, mail, password } = req.body;
-      const userData = await userService.registration(name, lastname, age, experience, sport_type, country, city, mail, password, role );
+      const { name, lastname, age, role, experience, sport_type, country, city, mail, password, img } = req.body;
+      const userData = await userService.registration(name, lastname, age, experience, sport_type, country, city, mail, password, role, img );
       return res.json(userData);
     } catch (e) {
       next(e);

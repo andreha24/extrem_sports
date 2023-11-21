@@ -9,7 +9,6 @@ router.post("/registration",
   body("password").isLength({ min: 8, max: 32 }),
   userController.registration)
     .post("/login", userController.login)
-    .get("/", userController.getUser)
     .patch("/changeUserData",
       body("mail").isEmail(),
       body("password").isLength({ min: 8, max: 32 }),

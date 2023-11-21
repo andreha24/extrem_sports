@@ -2,13 +2,14 @@ const sql = require("mssql");
 const bcrypt = require("bcrypt");
 
 const tokenService = require('../service/tokenService');
+const googleBucketService = require("../service/googleBucketService")
 const UserDto = require('../dtos/userDto');
 const ApiError = require("../exeptions/apiErrors");
 const dbConfig = require("../dbConnection");
 
 
 class UserService {
-  async registration(name, lastname, age, experience, sport_type, country, city, mail, password, role) {
+  async registration(name, lastname, age, experience, sport_type, country, city, mail, password, role, img) {
     const pool = await sql.connect(dbConfig);
 
     const hashPassword = await bcrypt.hash(password, 3);
@@ -23,8 +24,8 @@ class UserService {
 
     await pool
       .request()
-      .query(`INSERT INTO [User] (name, lastname, age, experience, sport_type, role, country, city, mail, password) 
-            VALUES ('${name}','${lastname}', ${age}, ${experience}, '${sport_type}', '${role}', '${country}', '${city}', '${mail}', '${hashPassword}')`);
+      .query(`INSERT INTO [User] (name, lastname, age, experience, sport_type, role, country, city, mail, password, photo) 
+        VALUES ('${name}','${lastname}', ${age}, ${experience}, '${sport_type}', '${role}', '${country}', '${city}', '${mail}', '${hashPassword}', '${img}')`);
   }
 
   async login(mail, password) {
@@ -63,7 +64,17 @@ class UserService {
       const userId = tokenService.getUserIdFromToken(token);
       const pool = await sql.connect(dbConfig);
       const user = await pool.request().query(`SELECT * FROM [User] WHERE id = ${userId}`);
-      return user.recordset[0];
+      if (user.recordset.length > 0) {
+        const userData = user.recordset[0];
+
+        if (userData.photo) {
+          userData.photo = await googleBucketService.getImage(userData.photo);
+        }
+
+        return userData;
+      } else {
+        return null;
+      }
     } catch (error) {
       console.error(error);
       throw error;

@@ -9,7 +9,6 @@ import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import UserField from "./UserField";
 import checkToken from "../../utils/auth/checkToken";
-import userPhoto from "../../assets/people-feedback/Andrey_Sherstyuk.jpg";
 
 import "./index.scss";
 
@@ -20,14 +19,16 @@ const Account = () => {
   const token = localStorage.getItem("token");
 
   useEffect(() => {
-    axios.get("http://localhost:5000/api/user")
+    axios.get("http://localhost:5000/api/user", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
       .then((response) => {
         setUserInfo(response.data);
       })
-      .catch((error) => {
-        if (error.response && error.response.status === 401) {
-          localStorage.clear();
-        }
+      .catch(() => {
+        localStorage.clear();
       });
   }, [token]);
 
@@ -54,7 +55,7 @@ const Account = () => {
         )
         : (
           <div className="user-wrapper">
-            <img src={userPhoto} className="user-wrapper__photo" alt="user" />
+            <img src={userInfo.photo} className="user-wrapper__photo" alt="user" />
             <Form
               onSubmit={changeUserData}
               render={({ handleSubmit, invalid }) => (

@@ -15,6 +15,7 @@ import "./index.scss";
 
 const Registration = () => {
   const [selectedRole, setSelectedRole] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(null);
   const { togglePassword, isPasswordVisible } = usePassword();
 
   const navigate = useNavigate();
@@ -23,12 +24,34 @@ const Registration = () => {
     setSelectedRole(value);
   };
 
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    setSelectedFile(file);
+  };
+
   const sendUserData = (values) => {
-    axios.post("http://localhost:5000/api/registration", values)
-      .then((response) => {
-        console.log("User registration successful", response);
+    const userData = {
+      ...values,
+      img: selectedFile.name,
+    };
+
+    const formData = new FormData();
+    formData.append("img", selectedFile);
+
+    axios
+      .post("http://localhost:5000/api/registration", userData)
+      .then(() => {
         alert("User registration successful");
         navigate("/login");
+      })
+      .catch((error) => {
+        console.error("Error registering user", error);
+      });
+
+    axios
+      .post("http://localhost:5000/api/addUserPhoto", formData)
+      .then(() => {
+        console.log("User photo successful");
       })
       .catch((error) => {
         console.error("Error registering user", error);
@@ -122,6 +145,7 @@ const Registration = () => {
           />
         </div>
       </div>
+      <input type="file" onChange={handleFileChange} name="photo" />
     </FormWrapper>
   );
 };
