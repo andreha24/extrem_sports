@@ -51,7 +51,7 @@ const Registration = () => {
     axios
       .post("http://localhost:5000/api/addUserPhoto", formData)
       .then(() => {
-        console.log("User photo successful");
+        console.log("WOW");
       })
       .catch((error) => {
         console.error("Error registering user", error);
@@ -129,6 +129,14 @@ const Registration = () => {
             <option value="coach">Coach</option>
           </Field>
 
+          {selectedRole === "coach" ? (
+            <FormField
+              name="price_per_lesson"
+              validators={required}
+              type="text"
+            />
+          ) : " "}
+
           <FormField
             name="mail"
             validators={composeValidators(required, validateEmail)}
@@ -145,7 +153,10 @@ const Registration = () => {
           />
         </div>
       </div>
-      <input type="file" onChange={handleFileChange} name="photo" />
+      <div>
+        <span>your photo </span>
+        <input type="file" onChange={handleFileChange} name="photo" />
+      </div>
     </FormWrapper>
   );
 };

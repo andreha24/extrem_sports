@@ -9,11 +9,10 @@ const dbConfig = require("../dbConnection");
 
 
 class UserService {
-  async registration(name, lastname, age, experience, sport_type, country, city, mail, password, role, img) {
+  async registration(name, lastname, age, experience, sport_type, country, city, mail, password, role, img, price) {
     const pool = await sql.connect(dbConfig);
 
     const hashPassword = await bcrypt.hash(password, 3);
-
     const candidate = await pool
       .request()
       .query(`SELECT * FROM [User] WHERE mail = '${mail}' AND password = '${password}'`);
@@ -22,11 +21,15 @@ class UserService {
       throw ApiError.BadRequest(`Пользователь с почтовым адресом ${mail} уже существует`);
     }
 
+    // Check if price is a valid number
+    const validPrice = !isNaN(price) ? price : 0; // You can set a default value or handle it based on your requirements
+
     await pool
       .request()
-      .query(`INSERT INTO [User] (name, lastname, age, experience, sport_type, role, country, city, mail, password, photo) 
-        VALUES ('${name}','${lastname}', ${age}, ${experience}, '${sport_type}', '${role}', '${country}', '${city}', '${mail}', '${hashPassword}', '${img}')`);
+      .query(`INSERT INTO [User] (name, lastname, age, experience, sport_type, role, country, city, mail, password, photo, price)
+      VALUES ('${name}','${lastname}', ${age}, ${experience}, '${sport_type}', '${role}', '${country}', '${city}', '${mail}', '${hashPassword}', '${img}', ${validPrice})`);
   }
+
 
   async login(mail, password) {
     const pool = await sql.connect(dbConfig);
@@ -149,10 +152,23 @@ class UserService {
     }
   }
 
-  async addCommentToService(userId, text){
+  async addCommentToService(token, text){
     try {
-      await pool.request().query(`INSERT INTO Service_comment (user_id, text) 
-      VALUES ('${userId}','${text}') `);
+      const userId = tokenService.getUserIdFromToken(token);
+      const pool = await sql.connect(dbConfig);
+      await pool.request().query(`INSERT INTO [Service_comments] (user_id, description) 
+      VALUES (${userId},'${text}')`);
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+
+  async getLastServiceComments(){
+    try {
+      const pool = await sql.connect(dbConfig);
+      const comments = await pool.request().query(`SELECT TOP 8 * FROM [Service_comments] ORDER BY date DESC;`);
+      return comments.recordset;
     } catch (error) {
       console.error(error);
       throw error;

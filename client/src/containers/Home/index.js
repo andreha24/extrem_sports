@@ -4,6 +4,7 @@ import Team from "./Team";
 import Feedbacks from "./Feedbacks";
 import Header from "../../components/Header";
 import Intro from "../../components/Intro";
+import FeedbackForm from "./FeedbackForm";
 import Footer from "../../components/Footer";
 import mountains from "../../assets/mountains.jpg";
 
@@ -20,6 +21,7 @@ const Home = () => (
     />
     <Team />
     <Feedbacks />
+    <FeedbackForm />
     <Footer />
   </>
 );

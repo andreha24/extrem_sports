@@ -68,6 +68,19 @@ const Account = () => {
                     disabled={isFormReadonly}
                   />
 
+                  {userInfo.role === "coach" ? (
+                    <div className="price-wrapper">
+                      <UserField
+                        name="price"
+                        type="text"
+                        label="Price"
+                        initialValue={userInfo.price}
+                        disabled={isFormReadonly}
+                      />
+                      <span>$</span>
+                    </div>
+                  ) : ""}
+
                   <UserField
                     name="name"
                     type="text"

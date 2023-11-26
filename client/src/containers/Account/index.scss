@@ -57,5 +57,15 @@
     &__btn{
       @include btn-theme();
     }
+
+    .price-wrapper{
+      position: relative;
+
+      span{
+        position: absolute;
+        top: 0;
+        left: 55px;
+      }
+    }
   }
 }
