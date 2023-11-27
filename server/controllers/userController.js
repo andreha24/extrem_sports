@@ -122,9 +122,9 @@ class UserControllers {
 
   async addCommentToService(req, res, next){
     try {
-      const {feedback} = req.body;
+      const {text} = req.body;
       const token = req.headers.authorization.split(" ")[1];
-      await userService.addCommentToService(token, feedback);
+      await userService.addCommentToService(token, text);
     } catch (e) {
       next(e)
     }

@@ -3,7 +3,18 @@ const eventService = require("../service/eventService");
 class EventControllers {
   async getAllEvents(req, res, next){
     try {
-      await eventService.getAllEvents();
+      const events = await eventService.getAllEvents();
+      res.json(events);
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  async getEvent(req, res, next){
+    try {
+      const { id } = req.params;
+      const event = await eventService.getEvent(id);
+      res.json(event[0]);
     } catch (e) {
       next(e);
     }
@@ -15,8 +26,8 @@ class EventControllers {
 
   async addEvent(req, res, next){
     try {
-      const { name, description, country, city, startDate, people } = req.body;
-      await eventService.addEvent(name, description, country, city, startDate, people);
+      const { name, description, continent, country, city, start_date, people, img } = req.body;
+      await eventService.addEvent(name, description, continent, country, city, start_date, people, img);
     } catch (e) {
       next(e);
     }

@@ -5,6 +5,7 @@ const app = express();
 const noAuthRouter = require("./router/noAuthRouter");
 const authRouter = require("./router/authRouter");
 const userRouter = require("./router/userRouter");
+const eventRouter = require("./router/eventRouter");
 const googleBucketRouter = require("./router/googleBucketRouter");
 
 const authMiddleware = require("./middlewares/authMiddleware");
@@ -14,8 +15,9 @@ app.use(cors());
 
 app.use('/api', authRouter);
 app.use('/api', authMiddleware, userRouter)
-app.use('/api', googleBucketRouter);
-app.use('/api/unAuth', noAuthRouter);
+app.use('/events', eventRouter);
+app.use('/bucket', googleBucketRouter);
+app.use('/unAuth', noAuthRouter);
 
 app.listen(process.env.PORT_SERVER, async () => {
   console.log(`Listening on port ${process.env.PORT_SERVER}`);

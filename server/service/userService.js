@@ -164,11 +164,20 @@ class UserService {
     }
   }
 
-  async getLastServiceComments(){
+  async getLastServiceComments() {
     try {
       const pool = await sql.connect(dbConfig);
-      const comments = await pool.request().query(`SELECT TOP 8 * FROM [Service_comments] ORDER BY date DESC;`);
-      return comments.recordset;
+      const commentsQuery = await pool.request().query(
+        `SELECT TOP 6 sc.description, sc.date, u.name, u.lastname, u.photo
+      FROM [Service_comments] sc
+      JOIN [User] u ON sc.user_id = u.id
+      ORDER BY sc.date DESC;`);
+
+      // We modify each entry by replacing the value of the photo field using the link to the photo
+      return await Promise.all(commentsQuery.recordset.map(async (comment) => {
+        const imageUrl = await googleBucketService.getImage(comment.photo);
+        return {...comment, photo: imageUrl};
+      }));
     } catch (error) {
       console.error(error);
       throw error;

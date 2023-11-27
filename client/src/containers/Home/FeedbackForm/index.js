@@ -8,19 +8,23 @@ import "./index.scss";
 
 const FeedbackForm = () => {
   const token = localStorage.getItem("token");
-  const sendFeedback = (text) => {
-    axios.post("http://localhost:5000/api/addCommentToService", text, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => {
-        console.log(response);
-        alert("Feedback sent successful");
-      })
-      .catch((error) => {
-        console.error("Error send feedback", error);
+
+  const sendFeedback = async (values) => {
+    try {
+      await axios.post("http://localhost:5000/api/addCommentToService", { text: values.feedback }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
+
+      alert("Feedback sent successfully");
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        alert("You need to log in");
+      } else {
+        console.error("Error sending feedback:", error);
+      }
+    }
   };
 
   return (

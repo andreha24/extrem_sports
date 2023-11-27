@@ -7,7 +7,7 @@ const upload = multer({ storage: storage });
 
 const googleBucketController = require("../controllers/googleBucketController");
 
-router.post("/addUserPhoto", upload.single("img"), googleBucketController.addUserPhoto)
+router.post("/addPhoto", upload.single("img"), googleBucketController.addUserPhoto)
   // .delete("/deletePost", googleBucketController.deletePost)
   // .patch("/editPost", googleBucketController.editPost);
 

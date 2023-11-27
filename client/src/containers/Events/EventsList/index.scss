@@ -1,0 +1,40 @@
+.events-wrapper{
+  width: 100%;
+
+  h1{
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 25px;
+  }
+
+  .events{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    justify-content: center;
+
+    @media (min-width: 992px) {
+      gap: 60px;
+    }
+
+    &-item{
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+
+      img{
+        height: 200px;
+        width: 250px;
+
+        @media (min-width: 768px) {
+          height: 250px;
+          width: 340px;
+        }
+      }
+
+      &-name{
+        font-weight: bold;
+      }
+    }
+  }
+}

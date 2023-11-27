@@ -49,7 +49,7 @@ const Registration = () => {
       });
 
     axios
-      .post("http://localhost:5000/api/addUserPhoto", formData)
+      .post("http://localhost:5000/bucket/addPhoto", formData)
       .then(() => {
         console.log("WOW");
       })
