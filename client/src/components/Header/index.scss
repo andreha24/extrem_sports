@@ -2,7 +2,7 @@
   display: flex;
   justify-content: space-between;
   padding: 1rem;
-  background: lightgray;
+  border-bottom: 1px solid;
   align-items: center;
 
   @media (min-width: 992px) {
@@ -65,7 +65,7 @@
 
       &:hover, &:hover::after {
         opacity: 1;
-        color: white;
+        color: deepskyblue;
       }
 
       &:not(.active){
@@ -165,4 +165,4 @@
         }
       }
     }
-  }
+}

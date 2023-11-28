@@ -1,4 +1,5 @@
 const eventService = require("../service/eventService");
+const tokenService = require("../service/tokenService");
 
 class EventControllers {
   async getAllEvents(req, res, next){
@@ -37,6 +38,16 @@ class EventControllers {
     try {
       const { eventId } = req.body;
       await eventService.removeEvent(eventId);
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  async addUserToEvent(req, res, next){
+    try {
+      const { token, eventId } = req.body;
+      const userId = tokenService.getUserIdFromToken(token);
+      await eventService.addUserToEvent(+eventId, +userId);
     } catch (e) {
       next(e);
     }

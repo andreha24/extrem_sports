@@ -7,6 +7,7 @@ router.post("/addEvent", eventController.addEvent)
   .get("/allEvents", eventController.getAllEvents)
   .get("/event/:id", eventController.getEvent)
   .delete("/deleteEvent", eventController.removeEvent)
-  .get("/eventsWithFilters", eventController.getEventsWithFilters);
+  .get("/eventsWithFilters", eventController.getEventsWithFilters)
+  .post("/addUserToEvent", eventController.addUserToEvent);
 
 module.exports = router;

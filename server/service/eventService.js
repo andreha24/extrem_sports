@@ -32,10 +32,15 @@ class EventService {
     try {
       const pool = await sql.connect(dbConfig);
       const event = await pool.request().query(`SELECT * FROM [Events] WHERE id = ${id}`);
+
+      const listOfUsers = await pool.request().query(`SELECT [User].id, [User].name, [User].lastname FROM [User]
+      JOIN [Events_users] ON [User].id = [Events_users].user_id
+      WHERE [Events_users].event_id = ${id};`);
+
       return await Promise.all(event.recordset.map(async (event) => {
         if (event.preview) {
           const imageUrl = await googleBucketService.getImage(event.preview);
-          return {...event, preview: imageUrl};
+          return {...event, preview: imageUrl, registeredUsers: listOfUsers.recordset};
         }
         return event[0];
       }));
@@ -61,6 +66,20 @@ class EventService {
   async removeEvent(eventId){
     try {
       await pool.request().query(`DELETE FROM Event WHERE id = ${eventId}`);
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+
+  async addUserToEvent(eventId, userId){
+    try {
+      const pool = await sql.connect(dbConfig);
+      const user = await pool.request().query(`SELECT * FROM [Events_users] WHERE user_id = ${userId} AND event_id = ${eventId}`);
+      if (user.recordset.length > 0) {
+        throw ApiError.BadRequest(`Вы уже зарегистрированы`);
+      }
+      await pool.request().query(`INSERT INTO [Events_users] (user_id, event_id) VALUES (${userId}, ${eventId})`);
     } catch (error) {
       console.error(error);
       throw error;
