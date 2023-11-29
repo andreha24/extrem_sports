@@ -23,9 +23,40 @@ class EventService {
     }
   }
 
-//todo
-  async getEventsWithFilters(){
+  async getEventsWithFilters(continents, sortingValue){
+    const pool = await sql.connect(dbConfig);
+    let query = `SELECT * FROM [Events] WHERE 1=1`;
 
+    if (continents !== undefined) {
+      const allContinents = continents.split(',').map(g => `'${g}'`).join(', ');
+      query += ` AND (continent IN (${allContinents}))`;
+    }
+
+    if (sortingValue !== undefined){
+      if (sortingValue === 'fromMinPeople') {
+        sortingValue = 'people'
+      }
+      if (sortingValue === 'fromMaxPeople') {
+        sortingValue = 'people DESC'
+      }
+      if (sortingValue === 'earliestStartDate') {
+        sortingValue = 'start_date'
+      }
+      if (sortingValue === 'furthestStartDate') {
+        sortingValue = 'start_date DESC'
+      }
+      query += ` ORDER BY ${sortingValue}`;
+    }
+    
+    const filteringEvents = await pool.request().query(query);
+
+    return await Promise.all(filteringEvents.recordset.map(async (event) => {
+      if (event.preview) {
+        const imageUrl = await googleBucketService.getImage(event.preview);
+        return {...event, preview: imageUrl};
+      }
+      return event[0];
+    }));
   }
 
   async getEvent(id){
@@ -49,7 +80,6 @@ class EventService {
       throw error;
     }
   }
-
 
   async addEvent(name, description, continent, country, city, startDate, people, img){
     const pool = await sql.connect(dbConfig);

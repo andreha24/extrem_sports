@@ -19,65 +19,104 @@ const Filters = ({ className, closeFilters, updateFilters }) => {
           {closeFilters && <button type="button" onClick={closeFilters} className="close-all-filters">X</button>}
           <span className="filters-paragraph">Filters</span>
           <Filter
-            filterParagraph="Genre"
+            filterParagraph="Continent"
           >
-            <label htmlFor="genres">
+            <label htmlFor="continents">
               <Field
-                name="genres"
+                name="continents"
                 component="input"
                 type="checkbox"
-                value="landscape"
+                value="eurasia"
               />
               {" "}
-              landscape
+              Eurasia
             </label>
-            <label htmlFor="genres">
+            <label htmlFor="continents">
               <Field
-                name="genres"
+                name="continents"
                 component="input"
                 type="checkbox"
-                value="still_life"
+                value="north_america"
               />
               {" "}
-              still life
+              North America
             </label>
-            <label htmlFor="genres">
+            <label htmlFor="continents">
               <Field
-                name="genres"
+                name="continents"
                 component="input"
                 type="checkbox"
-                value="portrait"
+                value="south_america"
               />
               {" "}
-              portrait
+              South America
+            </label>
+            <label htmlFor="continents">
+              <Field
+                name="continents"
+                component="input"
+                type="checkbox"
+                value="australia"
+              />
+              {" "}
+              Australia
+            </label>
+            <label htmlFor="continents">
+              <Field
+                name="continents"
+                component="input"
+                type="checkbox"
+                value="africa"
+              />
+              {" "}
+              Africa
             </label>
           </Filter>
 
           <Filter
-            filterParagraph="Price"
+            filterParagraph="Sort by"
           >
-            <div className="price-option">
-              <div>
-                {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
-                <label htmlFor="low_price">From</label>
-                <Field
-                  name="minPrice"
-                  component="input"
-                  type="text"
-                />
-              </div>
-              <div>
-                {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
-                <label htmlFor="high_price">to</label>
-                <Field
-                  name="maxPrice"
-                  component="input"
-                  type="text"
-                />
-              </div>
-            </div>
+            <label htmlFor="continents">
+              <Field
+                name="sort_by"
+                component="input"
+                type="radio"
+                value="fromMinPeople"
+              />
+              {" "}
+              People(min first)
+            </label>
+            <label htmlFor="continents">
+              <Field
+                name="sort_by"
+                component="input"
+                type="radio"
+                value="fromMaxPeople"
+              />
+              {" "}
+              People(max first)
+            </label>
+            <label htmlFor="continents">
+              <Field
+                name="sort_by"
+                component="input"
+                type="radio"
+                value="earliestStartDate"
+              />
+              {" "}
+              earliest start date first
+            </label>
+            <label htmlFor="continents">
+              <Field
+                name="sort_by"
+                component="input"
+                type="radio"
+                value="furthestStartDate"
+              />
+              {" "}
+              start date from furthest
+            </label>
           </Filter>
-
           <button type="submit">Apply filters</button>
         </form>
       )}

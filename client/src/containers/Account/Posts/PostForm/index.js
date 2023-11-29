@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 
 import "./index.scss";
 
-const PostForm = ({
+const PostForm = React.memo(({
   changeFormView, onSubmit, initialValues, buttonName,
 }) => {
   console.log(initialValues);
@@ -40,7 +40,7 @@ const PostForm = ({
       )}
     />
   );
-};
+});
 
 PostForm.propTypes = {
   changeFormView: PropTypes.func,

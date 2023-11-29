@@ -22,7 +22,13 @@ class EventControllers {
   }
 
   async getEventsWithFilters(req, res, next){
-
+    try {
+      const { continents, sort_by } = req.query;
+      const filteringReady = await eventService.getEventsWithFilters(continents, sort_by);
+      res.json(filteringReady);
+    } catch (e) {
+      next(e);
+    }
   }
 
   async addEvent(req, res, next){

@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { CSSTransition } from "react-transition-group";
+import axios from "axios";
 
 import Header from "../../components/Header";
 import EventList from "./EventsList";
-import Sorting from "./Sorting";
 import Filters from "./Filters";
 import FormWrapper from "../../components/FormWrapper";
 import Footer from "../../components/Footer";
@@ -11,20 +11,14 @@ import FormField from "../../components/FormWrapper/Field";
 import filterIcon from "../../assets/filter-icon.png";
 
 import "./index.scss";
-import axios from "axios";
 
 const Events = () => {
   const [viewFilters, setViewFilters] = useState(false);
-  const [sorting, setSorting] = useState({});
   const [filters, setFilters] = useState({});
   const [selectedFile, setSelectedFile] = useState(null);
 
   const toggleFilters = () => {
     setViewFilters((prev) => !prev);
-  };
-
-  const setNewSort = (newParams) => {
-    setSorting(newParams);
   };
 
   const setNewFilters = (newFilters) => {
@@ -68,7 +62,6 @@ const Events = () => {
     <>
       <Header />
       <div className="event-list-wrapper">
-        <Sorting updateSorting={setNewSort} />
         <img src={filterIcon} onClick={toggleFilters} className="event-list-wrapper-img" alt="filter-icon" />
         <CSSTransition
           in={viewFilters}
@@ -79,7 +72,7 @@ const Events = () => {
           <Filters className="filters-form__mobile" closeFilters={toggleFilters} updateFilters={setNewFilters} />
         </CSSTransition>
         <Filters className="filters-form__tablet" updateFilters={setNewFilters} />
-        <EventList sortingValues={sorting} filtersValues={filters} />
+        <EventList filtersValues={filters} />
       </div>
       <FormWrapper
         onSubmit={addEvent}

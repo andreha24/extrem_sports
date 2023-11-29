@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 
 import "./index.scss";
 
-const Paintings = ({ sortingValues, filtersValues }) => {
+const Paintings = React.memo(({ filtersValues }) => {
   const [allEvents, setAllEvents] = useState([]);
 
   useEffect(() => {
@@ -17,53 +17,24 @@ const Paintings = ({ sortingValues, filtersValues }) => {
         console.log(error);
       });
   }, []);
-
-  useEffect(() => {
-    if (
-      sortingValues
-      && sortingValues.sortBy !== undefined
-      && sortingValues.ascending !== undefined
-    ) {
-      axios
-        // eslint-disable-next-line max-len
-        .get(`https://localhost:7207/api/Painting/getPaintingsSorted?sortBy=${sortingValues.sortBy}&ascending=${sortingValues.ascending}`)
-        .then((response) => {
-          setAllEvents(response.data);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
-  }, [sortingValues]);
-
   // eslint-disable-next-line consistent-return
   useEffect(() => {
     const queryParams = new URLSearchParams();
 
-    if (filtersValues) {
-      // eslint-disable-next-line max-len
-      if (filtersValues.genres !== undefined && Array.isArray(filtersValues.genres) && filtersValues.genres.length > 0) {
-        filtersValues.genres.forEach((genre) => {
-          queryParams.append("genres", genre);
-        });
-      }
-
-      if (filtersValues.minPrice !== undefined) {
-        queryParams.set("minPrice", filtersValues.minPrice);
-      }
-
-      if (filtersValues.maxPrice !== undefined) {
-        queryParams.set("maxPrice", filtersValues.maxPrice);
-      }
+    // Add continents to the query string
+    if (filtersValues.continents && filtersValues.continents.length > 0) {
+      queryParams.append("continents", filtersValues.continents.join(","));
     }
 
-    const queryString = queryParams.toString();
+    // Add sorting option to the query string
+    if (filtersValues.sort_by) {
+      queryParams.append("sort_by", filtersValues.sort_by);
+    }
 
-    console.log(queryString);
-
-    if (queryString !== "") {
+    // Fetch data only if there are filters
+    if (queryParams.toString() !== "") {
       axios
-        .get(`https://localhost:7207/api/Painting/getFilteredPaintings?${queryString}`)
+        .get(`http://localhost:5000/events/eventsWithFilters?${queryParams}`)
         .then((response) => {
           setAllEvents(response.data);
         })
@@ -77,6 +48,7 @@ const Paintings = ({ sortingValues, filtersValues }) => {
     <div className="events-wrapper">
       <h1>Artworks</h1>
       <div className="events">
+        {allEvents.length === 0 ? <div>0 finds</div> : ""}
         {allEvents.map(({
           id, name, preview, people,
         }) => (
@@ -93,11 +65,9 @@ const Paintings = ({ sortingValues, filtersValues }) => {
       </div>
     </div>
   );
-};
+});
 
 Paintings.propTypes = {
-  // eslint-disable-next-line react/forbid-prop-types
-  sortingValues: PropTypes.object,
   // eslint-disable-next-line react/forbid-prop-types
   filtersValues: PropTypes.object,
 };
