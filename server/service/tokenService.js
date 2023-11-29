@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 
 class TokenService {
   generateToken(payload) {
-    return jwt.sign(payload, process.env.JWT_ACCESS_SECRET, {expiresIn: "60m"});
+    return jwt.sign(payload, process.env.JWT_ACCESS_SECRET, {expiresIn: "1h"});
   }
 
   validateAccessToken(token) {

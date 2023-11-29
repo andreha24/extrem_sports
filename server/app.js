@@ -5,6 +5,7 @@ const app = express();
 const noAuthRouter = require("./router/noAuthRouter");
 const authRouter = require("./router/authRouter");
 const userRouter = require("./router/userRouter");
+const postRouter = require("./router/postRouter");
 const eventRouter = require("./router/eventRouter");
 const googleBucketRouter = require("./router/googleBucketRouter");
 
@@ -15,6 +16,7 @@ app.use(cors());
 
 app.use('/api', authRouter);
 app.use('/api', authMiddleware, userRouter)
+app.use('/post', postRouter);
 app.use('/events', eventRouter);
 app.use('/bucket', googleBucketRouter);
 app.use('/unAuth', noAuthRouter);

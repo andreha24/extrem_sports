@@ -1,10 +1,12 @@
 const postService = require("../service/postService");
+const tokenService = require("../service/tokenService");
 
 class PostControllers {
   async getAllPosts(req, res, next){
     try {
-      const { userId } = req.body;
-      await postService.getAllPosts(userId);
+      const token = req.headers.authorization.split(" ")[1];
+      const userId = await tokenService.getUserIdFromToken(token);
+      return res.json(await postService.getAllPosts(userId));
     } catch (e) {
       next(e);
     }
@@ -12,7 +14,8 @@ class PostControllers {
 
   async addPost(req, res, next){
     try {
-      const { topic, text, userId } = req.body;
+      const { topic, text, token } = req.body;
+      const userId = await tokenService.getUserIdFromToken(token);
       await postService.addPost(topic, text, userId);
     } catch (e) {
       next(e);
@@ -31,8 +34,8 @@ class PostControllers {
 
   async deletePost(req, res, next){
     try {
-      const { postId } = req.body;
-      await postService.deletePost(postId);
+      const { id } = req.params;
+      await postService.deletePost(id);
     } catch (e) {
       next(e);
     }

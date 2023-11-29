@@ -23,7 +23,7 @@ class EventService {
     }
   }
 
-
+//todo
   async getEventsWithFilters(){
 
   }
@@ -63,6 +63,7 @@ class EventService {
     VALUES ('${name}','${description}', '${country}', '${city}', '${startDate}', ${people}, '${continent}', '${img}' )`);
   }
 
+  //todo
   async removeEvent(eventId){
     try {
       await pool.request().query(`DELETE FROM Event WHERE id = ${eventId}`);

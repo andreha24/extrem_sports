@@ -4,8 +4,8 @@ const router = Router();
 const postController = require("../controllers/postController");
 
 router.post("/addPost", postController.addPost)
-  .get("/posts", postController.getAllPosts)
-  .delete("/deletePost", postController.deletePost)
+  .get("/getPosts", postController.getAllPosts)
+  .delete("/deletePost/:id", postController.deletePost)
   .patch("/editPost", postController.editPost);
 
 module.exports = router;

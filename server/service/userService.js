@@ -51,6 +51,7 @@ class UserService {
     return { token, role: userRole.recordset[0].role }
   }
 
+  //todo
   async changeUserInfo(name, lastname, experience, sport_type, country, city, email, userId) {
     try {
       await pool.request().query(`UPDATE Users SET name = '${name}'
@@ -83,7 +84,7 @@ class UserService {
       throw error;
     }
   }
-
+  //todo
   async getAllUsers(){
     try {
       const pool = await sql.connect(dbConfig);
@@ -95,7 +96,7 @@ class UserService {
       throw error;
     }
   }
-
+  //todo
   async deleteUser(userId){
     try {
       await pool.request().query(`DELETE FROM User WHERE id = ${userId}`);
@@ -104,7 +105,7 @@ class UserService {
       throw error;
     }
   }
-
+  //todo
   async getUserHistory(userId){
     try {
       // todo order by
@@ -114,7 +115,7 @@ class UserService {
       throw error;
     }
   }
-
+  //todo
   async getBannedUser(){
     try {
       await pool.request().query(`SELECT * FROM User WHERE is_banned = 1`);
@@ -123,7 +124,7 @@ class UserService {
       throw error;
     }
   }
-
+  //todo
   async addBannedUser(userId){
     try {
       await pool.request().query(`UPDATE User SET is_banned = 0 WHERE Id = ${userId}`);
@@ -132,7 +133,7 @@ class UserService {
       throw error;
     }
   }
-
+  //todo
   async removeBannedUser(userId){
     try {
       await pool.request().query(`UPDATE User SET is_banned = 1 WHERE Id = ${userId}`);
@@ -141,7 +142,7 @@ class UserService {
       throw error;
     }
   }
-
+  //todo
   async addReport(firstUserId, secondUserId, reason){
     try {
       await pool.request().query(`INSERT INTO User_report (firstUserId, secondUserId, reason) 
@@ -184,6 +185,7 @@ class UserService {
     }
   }
 
+  //todo
   async addCommentToCoach(userId, trainerId, text){
     try {
       await pool.request().query(`INSERT INTO User_report (user_id, trainer_id, text) 
@@ -193,7 +195,6 @@ class UserService {
       throw error;
     }
   }
-
 }
 
 
