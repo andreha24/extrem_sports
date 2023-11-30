@@ -29,10 +29,20 @@ class UserControllers {
     }
   }
 
-  async getUser(req, res, next) {
+  async getAuthUser(req, res, next) {
     try {
       const token = req.headers.authorization.split(" ")[1];
-      const user = await userService.getUser(token);
+      const user = await userService.getAuthUser(token);
+      return res.json(user)
+    } catch (e) {
+      next(e)
+    }
+  }
+
+  async getUser(req, res, next) {
+    try {
+      const { id } = req.params;
+      const user = await userService.getUser(id);
       return res.json(user)
     } catch (e) {
       next(e)
@@ -41,8 +51,19 @@ class UserControllers {
 
   async getAllUsers(req, res, next) {
     try {
-      const allUser = await userService.getAllUsers();
+      const { role } = req.query
+      const allUser = await userService.getAllUsers(role);
       return res.json(allUser);
+    } catch (e) {
+      next(e)
+    }
+  }
+
+  async getAllUsersWithFilters(req, res, next) {
+    try {
+      const { role, sport_type, minAge, maxAge, minExp, maxExp, minPrice, maxPrice, sort_by } = req.query;
+      const allFilteringUsers = await userService.getAllUsersWithFilters(role, sport_type, minAge, maxAge, minExp, maxExp, minPrice, maxPrice, sort_by);
+      return res.json(allFilteringUsers);
     } catch (e) {
       next(e)
     }

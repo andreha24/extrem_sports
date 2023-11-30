@@ -20,7 +20,7 @@ const Account = () => {
   const token = localStorage.getItem("token");
 
   useEffect(() => {
-    axios.get("http://localhost:5000/api/user", {
+    axios.get("http://localhost:5000/api/authUser", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -56,12 +56,12 @@ const Account = () => {
         )
         : (
           <>
-            <div className="user-wrapper">
-              <img src={userInfo.photo} className="user-wrapper__photo" alt="user" />
+            <div className="account-wrapper">
+              <img src={userInfo.photo} className="account-wrapper__photo" alt="user" />
               <Form
                 onSubmit={changeUserData}
                 render={({ handleSubmit, invalid }) => (
-                  <form onSubmit={handleSubmit} className="user-form">
+                  <form onSubmit={handleSubmit} className="account-form">
                     <UserField
                       name="role"
                       type="text"

@@ -54,6 +54,7 @@ const Event = () => {
     <PageWrapper>
       <Header />
       <div className="event">
+        <button type="button">delete event</button>
         <img src={event.preview} className="event-img" alt="painting" />
 
         <div className="event-details">

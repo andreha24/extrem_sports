@@ -1,11 +1,9 @@
 const sql = require('mssql');
-const ApiError = require('../exeptions/apiErrors')
 const dbConfig = require("../dbConnection");
 
 const pool = await sql.connect(dbConfig);
 
 class CoachService {
-
   //todo
   async getAllClients(coachId){
     try {

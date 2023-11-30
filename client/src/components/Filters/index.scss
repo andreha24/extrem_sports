@@ -1,9 +1,15 @@
+@import "src/styles/mixins";
+
+.apply-filters-btn{
+  @include btn-theme();
+}
+
 .filters-form__tablet{
   display: none;
 
   @media (min-width: 992px) {
     display: block;
-    width: 200px;
+    width: 300px;
   }
 
   .filters-paragraph{

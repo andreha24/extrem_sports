@@ -8,15 +8,24 @@ class EventService {
   async getAllEvents() {
     try {
       const pool = await sql.connect(dbConfig);
-      const events = await pool.request().query(`SELECT * FROM [Events]`);
+      const eventsQuery = await pool.request().query(`
+      SELECT [Events].*, 
+             (SELECT COUNT(DISTINCT [User].id) 
+              FROM [User]
+              JOIN [Events_users] ON [User].id = [Events_users].user_id
+              WHERE [Events_users].event_id = [Events].id) AS registeredUsersCount
+      FROM [Events]
+    `);
 
-      return await Promise.all(events.recordset.map(async (event) => {
+      const events = eventsQuery.recordset;
+
+      return await Promise.all(events.map(async (event) => {
         if (event.preview) {
           const imageUrl = await googleBucketService.getImage(event.preview);
           return {...event, preview: imageUrl};
         }
         return event;
-      }));
+    }));
     } catch (error) {
       console.error(error);
       throw error;
@@ -25,7 +34,12 @@ class EventService {
 
   async getEventsWithFilters(continents, sortingValue){
     const pool = await sql.connect(dbConfig);
-    let query = `SELECT * FROM [Events] WHERE 1=1`;
+    let query = `SELECT [Events].*, 
+             (SELECT COUNT(DISTINCT [User].id) 
+              FROM [User]
+              JOIN [Events_users] ON [User].id = [Events_users].user_id
+              WHERE [Events_users].event_id = [Events].id) AS registeredUsersCount
+      FROM [Events] WHERE 1=1`;
 
     if (continents !== undefined) {
       const allContinents = continents.split(',').map(g => `'${g}'`).join(', ');
@@ -96,7 +110,8 @@ class EventService {
   //todo
   async removeEvent(eventId){
     try {
-      await pool.request().query(`DELETE FROM Event WHERE id = ${eventId}`);
+      const pool = await sql.connect(dbConfig);
+      await pool.request().query(`DELETE FROM [Events] WHERE id = ${eventId}`);
     } catch (error) {
       console.error(error);
       throw error;

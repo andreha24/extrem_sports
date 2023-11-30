@@ -13,6 +13,10 @@
     gap: 30px;
     justify-content: center;
 
+    @media (min-width: 768px) {
+      gap: 80px;
+    }
+
     @media (min-width: 992px) {
       gap: 60px;
     }
@@ -23,12 +27,12 @@
       gap: 10px;
 
       img{
-        height: 200px;
-        width: 250px;
+        height: 230px;
+        width: 280px;
 
-        @media (min-width: 768px) {
+        @media (min-width: 992px) {
           height: 250px;
-          width: 340px;
+          width: 280px;
         }
       }
 

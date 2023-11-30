@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 
 import "./index.scss";
 
-const Paintings = React.memo(({ filtersValues }) => {
+const EventsList = React.memo(({ filtersValues }) => {
   const [allEvents, setAllEvents] = useState([]);
 
   useEffect(() => {
@@ -46,17 +46,20 @@ const Paintings = React.memo(({ filtersValues }) => {
 
   return (
     <div className="events-wrapper">
-      <h1>Artworks</h1>
+      <h1>Events</h1>
       <div className="events">
         {allEvents.length === 0 ? <div>0 finds</div> : ""}
         {allEvents.map(({
-          id, name, preview, people,
+          id, name, preview, people, registeredUsersCount,
         }) => (
           <div className="events-item" key={id}>
             <img src={preview} alt="event" />
             <span className="events-item-name">{name}</span>
             <p>
               number of participants:
+              {" "}
+              {registeredUsersCount}
+              /
               {people}
             </p>
             <Link to={`/events/${id}`}>See more</Link>
@@ -67,9 +70,9 @@ const Paintings = React.memo(({ filtersValues }) => {
   );
 });
 
-Paintings.propTypes = {
+EventsList.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   filtersValues: PropTypes.object,
 };
 
-export default Paintings;
+export default EventsList;

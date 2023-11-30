@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { CSSTransition } from "react-transition-group";
 import PropTypes from "prop-types";
 
-import { ReactComponent as DownArrow } from "../../../../assets/arrows/arrow-down.svg";
+import { ReactComponent as DownArrow } from "../../../assets/arrows/arrow-down.svg";
 
 import "./index.scss";
 
@@ -21,7 +21,7 @@ const Filter = ({
         <span>{filterParagraph}</span>
         <CSSTransition
           in={viewFilter}
-          timeout={500}
+          timeout={300}
           classNames="filter-arrow"
         >
           <DownArrow onClick={changeFilterView} />
@@ -30,7 +30,7 @@ const Filter = ({
 
       <CSSTransition
         in={viewFilter}
-        timeout={500}
+        timeout={300}
         classNames="filter-animation"
         unmountOnExit
       >

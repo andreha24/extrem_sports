@@ -18,8 +18,8 @@ const Navigation = ({
       to: "/events",
     },
     {
-      paragraph: "Trainers",
-      to: "/trainers",
+      paragraph: "Clients",
+      to: "/clients",
     },
     {
       paragraph: "Account",

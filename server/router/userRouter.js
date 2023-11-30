@@ -3,8 +3,7 @@ const router = Router();
 
 const userController = require("../controllers/userController");
 
-router.get("/user", userController.getUser)
-  .get("/users", userController.getAllUsers)
+router.get("/authUser", userController.getAuthUser)
   .get("/bannedUsers", userController.getBannedUsers)
   .patch("/addBannedUser", userController.addBannedUser)
   .delete("/deleteBannedUser", userController.removeBannedUser)

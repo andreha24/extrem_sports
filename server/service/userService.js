@@ -63,7 +63,28 @@ class UserService {
     }
   }
 
-  async getUser(token){
+  async getUser(id){
+    try {
+      const pool = await sql.connect(dbConfig);
+      const user = await pool.request().query(`SELECT * FROM [User] WHERE id = ${id}`);
+      if (user.recordset.length > 0) {
+        const userData = user.recordset[0];
+
+        if (userData.photo) {
+          userData.photo = await googleBucketService.getImage(userData.photo);
+        }
+
+        return userData;
+      } else {
+        return null;
+      }
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+
+  async getAuthUser(token){
     try {
       const userId = tokenService.getUserIdFromToken(token);
       const pool = await sql.connect(dbConfig);
@@ -84,18 +105,81 @@ class UserService {
       throw error;
     }
   }
-  //todo
-  async getAllUsers(){
+
+  async getAllUsers(role){
     try {
       const pool = await sql.connect(dbConfig);
-      const allUsers = await pool.request().query(`SELECT * FROM [User]`);
+      const allUsers = await pool.request().query(`SELECT * FROM [User] WHERE role = '${role}' AND is_banned = 0`);
 
-      return allUsers.recordset;
+      const users = allUsers.recordset;
+
+      return await Promise.all(users.map(async (user) => {
+        if (user.photo) {
+          const imageUrl = await googleBucketService.getImage(user.photo);
+          return {...user, photo: imageUrl};
+        }
+        return user;
+      }));
     } catch (error) {
       console.error(error);
       throw error;
     }
   }
+
+  async getAllUsersWithFilters(role, sport_type, minAge, maxAge, minExp, maxExp, minPrice, maxPrice, sort_by){
+    const pool = await sql.connect(dbConfig);
+    let query = `SELECT * FROM [User] WHERE role = '${role}' AND is_banned = 0`;
+
+    if (sport_type !== undefined) {
+      const allSportTypes = sport_type.split(',').map(g => `'${g}'`).join(', ');
+      query += ` AND (sport_type IN (${allSportTypes}))`;
+    }
+
+    if (minAge !== undefined || maxAge !== undefined) {
+      minAge === undefined ? minAge  = 0 : minAge;
+      maxAge === undefined ? maxAge = 100 : maxAge;
+      query += ` AND (age BETWEEN ${minAge} AND ${maxAge})`;
+    }
+
+    if (minPrice !== undefined || maxPrice !== undefined) {
+      minPrice === undefined ? minPrice  = 0 : minPrice;
+      maxPrice === undefined ? maxPrice = 1000000 : maxPrice;
+      query += ` AND (price BETWEEN ${minPrice} AND ${maxPrice})`;
+    }
+
+    if (minExp !== undefined || maxExp !== undefined) {
+      minExp === undefined ? minExp  = 0 : minExp;
+      maxExp === undefined ? maxExp = 100 : maxExp;
+      query += ` AND (experience BETWEEN ${minExp} AND ${maxExp})`;
+    }
+
+    const sortMap = {
+      fromMinAge: 'age',
+      fromMaxAge: 'age DESC',
+      fromMinExp: 'experience',
+      fromMaxExp: 'experience DESC',
+      fromMinPrice: 'price',
+      fromMaxPrice: 'price DESC',
+      fromMinRate: 'rating',
+      fromMaxRate: 'rating DESC',
+    };
+
+    if (sort_by !== undefined && sortMap[sort_by] !== undefined) {
+      sort_by = sortMap[sort_by];
+      query += ` ORDER BY ${sort_by}`;
+    }
+    
+    const filteringUsers = await pool.request().query(query);
+
+    return await Promise.all(filteringUsers.recordset.map(async (user) => {
+      if (user.photo) {
+        const imageUrl = await googleBucketService.getImage(user.photo);
+        return {...user, photo: imageUrl};
+      }
+      return filteringUsers.recordset;
+    }));
+  }
+
   //todo
   async deleteUser(userId){
     try {
