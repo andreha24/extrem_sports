@@ -4,10 +4,21 @@ const dbConfig = require("../dbConnection");
 
 class PostService {
 
-  async getAllPosts(userId){
+  async getAllPersonalPosts(userId){
     try {
       const pool = await sql.connect(dbConfig);
-      const allPosts = await pool.request().query(`SELECT * FROM [Posts] WHERE user_id = ${userId} ORDER BY date DESC`);
+      const allPosts = await pool.request().query(`SELECT * FROM [Posts] WHERE user_id = ${userId} ORDER BY dateOfCreation DESC`);
+      return allPosts.recordset;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+
+  async getAllUserPosts(userId){
+    try {
+      const pool = await sql.connect(dbConfig);
+      const allPosts = await pool.request().query(`SELECT * FROM [Posts] WHERE user_id = ${userId} ORDER BY dateOfCreation DESC`);
       return allPosts.recordset;
     } catch (error) {
       console.error(error);

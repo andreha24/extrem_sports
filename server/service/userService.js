@@ -189,6 +189,7 @@ class UserService {
       throw error;
     }
   }
+
   //todo
   async getUserHistory(userId){
     try {

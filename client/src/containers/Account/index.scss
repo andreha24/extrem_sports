@@ -69,3 +69,17 @@
     }
   }
 }
+.client-list-animation-enter {
+  opacity: 0;
+}
+.client-list-animation-enter-active {
+  opacity: 1;
+  transition: opacity 300ms;
+}
+.client-list-animation-exit {
+  opacity: 1;
+}
+.client-list-animation-exit-active {
+  opacity: 0;
+  transition: opacity 300ms;
+}

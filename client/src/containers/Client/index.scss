@@ -1,14 +1,13 @@
 @import "src/styles/mixins";
 
-.event{
+.user-container{
   display: flex;
   flex-wrap: wrap;
+  gap: 40px;
   justify-content: center;
   padding: var(--general--padding-768);
-  gap: 25px;
-  flex-grow: 1;
 
-  @media(min-width: 768px){
+  @media (min-width: 768px) {
     justify-content: space-evenly;
   }
 
@@ -16,38 +15,29 @@
     padding: var(--general--padding-992);
   }
 
-  &-img{
-    width: 100%;
-
-    @media (min-width: 768px) {
-      width: 550px;
-    }
+  &-photo {
+    width: 300px;
   }
 
-  &-details{
+  .user-info{
     display: flex;
     flex-direction: column;
-    width: 100%;
     gap: 15px;
+    width: 200px;
 
-    .event-detail{
+    @media (min-width: 992px) {
+      width: 400px;
+    }
+
+    &-btns{
       display: flex;
       gap: 10px;
-    }
+      flex-wrap: wrap;
+      justify-content: center;
 
-    .description{
-      flex-direction: column;
-    }
-
-    .people{
-      align-items: center;
       button{
         @include btn-theme();
       }
-    }
-
-    .get-place-btn{
-      @include btn-theme();
     }
   }
 }

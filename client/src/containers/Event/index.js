@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { CSSTransition } from "react-transition-group";
 import axios from "axios";
 
 import PageWrapper from "../../components/PageWrapper";
 import Header from "../../components/Header";
+import ListWrapper from "../../components/ListWrapper";
+import EventUsersList from "./EventUsersList";
 import formatDate from "../../utils/formatDate";
 import Footer from "../../components/Footer";
 
@@ -100,18 +102,9 @@ const Event = () => {
             classNames="user-list-animation"
             unmountOnExit
           >
-            <div className="registered-users">
-              <button type="button" onClick={changeListView} className="registered-users__close">X</button>
-              {event.registeredUsers?.map(({ id, name, lastname }) => (
-                <div key={id} className="registered-user">
-                  <div>
-                    <span>{name}</span>
-                    <span className="registered-user-lastname">{lastname}</span>
-                  </div>
-                  <Link to={`/users/${id}`}>See profile</Link>
-                </div>
-              ))}
-            </div>
+            <ListWrapper closeList={changeListView}>
+              <EventUsersList users={event.registeredUsers} />
+            </ListWrapper>
           </CSSTransition>
           <div className="event-detail">
             <span>Start date:</span>

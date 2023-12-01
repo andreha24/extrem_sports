@@ -2,11 +2,20 @@ const postService = require("../service/postService");
 const tokenService = require("../service/tokenService");
 
 class PostControllers {
-  async getAllPosts(req, res, next){
+  async getAllPersonalPosts(req, res, next){
     try {
       const token = req.headers.authorization.split(" ")[1];
       const userId = await tokenService.getUserIdFromToken(token);
-      return res.json(await postService.getAllPosts(userId));
+      return res.json(await postService.getAllPersonalPosts(userId));
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  async getAllUserPosts(req, res, next){
+    try {
+      const { id } = req.params;
+      return res.json(await postService.getAllUserPosts(id));
     } catch (e) {
       next(e);
     }

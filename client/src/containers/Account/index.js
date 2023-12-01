@@ -3,18 +3,22 @@ import { Form } from "react-final-form";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { format } from "date-fns";
+import { CSSTransition } from "react-transition-group";
 
 import PageWrapper from "../../components/PageWrapper";
 import Header from "../../components/Header";
-import Posts from "./Posts";
+import Posts from "../../components/Posts";
+import ListOfClients from "./ListOfClients";
 import Footer from "../../components/Footer";
 import UserField from "./UserField";
 import checkToken from "../../utils/auth/checkToken";
+import ListWrapper from "../../components/ListWrapper";
 
 import "./index.scss";
 
 const Account = () => {
   const [isFormReadonly, setIsFormReadonly] = useState(true);
+  const [viewClientsList, setViewClientsList] = useState(false);
   const [userInfo, setUserInfo] = useState({});
 
   const token = localStorage.getItem("token");
@@ -33,11 +37,15 @@ const Account = () => {
       });
   }, [token]);
 
+  const regDate = userInfo.reg_date ? new Date(userInfo.reg_date) : null;
+
   const changeUserData = (values) => {
     console.log(values);
   };
 
-  const regDate = userInfo.reg_date ? new Date(userInfo.reg_date) : null;
+  const handleClientListView = () => {
+    setViewClientsList((prev) => !prev);
+  };
 
   return (
     <PageWrapper>
@@ -163,10 +171,22 @@ const Account = () => {
                     >
                       {isFormReadonly ? "Edit" : "Save"}
                     </button>
+                    {userInfo.role === "coach"
+                      ? <button type="button" onClick={handleClientListView}>List of Clients</button> : ""}
                   </form>
                 )}
               />
             </div>
+            <CSSTransition
+              in={viewClientsList}
+              timeout={500}
+              classNames="client-list-animation"
+              unmountOnExit
+            >
+              <ListWrapper closeList={handleClientListView}>
+                <ListOfClients />
+              </ListWrapper>
+            </CSSTransition>
             <Posts />
           </>
         )}

@@ -1,27 +1,38 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { CSSTransition } from "react-transition-group";
+import PropTypes from "prop-types";
 
 import PostForm from "./PostForm";
-import formatDate from "../../../utils/formatDate";
-import plus from "../../../assets/plus.png";
-import editIcon from "../../../assets/edit-icon.png";
-import deleteIcon from "../../../assets/garbage.png";
+import formatDateAndTime from "../../utils/formatDateAndTime";
+import plus from "../../assets/plus.png";
+import editIcon from "../../assets/edit-icon.png";
+import deleteIcon from "../../assets/garbage.png";
 
 import "./index.scss";
 
-const Posts = () => {
+const Posts = ({ user, userId }) => {
   const [isAddFormOpen, setIsAddFormOpen] = useState(false);
   const [isEditFormOpen, setIsEditFormOpen] = useState(false);
   const [posts, setPosts] = useState([]);
   const token = localStorage.getItem("token");
 
   useEffect(() => {
-    axios.get("http://localhost:5000/post/getPosts", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
+    if (!user) {
+      axios.get("http://localhost:5000/post/getAllPersonalPosts", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((response) => {
+          setPosts(response.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      return;
+    }
+    axios.get(`http://localhost:5000/post/getAllUserPosts/${userId}`)
       .then((response) => {
         setPosts(response.data);
       })
@@ -30,6 +41,8 @@ const Posts = () => {
       });
   }, []);
 
+  const getCurrentData = (data) => data;
+
   const changeAddFormView = () => {
     setIsAddFormOpen((prev) => !prev);
   };
@@ -37,8 +50,6 @@ const Posts = () => {
   const changeEditFormView = () => {
     setIsEditFormOpen((prev) => !prev);
   };
-
-  const getCurrentData = (data) => data;
 
   const addPost = (values) => {
     axios.post("http://localhost:5000/post/addPost", {
@@ -79,7 +90,16 @@ const Posts = () => {
   return (
     <div className="posts-container">
       <span className="posts-container-paragraph">Posts</span>
-      <button type="button" className="add-post-btn" onClick={changeAddFormView}><img src={plus} alt="plus" /></button>
+      { !user
+        && (
+        <button
+          type="button"
+          className="add-post-btn"
+          onClick={changeAddFormView}
+        >
+          <img src={plus} alt="plus" />
+        </button>
+        ) }
       <CSSTransition
         in={isAddFormOpen}
         timeout={300}
@@ -105,28 +125,31 @@ const Posts = () => {
         : (
           <div className="posts">
             {posts.map(({
-              id, topic, text, date,
+              id, topic, text, dateOfCreation,
             }) => (
               <div className="posts-item" key={id}>
-                <div className="posts-item-btns">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      changeEditFormView();
-                      getCurrentData({ topic, text });
-                    }}
-                  >
-                    <img src={editIcon} alt="edit" />
-                  </button>
-                  <button type="button" onClick={() => deletePost(id)}><img src={deleteIcon} alt="delete" /></button>
-                </div>
+                {!user
+                  && (
+                  <div className="posts-item-btns">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        changeEditFormView();
+                        getCurrentData({ topic, text });
+                      }}
+                    >
+                      <img src={editIcon} alt="edit" />
+                    </button>
+                    <button type="button" onClick={() => deletePost(id)}><img src={deleteIcon} alt="delete" /></button>
+                  </div>
+                  )}
                 <span className="posts-item-topic">{topic}</span>
                 <span>
                   {text}
                 </span>
                 <span>
                   publication date:
-                  {formatDate(date)}
+                  {formatDateAndTime(dateOfCreation)}
                 </span>
               </div>
             ))}
@@ -134,6 +157,11 @@ const Posts = () => {
         )}
     </div>
   );
+};
+
+Posts.propTypes = {
+  user: PropTypes.bool,
+  userId: PropTypes.string,
 };
 
 export default Posts;
