@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import ReactStars from "react-stars";
 
 import Header from "../../components/Header";
 import Posts from "../../components/Posts";
@@ -10,15 +11,17 @@ import "./index.scss";
 
 const Client = () => {
   const [userData, setUserData] = useState({});
+  const [rating, setRating] = useState(0);
   const { userId } = useParams();
   const token = localStorage.getItem("token");
 
   useEffect(() => {
     axios.get(`http://localhost:5000/unAuth/user/${userId}`)
       .then((response) => {
+        console.log(response.data);
         setUserData(response.data);
       });
-  }, []);
+  }, [rating]);
 
   const sendApplication = (coachId) => {
     axios.post("http://localhost:5000/coach/addClient", {
@@ -27,6 +30,21 @@ const Client = () => {
     })
       .then((response) => {
         alert(response.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const ratingChanged = (newRating) => {
+    setRating(newRating);
+    axios.post("http://localhost:5000/coach/addRating", {
+      token,
+      userId,
+      newRating,
+    })
+      .then((response) => {
+        console.log(response);
       })
       .catch((err) => {
         console.log(err);
@@ -61,7 +79,14 @@ const Client = () => {
               </span>
               <span>
                 Rating:
-                {userData.rating}
+                <ReactStars
+                  count={5}
+                  onChange={ratingChanged}
+                  size={24}
+                  color2="#ffd700"
+                  half={false}
+                  value={userData.rating}
+                />
               </span>
             </>
           ) : ""}

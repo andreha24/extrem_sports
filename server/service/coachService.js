@@ -51,6 +51,17 @@ class CoachService {
       throw error;
     }
   }
+
+  async addCoachRating(rating, valuerId, coachId) {
+    try {
+      const pool = await sql.connect(dbConfig);
+      await pool.request().query(`INSERT INTO [Coach_ratings] (ratingValue, valuerId, coachId) 
+        VALUES (${rating}, ${valuerId}, ${coachId})`);
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
 }
 
 

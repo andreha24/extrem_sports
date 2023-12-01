@@ -45,6 +45,16 @@ class CoachControllers {
       next(e);
     }
   }
+
+  async addCoachRating(req, res, next){
+    try {
+      const { userId, newRating, token } = req.body;
+      const valuerId = await tokenService.getUserIdFromToken(token);
+      await coachService.addCoachRating(+newRating, +valuerId, +userId);
+    } catch (e) {
+      next(e);
+    }
+  }
 }
 
 module.exports = new CoachControllers();
