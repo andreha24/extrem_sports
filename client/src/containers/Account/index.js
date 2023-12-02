@@ -9,6 +9,7 @@ import PageWrapper from "../../components/PageWrapper";
 import Header from "../../components/Header";
 import Posts from "../../components/Posts";
 import ListOfClients from "./ListOfClients";
+import accountFields from "./UserField/constants";
 import Footer from "../../components/Footer";
 import UserField from "./UserField";
 import checkToken from "../../utils/auth/checkToken";
@@ -30,7 +31,6 @@ const Account = () => {
       },
     })
       .then((response) => {
-        console.log(response.data);
         setUserInfo(response.data);
       })
       .catch(() => {
@@ -92,69 +92,16 @@ const Account = () => {
                       </div>
                     ) : ""}
 
-                    <UserField
-                      name="name"
-                      type="text"
-                      label="Name"
-                      initialValue={userInfo.name}
-                      disabled={isFormReadonly}
-                    />
-
-                    <UserField
-                      name="lastname"
-                      type="text"
-                      label="Lastname"
-                      initialValue={userInfo.lastname}
-                      disabled={isFormReadonly}
-                    />
-
-                    <UserField
-                      name="age"
-                      type="text"
-                      label="Age"
-                      initialValue={userInfo.age}
-                      disabled={isFormReadonly}
-                    />
-
-                    <UserField
-                      name="experience"
-                      type="text"
-                      label="Experience"
-                      initialValue={userInfo.experience}
-                      disabled={isFormReadonly}
-                    />
-
-                    <UserField
-                      name="sport_type"
-                      type="text"
-                      label="Sport type"
-                      initialValue={userInfo.sport_type}
-                      disabled={isFormReadonly}
-                    />
-
-                    <UserField
-                      name="country"
-                      type="text"
-                      label="Country"
-                      initialValue={userInfo.country}
-                      disabled={isFormReadonly}
-                    />
-
-                    <UserField
-                      name="city"
-                      type="text"
-                      label="City"
-                      initialValue={userInfo.city}
-                      disabled={isFormReadonly}
-                    />
-
-                    <UserField
-                      name="mail"
-                      type="text"
-                      label="Mail"
-                      initialValue={userInfo.mail}
-                      disabled={isFormReadonly}
-                    />
+                    {accountFields.map(({ name, label }) => (
+                      <UserField
+                        key={name}
+                        name={name}
+                        type="text"
+                        label={label}
+                        initialValue={userInfo[name]}
+                        disabled={isFormReadonly}
+                      />
+                    ))}
 
                     <UserField
                       name="reg_date"

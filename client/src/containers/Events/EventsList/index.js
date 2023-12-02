@@ -21,17 +21,14 @@ const EventsList = React.memo(({ filtersValues }) => {
   useEffect(() => {
     const queryParams = new URLSearchParams();
 
-    // Add continents to the query string
     if (filtersValues.continents && filtersValues.continents.length > 0) {
       queryParams.append("continents", filtersValues.continents.join(","));
     }
 
-    // Add sorting option to the query string
     if (filtersValues.sort_by) {
       queryParams.append("sort_by", filtersValues.sort_by);
     }
 
-    // Fetch data only if there are filters
     if (queryParams.toString() !== "") {
       axios
         .get(`http://localhost:5000/events/eventsWithFilters?${queryParams}`)

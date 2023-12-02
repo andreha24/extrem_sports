@@ -33,7 +33,7 @@ UserField.propTypes = {
   type: PropTypes.string,
   label: PropTypes.string,
   disabled: PropTypes.bool,
-  initialValue: PropTypes.string,
+  initialValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 
 export default UserField;

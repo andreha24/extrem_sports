@@ -11,6 +11,7 @@
     "date-fns": "^2.30.0",
     "eslint": "8.22.0",
     "final-form": "^4.20.10",
+    "jwt-decode": "^4.0.0",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

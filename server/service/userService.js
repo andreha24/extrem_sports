@@ -2,12 +2,10 @@ const sql = require("mssql");
 const bcrypt = require("bcrypt");
 
 const tokenService = require('../service/tokenService');
-const googleBucketService = require("../service/googleBucketService")
+const googleBucketService = require("../service/googleBucketService");
 const UserDto = require('../dtos/userDto');
 const ApiError = require("../exeptions/apiErrors");
 const dbConfig = require("../dbConnection");
-const {request} = require("express");
-
 
 class UserService {
   async registration(name, lastname, age, experience, sport_type, country, city, mail, password, role, img, price) {

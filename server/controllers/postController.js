@@ -25,7 +25,8 @@ class PostControllers {
     try {
       const { topic, text, token } = req.body;
       const userId = await tokenService.getUserIdFromToken(token);
-      await postService.addPost(topic, text, userId);
+      const newPost = await postService.addPost(topic, text, userId);
+      return res.json(newPost);
     } catch (e) {
       next(e);
     }
@@ -33,8 +34,10 @@ class PostControllers {
 
   async editPost(req, res, next){
     try {
-      const { topic, text, postId } = req.body;
-      await postService.editPost(topic, text, postId);
+      const { topic, text, id } = req.body;
+      console.log( req.body );
+      const editedPost = await postService.editPost(topic, text, id);
+      return res.json(editedPost);
     } catch (e) {
       next(e);
     }

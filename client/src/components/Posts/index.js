@@ -13,7 +13,7 @@ import "./index.scss";
 
 const Posts = ({ user, userId }) => {
   const [isAddFormOpen, setIsAddFormOpen] = useState(false);
-  const [isEditFormOpen, setIsEditFormOpen] = useState(false);
+  const [postsId, setPostsId] = useState([]);
   const [posts, setPosts] = useState([]);
   const token = localStorage.getItem("token");
 
@@ -41,14 +41,12 @@ const Posts = ({ user, userId }) => {
       });
   }, []);
 
-  const getCurrentData = (data) => data;
-
   const changeAddFormView = () => {
     setIsAddFormOpen((prev) => !prev);
   };
 
-  const changeEditFormView = () => {
-    setIsEditFormOpen((prev) => !prev);
+  const clearEditFormView = (id) => {
+    setPostsId((prev) => prev.filter((postId) => postId !== id));
   };
 
   const addPost = (values) => {
@@ -57,19 +55,30 @@ const Posts = ({ user, userId }) => {
       token,
     })
       .then((response) => {
-        console.log(response);
-        alert("WOW");
+        setPosts((prev) => [response.data.post, ...prev]);
+        changeAddFormView();
       })
       .catch((err) => {
         console.log(err);
       });
   };
 
-  const editPost = (values) => {
-    axios.patch("http://localhost:5000/post/editPost", values)
+  const editPost = (id) => (values) => {
+    axios.patch("http://localhost:5000/post/editPost", {
+      ...values,
+      id,
+    })
       .then((response) => {
-        console.log(response);
-        alert("WOW");
+        console.log(response.data);
+        setPosts((prev) => prev.map((post) => {
+          if (post.id === response.data.post.id) {
+            return response.data.post;
+          }
+
+          return post;
+        }));
+
+        clearEditFormView(id);
       })
       .catch((err) => {
         console.log(err);
@@ -108,51 +117,58 @@ const Posts = ({ user, userId }) => {
       >
         <PostForm changeFormView={changeAddFormView} onSubmit={addPost} buttonName="Add post" />
       </CSSTransition>
-      <CSSTransition
-        in={isEditFormOpen}
-        timeout={300}
-        classNames="post-form-animation"
-        unmountOnExit
-      >
-        <PostForm
-          changeFormView={changeEditFormView}
-          initialValues={{ text: "dsadas", topic: "dasddsad" }}
-          onSubmit={editPost}
-          buttonName="Edit post"
-        />
-      </CSSTransition>
       {posts.length === 0 ? <div style={{ fontSize: "20px" }}>No posts yet</div>
         : (
           <div className="posts">
             {posts.map(({
               id, topic, text, dateOfCreation,
             }) => (
-              <div className="posts-item" key={id}>
-                {!user
-                  && (
-                  <div className="posts-item-btns">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        changeEditFormView();
-                        getCurrentData({ topic, text });
-                      }}
-                    >
-                      <img src={editIcon} alt="edit" />
-                    </button>
-                    <button type="button" onClick={() => deletePost(id)}><img src={deleteIcon} alt="delete" /></button>
-                  </div>
-                  )}
-                <span className="posts-item-topic">{topic}</span>
-                <span>
-                  {text}
-                </span>
-                <span>
-                  publication date:
-                  {formatDateAndTime(dateOfCreation)}
-                </span>
-              </div>
-            ))}
+              postsId.includes(id) ? (
+                <CSSTransition
+                  in={postsId.includes(id)}
+                  timeout={300}
+                  classNames="post-form-animation"
+                  unmountOnExit
+                  key={id}
+                >
+                  <PostForm
+                    changeFormView={() => clearEditFormView(id)}
+                    initialValues={{ topic, text }}
+                    onSubmit={editPost(id)}
+                    buttonName="Edit post"
+                  />
+                </CSSTransition>
+              ) : (
+                <div className="posts-item" key={id}>
+                  {!user
+                    && (
+                      <div className="posts-item-btns">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setPostsId((prev) => [...prev, id]);
+                          }}
+                        >
+                          <img src={editIcon} alt="edit" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => deletePost(id)}
+                        >
+                          <img src={deleteIcon} alt="delete" />
+                        </button>
+                      </div>
+                    )}
+                  <span className="posts-item-topic">{topic}</span>
+                  <span>
+                    {text}
+                  </span>
+                  <span>
+                    publication date:
+                    {formatDateAndTime(dateOfCreation)}
+                  </span>
+                </div>
+              )))}
           </div>
         )}
     </div>
