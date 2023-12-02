@@ -3,6 +3,8 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 
+import StarsRating from "../../../components/StarsRating";
+
 import "./index.scss";
 
 const ClientsList = ({ filtersValues, chooseRole, handleRole }) => {
@@ -119,7 +121,11 @@ const ClientsList = ({ filtersValues, chooseRole, handleRole }) => {
                       <span>
                         Rating -
                         {" "}
-                        {rating}
+                        <StarsRating
+                          value={rating}
+                          readOnly={false}
+                        />
+
                       </span>
                     </>
                   ) : ""}

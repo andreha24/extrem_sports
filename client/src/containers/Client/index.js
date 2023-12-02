@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import ReactStars from "react-stars";
 
 import Header from "../../components/Header";
+import StarsRating from "../../components/StarsRating";
 import Posts from "../../components/Posts";
 import Footer from "../../components/Footer";
 
@@ -79,13 +79,9 @@ const Client = () => {
               </span>
               <span>
                 Rating:
-                <ReactStars
-                  count={5}
-                  onChange={ratingChanged}
-                  size={24}
-                  color2="#ffd700"
-                  half={false}
-                  value={userData.rating}
+                <StarsRating
+                  ratingChanged={ratingChanged}
+                  initialValue={userData.rating}
                 />
               </span>
             </>
