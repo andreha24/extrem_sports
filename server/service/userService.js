@@ -269,11 +269,18 @@ class UserService {
       throw error;
     }
   }
-  //todo
-  async addReport(firstUserId, secondUserId, reason){
+
+  async addReport(recipientId, token, reason){
     try {
-      await pool.request().query(`INSERT INTO User_report (firstUserId, secondUserId, reason) 
-      VALUES ('${firstUserId}','${secondUserId}', '${reason}') `);
+      const pool = await sql.connect(dbConfig);
+      const senderId = await tokenService.getUserIdFromToken(token);
+      const checkSenderId = await pool.request().query(`SELECT * FROM [User_reports] WHERE senderId = ${senderId}`);
+      if(checkSenderId.recordset.length > 0){
+        throw ApiError.BadRequest("You have already filed a complaint against the user");
+      }
+      await pool.request().query(`INSERT INTO [User_reports] (reason, senderId, recipientId) 
+      VALUES ('${reason}', ${senderId}, ${recipientId})`);
+      return "Report sent";
     } catch (error) {
       console.error(error);
       throw error;
@@ -293,6 +300,29 @@ class UserService {
       throw error;
     }
   }
+  //todo
+  async addCommentToCoach(coachId, token, text) {
+    try {
+      const pool = await sql.connect(dbConfig);
+      const senderId = await tokenService.getUserIdFromToken(token);
+      const checkSenderId = await pool.request().query(`SELECT * FROM [Coach_comments] WHERE senderId = ${senderId}`);
+
+      if (checkSenderId.recordset.length > 0) {
+        throw ApiError.BadRequest("You have already left a comment");
+      }
+
+      await pool.request().query(`
+      INSERT INTO [Coach_comments] (text, senderId, coachId) 
+      VALUES ('${text}', ${senderId}, ${coachId})
+    `);
+
+      return "Comment sent";
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+
 
   async getLastServiceComments() {
     try {
@@ -308,17 +338,6 @@ class UserService {
         const imageUrl = await googleBucketService.getImage(comment.photo);
         return {...comment, photo: imageUrl};
       }));
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  }
-
-  //todo
-  async addCommentToCoach(userId, trainerId, text){
-    try {
-      await pool.request().query(`INSERT INTO User_report (user_id, trainer_id, text) 
-      VALUES ('${userId}','${trainerId}', '${text}') `);
     } catch (error) {
       console.error(error);
       throw error;

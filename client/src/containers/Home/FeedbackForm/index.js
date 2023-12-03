@@ -33,7 +33,7 @@ const FeedbackForm = () => {
     <div className="feedback-form-wrapper">
       <ToastContainer />
       <Form
-        onSubmit={(values, form) => sendFeedback(values, form)}
+        onSubmit={sendFeedback}
         render={({ handleSubmit }) => (
           <form onSubmit={handleSubmit} className="feedback-form">
             <span className="feedback-form-paragraph">Send feedback to our service</span>

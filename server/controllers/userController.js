@@ -125,8 +125,9 @@ class UserControllers {
 
   async addReport(req, res, next){
     try {
-      const {firstUserId, secondUserId, reason} = req.body;
-      await userService.addReport(firstUserId, secondUserId, reason);
+      const token = req.headers.authorization.split(" ")[1];
+      const {recipientId, value} = req.body;
+      res.json(await userService.addReport(recipientId, token, value));
     } catch (e) {
       next(e)
     }
@@ -153,8 +154,10 @@ class UserControllers {
 
   async addCommentToCoach(req, res, next){
     try {
-      const {userId, trainerId, text} = req.body;
-      await userService.addCommentToCoach(userId, trainerId, text);
+      const {coachId, value} = req.body;
+      console.log(req.body);
+      const token = req.headers.authorization.split(" ")[1];
+      res.json(await userService.addCommentToCoach(coachId, token, value));
     } catch (e) {
       next(e)
     }

@@ -6,6 +6,7 @@ import { ToastContainer } from "react-toastify";
 import Header from "../../components/Header";
 import StarsRating from "../../components/StarsRating";
 import Posts from "../../components/Posts";
+import SendingForm from "./SendingForm";
 import Footer from "../../components/Footer";
 import toastSuccess from "../../utils/toast/toastSuccess";
 import toastError from "../../utils/toast/toastError";
@@ -16,8 +17,18 @@ import "react-toastify/dist/ReactToastify.css";
 const Client = () => {
   const [userData, setUserData] = useState({});
   const [rating, setRating] = useState(0);
+  const [isReportFormOpen, setIsReportFormOpen] = useState(false);
+  const [isFeedbackFormOpen, setIsFeedbackFormOpen] = useState(false);
   const { userId } = useParams();
   const token = localStorage.getItem("token");
+
+  const changeReportFormView = () => {
+    setIsReportFormOpen((prev) => !prev);
+  };
+
+  const changeFeedbackFormView = () => {
+    setIsFeedbackFormOpen((prev) => !prev);
+  };
 
   useEffect(() => {
     axios.get(`http://localhost:5000/unAuth/user/${userId}`)
@@ -63,6 +74,51 @@ const Client = () => {
           toastError("You have already rated");
           return;
         }
+        toastError("???");
+      });
+  };
+
+  const sendCoachFeedback = (coachId) => (value) => {
+    axios.post("http://localhost:5000/api/addCommentToCoach", { value: value.text, coachId }, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => {
+        console.log(response.data);
+        changeFeedbackFormView();
+        toastSuccess(response.data);
+      })
+      .catch((err) => {
+        if (err.request.status === 401) {
+          toastError("You need to log in");
+          return;
+        }
+
+        toastError("???");
+      });
+  };
+
+  const sendReport = (recipientId) => (value) => {
+    axios.post("http://localhost:5000/api/addReport", { value: value.text, recipientId }, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => {
+        changeReportFormView();
+        toastSuccess(response.data);
+      })
+      .catch((err) => {
+        if (err.request.status === 401) {
+          toastError("You need to log in");
+          return;
+        }
+        if (err.request.status === 400) {
+          toastError("You have already filed a complaint against the user");
+          return;
+        }
+
         toastError("???");
       });
   };
@@ -133,13 +189,25 @@ const Client = () => {
             {userData.role === "coach" ? (
               <>
                 <button type="button" onClick={() => sendApplication(userId)}>Application for a lesson</button>
-                <button type="button">Feedback</button>
+                <button type="button" onClick={changeFeedbackFormView}>Feedback</button>
               </>
             ) : ""}
-            <button type="button">Report</button>
+            <button type="button" onClick={changeReportFormView}>Report</button>
           </div>
         </div>
       </div>
+      <SendingForm
+        onSubmit={sendReport(userData.id)}
+        closeForm={changeReportFormView}
+        blockName="Report"
+        isFormOpen={isReportFormOpen}
+      />
+      <SendingForm
+        onSubmit={sendCoachFeedback(userData.id)}
+        closeForm={changeFeedbackFormView}
+        blockName="Feedback"
+        isFormOpen={isFeedbackFormOpen}
+      />
       <Posts user userId={userId} />
       <Footer />
     </>
