@@ -74,6 +74,14 @@ class UserService {
       WHERE u.id = ${id}
     `);
 
+      let userRating = 0
+      const userRatingArr = await pool.request().query(`SELECT ratingValue FROM [Coach_ratings] WHERE coachId = ${id}`)
+      if (userRatingArr.recordset.length > 0) {
+        userRating =
+          userRatingArr.recordset.reduce((acc, currentValue) => acc + currentValue.ratingValue, 0) /
+          userRatingArr.recordset.length;
+      }
+
       if (user.recordset.length > 0) {
         const userData = user.recordset[0];
 
@@ -81,8 +89,7 @@ class UserService {
           userData.photo = await googleBucketService.getImage(userData.photo);
         }
 
-        // Set default rating to 0 if it's null or undefined
-        userData.rating = userData.rating || 0;
+        userData.rating = userRating;
         return userData;
       } else {
         return null;
@@ -98,22 +105,15 @@ class UserService {
       const userId = tokenService.getUserIdFromToken(token);
       const pool = await sql.connect(dbConfig);
 
-      const allUserRating = await pool
-        .request()
-        .query(`SELECT * FROM [Coach_ratings] WHERE id = ${userId}`);
-
-      let userRating = 0;
-
-      if (allUserRating.recordset.length > 0) {
+      let userRating = 0
+      const userRatingArr = await pool.request().query(`SELECT ratingValue FROM [Coach_ratings] WHERE coachId = ${userId}`)
+      if (userRatingArr.recordset.length > 0) {
         userRating =
-          allUserRating.recordset.reduce((a, b) => a + b.rating, 0) /
-          allUserRating.recordset.length;
+          userRatingArr.recordset.reduce((acc, currentValue) => acc + currentValue.ratingValue, 0) /
+          userRatingArr.recordset.length;
       }
 
-      const user = await pool
-        .request()
-        .query(`SELECT * FROM [User] WHERE id = ${userId}`);
-
+      const user = await pool.request().query(`SELECT * FROM [User] WHERE id = ${userId}`);
       if (user.recordset.length > 0) {
         const userData = user.recordset[0];
 
@@ -121,7 +121,7 @@ class UserService {
           userData.photo = await googleBucketService.getImage(userData.photo);
         }
 
-        userData.rating = isNaN(userRating) ? 0 : userRating;
+        userData.rating = userRating;
         return userData;
       } else {
         return null;
@@ -143,7 +143,6 @@ class UserService {
       LEFT JOIN [Coach_ratings] cr ON u.id = cr.id
       WHERE u.role = '${role}' AND u.is_banned = 0
     `);
-
       const users = allUsers.recordset;
 
       return await Promise.all(users.map(async (user) => {
@@ -151,9 +150,15 @@ class UserService {
           user.photo = await googleBucketService.getImage(user.photo);
         }
 
-        // Set default rating to 0 if it's null or undefined
-        user.rating = user.rating || 0;
+        let userRating = 0
+        const userRatingArr = await pool.request().query(`SELECT ratingValue FROM [Coach_ratings] WHERE coachId = ${user.id}`)
+        if (userRatingArr.recordset.length > 0) {
+          userRating =
+            userRatingArr.recordset.reduce((acc, currentValue) => acc + currentValue.ratingValue, 0) /
+            userRatingArr.recordset.length;
+        }
 
+        user.rating = userRating;
         return user;
       }));
     } catch (error) {
@@ -219,7 +224,8 @@ class UserService {
   //todo
   async deleteUser(userId){
     try {
-      await pool.request().query(`DELETE FROM User WHERE id = ${userId}`);
+      const pool = await sql.connect(dbConfig);
+      await pool.request().query(`DELETE FROM [User] WHERE id = ${userId}`);
     } catch (error) {
       console.error(error);
       throw error;
@@ -280,6 +286,8 @@ class UserService {
       const pool = await sql.connect(dbConfig);
       await pool.request().query(`INSERT INTO [Service_comments] (user_id, description) 
       VALUES (${userId},'${text}')`);
+
+      return 'Feedback sent';
     } catch (error) {
       console.error(error);
       throw error;

@@ -4,7 +4,6 @@ const dbConfig = require("../dbConnection");
 const PostDto = require("../dtos/postDto");
 
 class PostService {
-
   async getAllPersonalPosts(userId){
     try {
       const pool = await sql.connect(dbConfig);
@@ -58,6 +57,7 @@ class PostService {
     try {
       const pool = await sql.connect(dbConfig);
       await pool.request().query(`DELETE FROM [Posts] WHERE id = ${postId}`);
+      return postId;
     } catch (error) {
       console.error(error);
       throw error;

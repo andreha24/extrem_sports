@@ -87,9 +87,8 @@ const Posts = ({ user, userId }) => {
 
   const deletePost = (postId) => {
     axios.delete(`http://localhost:5000/post/deletePost/${postId}`)
-      .then((response) => {
-        console.log(response);
-        alert("WOW");
+      .then(() => {
+        setPosts((prev) => prev.filter((post) => post.id !== postId));
       })
       .catch((err) => {
         console.log(err);

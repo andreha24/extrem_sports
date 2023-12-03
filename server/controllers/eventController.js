@@ -53,7 +53,7 @@ class EventControllers {
     try {
       const { token, eventId } = req.body;
       const userId = tokenService.getUserIdFromToken(token);
-      await eventService.addUserToEvent(+eventId, +userId);
+      return res.json(await eventService.addUserToEvent(+eventId, +userId));
     } catch (e) {
       next(e);
     }

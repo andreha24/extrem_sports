@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import { ToastContainer } from "react-toastify";
 
 import Header from "../../components/Header";
 import StarsRating from "../../components/StarsRating";
 import Posts from "../../components/Posts";
 import Footer from "../../components/Footer";
+import toastSuccess from "../../utils/toast/toastSuccess";
+import toastError from "../../utils/toast/toastError";
 
 import "./index.scss";
+import "react-toastify/dist/ReactToastify.css";
 
 const Client = () => {
   const [userData, setUserData] = useState({});
@@ -18,7 +22,6 @@ const Client = () => {
   useEffect(() => {
     axios.get(`http://localhost:5000/unAuth/user/${userId}`)
       .then((response) => {
-        console.log(response.data);
         setUserData(response.data);
       });
   }, [rating]);
@@ -29,10 +32,14 @@ const Client = () => {
       token,
     })
       .then((response) => {
-        alert(response.data);
+        toastSuccess(response.data);
       })
       .catch((err) => {
-        console.log(err);
+        if (err.request.status === 401) {
+          toastError("You need to log in");
+          return;
+        }
+        toastError("???");
       });
   };
 
@@ -44,15 +51,25 @@ const Client = () => {
       newRating,
     })
       .then((response) => {
-        console.log(response);
+        toastSuccess(response.data);
       })
       .catch((err) => {
         console.log(err);
+        if (err.request.status === 401) {
+          toastError("You need to log in");
+          return;
+        }
+        if (err.request.status === 400) {
+          toastError("You have already rated");
+          return;
+        }
+        toastError("???");
       });
   };
 
   return (
     <>
+      <ToastContainer />
       <Header />
       <div className="user-container">
         <img src={userData.photo} className="user-container-photo" alt="user" />

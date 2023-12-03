@@ -145,7 +145,7 @@ class UserControllers {
     try {
       const {text} = req.body;
       const token = req.headers.authorization.split(" ")[1];
-      await userService.addCommentToService(token, text);
+      return res.json(await userService.addCommentToService(token, text));
     } catch (e) {
       next(e)
     }

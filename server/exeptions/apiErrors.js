@@ -9,7 +9,7 @@ module.exports = class ApiErrors extends Error{
   }
 
   static UnauthorizedError(){
-    return new ApiErrors(401, "Пользователь не авторизован");
+    return new ApiErrors(401, "User not authorized");
   }
 
   static BadRequest(message, errors = []){

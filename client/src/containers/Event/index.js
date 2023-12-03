@@ -2,13 +2,16 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { CSSTransition } from "react-transition-group";
 import axios from "axios";
+import { ToastContainer } from "react-toastify";
 
 import PageWrapper from "../../components/PageWrapper";
 import Header from "../../components/Header";
 import ListWrapper from "../../components/ListWrapper";
-import EventUsersList from "./EventUsersList";
+import RegUsersList from "./RegUsersList";
 import formatDate from "../../utils/formatDate";
 import Footer from "../../components/Footer";
+import toastError from "../../utils/toast/toastError";
+import toastSuccess from "../../utils/toast/toastSuccess";
 
 import "./index.scss";
 
@@ -34,7 +37,7 @@ const Event = () => {
   const addUserIntoEvent = () => {
     const token = localStorage.getItem("token");
     if (token === null) {
-      alert("You need to log in");
+      toastError("You need to log in");
       return;
     }
     axios.post("http://localhost:5000/events/addUserToEvent", {
@@ -42,18 +45,26 @@ const Event = () => {
       eventId,
     })
       .then((response) => {
-        console.log(response);
-        console.log("Congats");
+        toastSuccess(response.data.message);
+        setEvent({
+          ...event,
+          registeredUsers: [
+            ...event.registeredUsers,
+            response.data.user,
+          ],
+        });
       })
       .catch((err) => {
+        console.log(err);
         if (err.request.status === 400) {
-          alert("You already register");
+          toastError("You already register");
         }
       });
   };
 
   return (
     <PageWrapper>
+      <ToastContainer />
       <Header />
       <div className="event">
         <button type="button">delete event</button>
@@ -103,7 +114,7 @@ const Event = () => {
             unmountOnExit
           >
             <ListWrapper closeList={changeListView}>
-              <EventUsersList users={event.registeredUsers} />
+              <RegUsersList users={event.registeredUsers} />
             </ListWrapper>
           </CSSTransition>
           <div className="event-detail">

@@ -18,7 +18,7 @@ class CoachControllers {
       const { id } = req.params;
       const token = req.headers.authorization.split(" ")[1];
       const coachId = tokenService.getUserIdFromToken(token);
-      await coachService.deleteClient(coachId, id);
+      return(await coachService.deleteClient(coachId, id));
     } catch (e) {
       next(e);
     }
@@ -27,9 +27,7 @@ class CoachControllers {
   async addClient(req, res, next){
     try {
       const { coachId, token } = req.body;
-      const clientId = tokenService.getUserIdFromToken(token);
-      const result = await coachService.addClient(coachId, clientId);
-      res.json(result);
+      res.json(await coachService.addClient(coachId, token));
     } catch (e) {
       next(e);
     }
@@ -39,8 +37,7 @@ class CoachControllers {
     try {
       const { clientId, token } = req.body;
       const coachId = tokenService.getUserIdFromToken(token);
-      await coachService.acceptClient(coachId, clientId);
-      return `Client accepted`
+      res.json(await coachService.acceptClient(coachId, clientId));
     } catch (e) {
       next(e);
     }
@@ -49,8 +46,7 @@ class CoachControllers {
   async addCoachRating(req, res, next){
     try {
       const { userId, newRating, token } = req.body;
-      const valuerId = await tokenService.getUserIdFromToken(token);
-      await coachService.addCoachRating(+newRating, +valuerId, +userId);
+      res.json(await coachService.addCoachRating(+newRating, token, +userId));
     } catch (e) {
       next(e);
     }

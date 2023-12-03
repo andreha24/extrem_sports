@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 import axios from "axios";
 
 import formatDate from "../../../utils/formatDate";
@@ -7,6 +8,7 @@ import check from "../../../assets/check.png";
 import clear from "../../../assets/clear.png";
 
 import "./index.scss";
+import "react-toastify/dist/ReactToastify.css";
 
 const ListOfClients = () => {
   const [coachClients, setCoachClients] = useState([]);
@@ -32,7 +34,8 @@ const ListOfClients = () => {
       clientId,
     })
       .then((response) => {
-        alert(response.data);
+        console.log(response.data);
+        setCoachClients((prev) => prev.filter((client) => client.id !== clientId));
       })
       .catch((err) => {
         console.log(err);
@@ -46,7 +49,8 @@ const ListOfClients = () => {
       },
     })
       .then((response) => {
-        alert(response.data);
+        console.log(response.data);
+        setCoachClients((prev) => prev.filter((client) => client.id !== id));
       })
       .catch((err) => {
         console.log(err);
@@ -59,6 +63,7 @@ const ListOfClients = () => {
 
   return (
     <>
+      <ToastContainer />
       <div className="status">
         <span>Status</span>
         <div className="status-btns">

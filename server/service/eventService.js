@@ -2,6 +2,7 @@ const sql = require('mssql');
 
 const googleBucketService = require("./googleBucketService");
 const ApiError = require("../exeptions/apiErrors");
+const UserDto = require("../dtos/userDto");
 const dbConfig = require("../dbConnection");
 
 class EventService {
@@ -119,19 +120,21 @@ class EventService {
   }
 
   async addUserToEvent(eventId, userId){
-    try {
       const pool = await sql.connect(dbConfig);
       const user = await pool.request().query(`SELECT * FROM [Events_users] WHERE user_id = ${userId} AND event_id = ${eventId}`);
       if (user.recordset.length > 0) {
-        throw ApiError.BadRequest(`Вы уже зарегистрированы`);
+        throw ApiError.BadRequest(`You already registered`);
       }
       await pool.request().query(`INSERT INTO [Events_users] (user_id, event_id) VALUES (${userId}, ${eventId})`);
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
+      const getLastUserAdded = await pool.request().query(`SELECT * FROM [User] WHERE id=${userId}`);
+
+    return {
+      user: new UserDto(getLastUserAdded.recordset[0]),
+      message: 'Successful registration',
+    };
   }
 }
+
 
 
 module.exports = new EventService();

@@ -47,7 +47,8 @@ class PostControllers {
   async deletePost(req, res, next){
     try {
       const { id } = req.params;
-      await postService.deletePost(id);
+      const result = await postService.deletePost(id);
+      return res.json(result);
     } catch (e) {
       next(e);
     }

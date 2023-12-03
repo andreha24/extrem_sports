@@ -122,7 +122,7 @@ const ClientsList = ({ filtersValues, chooseRole, handleRole }) => {
                         Rating -
                         {" "}
                         <StarsRating
-                          value={rating}
+                          initialValue={rating}
                           readOnly={false}
                         />
 
