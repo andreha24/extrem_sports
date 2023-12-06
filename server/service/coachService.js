@@ -22,6 +22,30 @@ class CoachService {
     }
   }
 
+  async getCoachComments(coachId){
+    try {
+      const pool = await sql.connect(dbConfig);
+      const commentsQuery = await pool.request().query(
+        `SELECT 
+            SenderUser.id AS id, 
+            SenderUser.name AS SenderName, 
+            SenderUser.lastname AS SenderLastname, 
+            Coach_comments.text, 
+            Coach_comments.dateOfCreation
+        FROM [Coach_comments]
+        JOIN [User] AS CoachUser ON [Coach_comments].coachId = CoachUser.id
+        JOIN [User] AS SenderUser ON [Coach_comments].senderId = SenderUser.id
+        WHERE [Coach_comments].coachId = ${coachId};
+        `);
+
+      return commentsQuery.recordset;
+
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+
   async deleteClient(coachId, clientId){
     try {
       const pool = await sql.connect(dbConfig);

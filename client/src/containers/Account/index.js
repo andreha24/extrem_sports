@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { format } from "date-fns";
 import { CSSTransition } from "react-transition-group";
+import { ToastContainer } from "react-toastify";
 
 import PageWrapper from "../../components/PageWrapper";
 import Header from "../../components/Header";
@@ -14,6 +15,8 @@ import Footer from "../../components/Footer";
 import UserField from "./UserField";
 import checkToken from "../../utils/auth/checkToken";
 import ListWrapper from "../../components/ListWrapper";
+import toastSuccess from "../../utils/toast/toastSuccess";
+import toastError from "../../utils/toast/toastError";
 
 import "./index.scss";
 
@@ -21,8 +24,19 @@ const Account = () => {
   const [isFormReadonly, setIsFormReadonly] = useState(true);
   const [viewClientsList, setViewClientsList] = useState(false);
   const [userInfo, setUserInfo] = useState({});
-
+  const [selectedFile, setSelectedFile] = useState(null);
   const token = localStorage.getItem("token");
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    setSelectedFile(file);
+  };
+
+  const generateUniqueFileName = (originalFileName) => {
+    const uniqueIdentifier = Date.now(); // You can use a more sophisticated method for generating unique identifiers
+    const extension = originalFileName.split(".").pop(); // Extract the file extension
+    return `${uniqueIdentifier}.${extension}`;
+  };
 
   useEffect(() => {
     axios.get("http://localhost:5000/api/authUser", {
@@ -38,18 +52,50 @@ const Account = () => {
       });
   }, [token]);
 
-  const regDate = userInfo.reg_date ? new Date(userInfo.reg_date) : null;
-
   const changeUserData = (values) => {
-    console.log(values);
+    let photoName = userInfo.photo;
+    const formData = new FormData();
+
+    if (selectedFile !== null) {
+      photoName = generateUniqueFileName(selectedFile.name);
+    }
+
+    const newData = {
+      ...values,
+      photo: photoName,
+      token,
+    };
+
+    axios.patch("http://localhost:5000/api/changeUserData", newData)
+      .then((response) => {
+        setUserInfo(response.data.updated);
+        toastSuccess(response.data.message);
+      })
+      .catch(() => {
+        toastError("???");
+      });
+
+    if (selectedFile !== null) {
+      formData.append("oldPhoto", userInfo.photo);
+      formData.append("newPhoto", selectedFile, photoName);
+      axios.post("http://localhost:5000/bucket/editPhoto", formData)
+        .then(() => {
+          toastSuccess("Photo changed");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   };
 
   const handleClientListView = () => {
     setViewClientsList((prev) => !prev);
   };
 
+  const regDate = userInfo.reg_date ? new Date(userInfo.reg_date) : null;
   return (
     <PageWrapper>
+      <ToastContainer style={{ width: "330px" }} />
       <Header />
       {checkToken() === null
         ? (
@@ -66,7 +112,19 @@ const Account = () => {
         : (
           <>
             <div className="account-wrapper">
-              <img src={userInfo.photo} className="account-wrapper__photo" alt="user" />
+              <div className="img-wrapper">
+                {!isFormReadonly
+                  && (
+                    <div className="file-upload">
+                      {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
+                      <label>
+                        <input type="file" onChange={handleFileChange} name="file" />
+                        <span>{selectedFile === null ? "Choose photo if you want to change" : "New photo added"}</span>
+                      </label>
+                    </div>
+                  )}
+                <img key={userInfo.photoUrl} src={userInfo.photoUrl} className="account-wrapper__photo" alt="user" />
+              </div>
               <Form
                 onSubmit={changeUserData}
                 render={({ handleSubmit, invalid }) => (

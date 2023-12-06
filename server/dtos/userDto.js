@@ -4,6 +4,7 @@ module.exports = class UserDto {
     this.name = user.name;
     this.lastname = user.lastname;
     this.age = user.age;
+    this.role = user.role;
     this.experience = user.experience;
     this.country = user.country;
     this.city = user.city;

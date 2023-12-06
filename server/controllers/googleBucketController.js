@@ -18,8 +18,10 @@ class googleBucketControllers {
 
   async editUserPhoto(req, res, next){
     try {
-      const { topic, text, postId } = req.body;
-      await postService.editPost(topic, text, postId);
+      const newPhoto = req.files[0];
+      const { oldPhoto } = req.body;
+      const img = await googleBucketService.editImage(oldPhoto, newPhoto.buffer, newPhoto.originalname)
+      res.json({ img })
     } catch (e) {
       next(e);
     }

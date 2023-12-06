@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Field } from "react-final-form";
 import axios from "axios";
+import { ToastContainer } from "react-toastify";
 
 import FormWrapper from "../../components/FormWrapper";
 import FormField from "../../components/FormWrapper/Field";
@@ -10,6 +11,7 @@ import minLength from "../../utils/validators/minLength";
 import validateEmail from "../../utils/validators/validateEmail";
 import composeValidators from "../../utils/validators/composeValidators";
 import usePassword from "../../hooks/usePassword";
+import toastSuccess from "../../utils/toast/toastSuccess";
 
 import "./index.scss";
 
@@ -29,19 +31,25 @@ const Registration = () => {
     setSelectedFile(file);
   };
 
+  const generateUniqueFileName = (originalFileName) => {
+    const uniqueIdentifier = Date.now();
+    const extension = originalFileName.split(".").pop();
+    return `${uniqueIdentifier}.${extension}`;
+  };
+
   const sendUserData = (values) => {
     const userData = {
       ...values,
-      img: selectedFile.name,
+      img: generateUniqueFileName(selectedFile.name),
     };
 
     const formData = new FormData();
-    formData.append("img", selectedFile);
+    formData.append("img", selectedFile, userData.img);
 
     axios
       .post("http://localhost:5000/api/registration", userData)
       .then(() => {
-        alert("User registration successful");
+        toastSuccess("User registration successful");
         navigate("/login");
       })
       .catch((error) => {
@@ -65,7 +73,7 @@ const Registration = () => {
       linkToName="Log in"
       paragraphName="Registration"
     >
-
+      <ToastContainer />
       <div className="inputs-wrapper">
         <div className="inputs-wrapper__block">
           <FormField
@@ -153,9 +161,12 @@ const Registration = () => {
           />
         </div>
       </div>
-      <div>
-        <span>your photo </span>
-        <input type="file" onChange={handleFileChange} name="photo" />
+      <div className="file-upload">
+        {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
+        <label>
+          <input type="file" onChange={handleFileChange} name="photo" />
+          <span>{selectedFile === null ? "Choose your photo" : "Photo added"}</span>
+        </label>
       </div>
     </FormWrapper>
   );

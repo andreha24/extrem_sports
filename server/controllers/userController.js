@@ -51,7 +51,7 @@ class UserControllers {
 
   async getAllUsers(req, res, next) {
     try {
-      const { role } = req.query
+      const { role } = req.query;
       const allUser = await userService.getAllUsers(role);
       return res.json(allUser);
     } catch (e) {
@@ -80,8 +80,8 @@ class UserControllers {
 
   async changeUserData(req, res, next) {
     try {
-      const {name, email, userId} = req.body;
-      await userService.changeUserInfo(name, email, userId);
+      const {name, lastname, mail, role, price, country, city, age, experience, sport_type, reg_date, photo, token} = req.body;
+      res.json(await userService.changeUserInfo(name, lastname, mail, role, price, country, city, age, experience, sport_type, reg_date, photo, token));
     } catch (e) {
       next(e)
     }
@@ -155,7 +155,6 @@ class UserControllers {
   async addCommentToCoach(req, res, next){
     try {
       const {coachId, value} = req.body;
-      console.log(req.body);
       const token = req.headers.authorization.split(" ")[1];
       res.json(await userService.addCommentToCoach(coachId, token, value));
     } catch (e) {

@@ -7,6 +7,7 @@ import Header from "../../components/Header";
 import StarsRating from "../../components/StarsRating";
 import Posts from "../../components/Posts";
 import SendingForm from "./SendingForm";
+import CoachComments from "./CoachComments";
 import Footer from "../../components/Footer";
 import toastSuccess from "../../utils/toast/toastSuccess";
 import toastError from "../../utils/toast/toastError";
@@ -92,6 +93,10 @@ const Client = () => {
       .catch((err) => {
         if (err.request.status === 401) {
           toastError("You need to log in");
+          return;
+        }
+        if (err.request.status === 400) {
+          toastError("You have already left a comment");
           return;
         }
 
@@ -208,6 +213,7 @@ const Client = () => {
         blockName="Feedback"
         isFormOpen={isFeedbackFormOpen}
       />
+      {userData.role === "coach" ? <CoachComments coachId={userId} /> : ""}
       <Posts user userId={userId} />
       <Footer />
     </>

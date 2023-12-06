@@ -22,7 +22,6 @@ const FeedbackForm = () => {
         toastSuccess(response.data);
       })
       .catch((err) => {
-        console.log(err.request.status);
         if (err.request.status === 401) {
           toastError("You need to login");
         }

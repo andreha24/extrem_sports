@@ -37,20 +37,29 @@ class googleBucketService {
     }
   }
 
-  async editImage(topic, text, postId){
+  async editImage(oldPhoto, fileBuffer, fileName){
     try {
-      await pool.request().query(`UPDATE Post SET topic = '${topic}' text = '${text}'  WHERE id = ${postId}`);
+      await this.deleteImage(oldPhoto);
+      await this.addImage(fileBuffer, fileName)
     } catch (error) {
       console.error(error);
       throw error;
     }
   }
 
-  async deleteImage(postId){
+  async deleteImage(fileName) {
     try {
-      await pool.request().query(`DELETE FROM Post WHERE id = ${postId}`);
+      const file = bucket.file(fileName);
+
+      const exists = await file.exists();
+      if (exists[0]) {
+        await file.delete();
+        console.log(`Image ${fileName} deleted successfully from bucket ${bucketName}`);
+      } else {
+        console.log(`Image ${fileName} does not exist in bucket ${bucketName}`);
+      }
     } catch (error) {
-      console.error(error);
+      console.error('Error deleting image from Google Cloud Storage:', error);
       throw error;
     }
   }

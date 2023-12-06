@@ -13,6 +13,15 @@ class CoachControllers {
     }
   }
 
+  async getCoachComments(req, res, next){
+    try {
+      const { coachId } = req.params;
+      res.json(await coachService.getCoachComments(+coachId));
+    } catch (e) {
+      next(e);
+    }
+  }
+
   async deleteClient(req, res, next){
     try {
       const { id } = req.params;

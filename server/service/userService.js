@@ -51,11 +51,34 @@ class UserService {
   }
 
   //todo
-  async changeUserInfo(name, lastname, experience, sport_type, country, city, email, userId) {
+  async changeUserInfo(name, lastname, mail, role, price, country, city, age, experience, sport_type, reg_date, photo, token) {
     try {
-      await pool.request().query(`UPDATE Users SET name = '${name}'
-      , lastname = '${lastname}', experience = '${experience}', sport_type = '${sport_type}', 
-      country = '${country}', city = '${city}', email = '${email}' WHERE Id = ${userId}`);
+      const pool = await sql.connect(dbConfig);
+      const userId = await tokenService.getUserIdFromToken(token);
+      let query = `UPDATE [User] SET name = '${name}'
+      , lastname = '${lastname}', age = ${age}, experience = ${experience}, sport_type = '${sport_type}', role='${role}', 
+      country = '${country}', city = '${city}', mail = '${mail}', photo = '${photo}'`;
+
+      if(price !== undefined) {
+        query += `, price =${price} WHERE id = ${userId}`;
+      }
+      else{
+        query += ` WHERE id = ${userId}`;
+      }
+
+      await pool.request().query(query);
+
+      const updatedDate = await pool.request().query(`SELECT * FROM [User] WHERE id = ${userId}`);
+      const forSend = new UserDto(updatedDate.recordset[0]);
+
+      if (forSend.photo) {
+        forSend.photoUrl = await googleBucketService.getImage(forSend.photo);
+      }
+
+      return {
+        updated: forSend,
+        message: "Data updated",
+      };
     } catch (error) {
       console.error(error);
       throw error;
@@ -118,7 +141,7 @@ class UserService {
         const userData = user.recordset[0];
 
         if (userData.photo) {
-          userData.photo = await googleBucketService.getImage(userData.photo);
+          userData.photoUrl = await googleBucketService.getImage(userData.photo);
         }
 
         userData.rating = userRating;
@@ -300,7 +323,7 @@ class UserService {
       throw error;
     }
   }
-  //todo
+
   async addCommentToCoach(coachId, token, text) {
     try {
       const pool = await sql.connect(dbConfig);
