@@ -10,6 +10,7 @@ import Client from "./containers/Client";
 import Account from "./containers/Account";
 import Login from "./containers/LogIn";
 import Registration from "./containers/Registration";
+import NotFound from "./containers/NotFound";
 import checkTokenExpired from "./utils/auth/checkTokenExpired";
 
 import "./styles/global.scss";
@@ -28,7 +29,7 @@ const App = () => {
       <Route path="/account" element={<Account />} />
       <Route path="/registration" element={<Registration />} />
       <Route path="/login" element={<Login />} />
-      <Route path="/registration" element={<Registration />} />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 };

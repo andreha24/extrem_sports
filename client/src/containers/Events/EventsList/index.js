@@ -3,10 +3,19 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 
+import checkRole from "../../../utils/auth/checkRole";
+import EventForm from "../EventForm";
+
 import "./index.scss";
 
 const EventsList = React.memo(({ filtersValues }) => {
+  const currentRole = checkRole();
+  const [isFormOpen, setIsFormOpen] = useState(false);
   const [allEvents, setAllEvents] = useState([]);
+
+  const changeFormView = () => {
+    setIsFormOpen((prev) => !prev);
+  };
 
   useEffect(() => {
     axios.get("http://localhost:5000/events/allEvents")
@@ -42,28 +51,41 @@ const EventsList = React.memo(({ filtersValues }) => {
   }, [filtersValues]);
 
   return (
-    <div className="events-wrapper">
-      <h1>Events</h1>
-      <div className="events">
-        {allEvents.length === 0 ? <div>0 finds</div> : ""}
-        {allEvents.map(({
-          id, name, preview, people, registeredUsersCount,
-        }) => (
-          <div className="events-item" key={id}>
-            <img src={preview} alt="event" />
-            <span className="events-item-name">{name}</span>
-            <p>
-              number of participants:
-              {" "}
-              {registeredUsersCount}
-              /
-              {people}
-            </p>
-            <Link to={`/events/${id}`}>See more</Link>
-          </div>
-        ))}
+    <>
+      {isFormOpen && <EventForm changeFormView={changeFormView} />}
+      <div className="events-wrapper">
+        {currentRole === "admin"
+          ? (
+            <button
+              type="button"
+              onClick={changeFormView}
+              className="create-event-btn"
+            >
+              Create new event
+            </button>
+          ) : ""}
+        <h1>Events</h1>
+        <div className="events">
+          {allEvents.length === 0 ? <div>0 finds</div> : ""}
+          {allEvents.map(({
+            id, name, preview, people, registeredUsersCount,
+          }) => (
+            <div className="events-item" key={id}>
+              <img src={preview} alt="event" />
+              <span className="events-item-name">{name}</span>
+              <p>
+                number of participants:
+                {" "}
+                {registeredUsersCount}
+                /
+                {people}
+              </p>
+              <Link to={`/events/${id}`}>See more</Link>
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
+    </>
   );
 });
 

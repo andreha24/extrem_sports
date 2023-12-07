@@ -1,5 +1,16 @@
+@import "src/styles/mixins";
+
 .events-wrapper{
   width: 100%;
+
+  .create-event-btn{
+    @include btn-theme();
+    position: absolute;
+    margin-right: -50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    top: -15px;
+  }
 
   h1{
     text-align: center;

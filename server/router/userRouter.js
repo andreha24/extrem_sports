@@ -5,8 +5,8 @@ const userController = require("../controllers/userController");
 
 router.get("/authUser", userController.getAuthUser)
   .get("/bannedUsers", userController.getBannedUsers)
-  .patch("/addBannedUser", userController.addBannedUser)
-  .delete("/deleteBannedUser", userController.removeBannedUser)
+  .patch("/addBannedUser/:id", userController.addBannedUser)
+  .patch("/deleteBannedUser/:id", userController.removeBannedUser)
   .delete("/deleteUser", userController.deleteUser)
   .get("/userHistory", userController.getUserHistory)
   .post("/addReport", userController.addReport)

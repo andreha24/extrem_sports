@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { CSSTransition } from "react-transition-group";
-import axios from "axios";
 import { ToastContainer } from "react-toastify";
+import axios from "axios";
 
 import PageWrapper from "../../components/PageWrapper";
 import Header from "../../components/Header";
@@ -10,14 +10,17 @@ import ListWrapper from "../../components/ListWrapper";
 import RegUsersList from "./RegUsersList";
 import formatDate from "../../utils/formatDate";
 import Footer from "../../components/Footer";
+import checkRole from "../../utils/auth/checkRole";
 import toastError from "../../utils/toast/toastError";
 import toastSuccess from "../../utils/toast/toastSuccess";
 
 import "./index.scss";
 
 const Event = () => {
+  const currentRole = checkRole();
   const [event, setEvent] = useState({});
   const [viewUsersList, setViewUsersList] = useState(false);
+  const navigate = useNavigate();
   const { eventId } = useParams();
 
   useEffect(() => {
@@ -62,14 +65,35 @@ const Event = () => {
       });
   };
 
+  const deleteEvent = (id) => {
+    axios.delete(`http://localhost:5000/events/deleteEvent/${id}`)
+      .then((response) => {
+        toastSuccess(response.data);
+        setTimeout(() => {
+          navigate("/events");
+        }, 3000);
+      })
+      .catch(() => {
+        toastError("???");
+      });
+  };
+
   return (
     <PageWrapper>
       <ToastContainer />
       <Header />
       <div className="event">
-        <button type="button">delete event</button>
-        <img src={event.preview} className="event-img" alt="painting" />
-
+        {currentRole === "admin"
+          ? (
+            <button
+              type="button"
+              onClick={() => deleteEvent(eventId)}
+              className="event-del-btn"
+            >
+              delete event
+            </button>
+          ) : ""}
+        <img src={event.preview} className="event-img" alt="event" />
         <div className="event-details">
           <div className="event-detail">
             <span>Name:</span>

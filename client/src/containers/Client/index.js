@@ -11,11 +11,13 @@ import CoachComments from "./CoachComments";
 import Footer from "../../components/Footer";
 import toastSuccess from "../../utils/toast/toastSuccess";
 import toastError from "../../utils/toast/toastError";
+import CheckRole from "../../utils/auth/checkRole";
 
 import "./index.scss";
 import "react-toastify/dist/ReactToastify.css";
 
 const Client = () => {
+  const currentRole = CheckRole();
   const [userData, setUserData] = useState({});
   const [rating, setRating] = useState(0);
   const [isReportFormOpen, setIsReportFormOpen] = useState(false);
@@ -128,6 +130,34 @@ const Client = () => {
       });
   };
 
+  const banUser = (id) => {
+    axios.patch(`http://localhost:5000/api/addBannedUser/${id}`, {}, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => {
+        toastSuccess(response.data);
+      })
+      .catch(() => {
+        toastError("???");
+      });
+  };
+
+  const unbanUser = (id) => {
+    axios.patch(`http://localhost:5000/api/deleteBannedUser/${id}`, {}, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => {
+        toastSuccess(response.data);
+      })
+      .catch(() => {
+        toastError("???");
+      });
+  };
+
   return (
     <>
       <ToastContainer />
@@ -198,6 +228,12 @@ const Client = () => {
               </>
             ) : ""}
             <button type="button" onClick={changeReportFormView}>Report</button>
+            {/* eslint-disable-next-line no-nested-ternary */}
+            {currentRole === "admin" ? (
+              userData.is_banned
+                ? <button type="button" onClick={() => unbanUser(userId)}>Unban</button>
+                : <button type="button" onClick={() => banUser(userId)}>Ban</button>
+            ) : ""}
           </div>
         </div>
       </div>

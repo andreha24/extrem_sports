@@ -12,6 +12,7 @@ import validateEmail from "../../utils/validators/validateEmail";
 import composeValidators from "../../utils/validators/composeValidators";
 import usePassword from "../../hooks/usePassword";
 import toastSuccess from "../../utils/toast/toastSuccess";
+import generateUniqueFileName from "../../utils/generateUniqueFileName";
 
 import "./index.scss";
 
@@ -19,7 +20,6 @@ const Registration = () => {
   const [selectedRole, setSelectedRole] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const { togglePassword, isPasswordVisible } = usePassword();
-
   const navigate = useNavigate();
 
   const changeRole = (value) => {
@@ -29,12 +29,6 @@ const Registration = () => {
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     setSelectedFile(file);
-  };
-
-  const generateUniqueFileName = (originalFileName) => {
-    const uniqueIdentifier = Date.now();
-    const extension = originalFileName.split(".").pop();
-    return `${uniqueIdentifier}.${extension}`;
   };
 
   const sendUserData = (values) => {

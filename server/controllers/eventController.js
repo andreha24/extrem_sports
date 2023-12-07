@@ -34,7 +34,7 @@ class EventControllers {
   async addEvent(req, res, next){
     try {
       const { name, description, continent, country, city, start_date, people, img } = req.body;
-      await eventService.addEvent(name, description, continent, country, city, start_date, people, img);
+      res.json(await eventService.addEvent(name, description, continent, country, city, start_date, people, img));
     } catch (e) {
       next(e);
     }
@@ -42,8 +42,8 @@ class EventControllers {
 
   async removeEvent(req, res, next){
     try {
-      const { eventId } = req.body;
-      await eventService.removeEvent(eventId);
+      const { id } = req.params;
+      res.json(await eventService.removeEvent(id));
     } catch (e) {
       next(e);
     }

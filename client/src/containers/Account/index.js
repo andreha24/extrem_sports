@@ -17,6 +17,7 @@ import checkToken from "../../utils/auth/checkToken";
 import ListWrapper from "../../components/ListWrapper";
 import toastSuccess from "../../utils/toast/toastSuccess";
 import toastError from "../../utils/toast/toastError";
+import generateUniqueFileName from "../../utils/generateUniqueFileName";
 
 import "./index.scss";
 
@@ -30,12 +31,6 @@ const Account = () => {
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     setSelectedFile(file);
-  };
-
-  const generateUniqueFileName = (originalFileName) => {
-    const uniqueIdentifier = Date.now(); // You can use a more sophisticated method for generating unique identifiers
-    const extension = originalFileName.split(".").pop(); // Extract the file extension
-    return `${uniqueIdentifier}.${extension}`;
   };
 
   useEffect(() => {

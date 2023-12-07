@@ -44,13 +44,9 @@ class UserService {
     }
 
     const userDto = new UserDto(user.recordset[0])
-    const token = tokenService.generateToken({ ...userDto });
-    const userRole =  await pool.request().query(`SELECT role FROM [User] WHERE mail = '${mail}'`);
-
-    return { token, role: userRole.recordset[0].role }
+    return tokenService.generateToken({...userDto});
   }
 
-  //todo
   async changeUserInfo(name, lastname, mail, role, price, country, city, age, experience, sport_type, reg_date, photo, token) {
     try {
       const pool = await sql.connect(dbConfig);
@@ -258,6 +254,7 @@ class UserService {
   //todo
   async getUserHistory(userId){
     try {
+      const pool = await sql.connect(dbConfig);
       // todo order by
       await pool.request().query(`SELECT * FROM User_History WHERE Id = ${userId}`);
     } catch (error) {
@@ -265,28 +262,36 @@ class UserService {
       throw error;
     }
   }
-  //todo
+
   async getBannedUser(){
     try {
-      await pool.request().query(`SELECT * FROM User WHERE is_banned = 1`);
+      const pool = await sql.connect(dbConfig);
+      const users = await pool.request().query(`SELECT * FROM [User] WHERE is_banned = 1`);
+      return users.recordset;
     } catch (error) {
       console.error(error);
       throw error;
     }
   }
-  //todo
+
   async addBannedUser(userId){
     try {
-      await pool.request().query(`UPDATE User SET is_banned = 0 WHERE Id = ${userId}`);
+      const pool = await sql.connect(dbConfig);
+      await pool.request().query(`UPDATE [User] SET is_banned = 1 WHERE Id = ${userId}`);
+
+      return "User banned";
     } catch (error) {
       console.error(error);
       throw error;
     }
   }
-  //todo
+
   async removeBannedUser(userId){
     try {
-      await pool.request().query(`UPDATE User SET is_banned = 1 WHERE Id = ${userId}`);
+      const pool = await sql.connect(dbConfig);
+      await pool.request().query(`UPDATE [User] SET is_banned = 0 WHERE Id = ${userId}`);
+
+      return "User unbanned";
     } catch (error) {
       console.error(error);
       throw error;
@@ -344,8 +349,7 @@ class UserService {
       console.error(error);
       throw error;
     }
-  }
-
+  };
 
   async getLastServiceComments() {
     try {

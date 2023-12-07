@@ -106,13 +106,17 @@ class EventService {
 
     await pool.request().query(`INSERT INTO [Events] (name, description, country, city, start_date, people, continent, preview) 
     VALUES ('${name}','${description}', '${country}', '${city}', '${startDate}', ${people}, '${continent}', '${img}' )`);
+
+    return "Event added";
   }
 
-  //todo
   async removeEvent(eventId){
     try {
       const pool = await sql.connect(dbConfig);
+      const event = await pool.request().query(`SELECT preview FROM [Events] WHERE id = ${eventId}`);
+      await googleBucketService.deleteImage(event.recordset[0].preview);
       await pool.request().query(`DELETE FROM [Events] WHERE id = ${eventId}`);
+      return "Delete successful";
     } catch (error) {
       console.error(error);
       throw error;

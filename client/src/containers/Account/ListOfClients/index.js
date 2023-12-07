@@ -14,6 +14,7 @@ const ListOfClients = () => {
   const [coachClients, setCoachClients] = useState([]);
   const [currentClientStatus, setCurrentClientStatus] = useState("waiting");
   const token = localStorage.getItem("token");
+
   useEffect(() => {
     axios.get(`http://localhost:5000/coach/clients?status=${currentClientStatus}`, {
       headers: {

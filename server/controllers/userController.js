@@ -98,8 +98,7 @@ class UserControllers {
 
   async getBannedUsers(req, res, next){
     try {
-      const bannedUsers = await userService.getBannedUser();
-      return res.json(bannedUsers);
+      res.json(await userService.getBannedUser());
     } catch (e) {
       next(e)
     }
@@ -107,8 +106,8 @@ class UserControllers {
 
   async addBannedUser(req, res, next){
     try {
-      const {userId} = req.body;
-      await userService.addBannedUser(userId);
+      const { id } = req.params;
+      res.json(await userService.addBannedUser(id));
     } catch (e) {
       next(e)
     }
@@ -116,8 +115,8 @@ class UserControllers {
 
   async removeBannedUser(req, res, next){
     try {
-      const {userId} = req.body;
-      await userService.removeBannedUser(userId);
+      const { id } = req.params;
+      res.json(await userService.removeBannedUser(id));
     } catch (e) {
       next(e)
     }

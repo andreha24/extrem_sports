@@ -1,12 +1,24 @@
+@import "src/styles/mixins";
+
 .user-list-wrapper {
   display: flex;
   justify-content: space-between;
   margin-top: 2rem;
   position: relative;
+  flex-grow: 1;
   gap: 30px;
 
   @media (min-width: 992px) {
     padding: var(--general--padding-992);
+  }
+
+  .banned-users-btn{
+    @include btn-theme();
+    position: absolute;
+    margin-right: -50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    top: -30px;
   }
 
   &-img{
