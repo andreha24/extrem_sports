@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { CSSTransition } from "react-transition-group";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 import Navigation from "./Navigation";
 import logout from "../../utils/auth/logout";
@@ -12,11 +13,17 @@ import "./index.scss";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { t, i18n } = useTranslation();
+
+  const changeLanguage = (lng) => {
+    i18n.changeLanguage(lng);
+  };
 
   const toggleMenu = () => {
     setIsMenuOpen((prev) => !prev);
   };
 
+  const currentLanguage = i18n.language;
   return (
     <header className="header">
 
@@ -35,13 +42,37 @@ const Header = () => {
         classNames="menu-animation"
         unmountOnExit
       >
-        <Navigation isOpen={isMenuOpen} closeMenu={toggleMenu} className="header__burger__menu" hasLogin />
+        <Navigation
+          isOpen={isMenuOpen}
+          closeMenu={toggleMenu}
+          className="header__burger__menu"
+          hasLogin
+        />
       </CSSTransition>
 
       <Navigation className="header__nav__menu" />
 
-      {checkToken() !== null ? <Link to="/login" className="header__log-btn" onClick={logout}>Log out</Link>
-        : <Link to="/login" className="header__log-btn">Log in</Link>}
+      <div className="language-btns">
+        <button
+          className={`btn ${currentLanguage === "en" ? "active" : ""}`}
+          type="button"
+          onClick={() => changeLanguage("en")}
+        >
+          Eng
+        </button>
+        <span>/</span>
+        <button
+          className={`btn ${currentLanguage === "ua" ? "active" : ""}`}
+          type="button"
+          onClick={() => changeLanguage("ua")}
+        >
+          Укр
+        </button>
+      </div>
+
+      {checkToken() !== null
+        ? <Link to="/login" className="header__log-btn" onClick={logout}>{t("header.btns.logout")}</Link>
+        : <Link to="/login" className="header__log-btn">{t("header.btns.login")}</Link>}
     </header>
   );
 };

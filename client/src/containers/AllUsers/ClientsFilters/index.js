@@ -1,212 +1,197 @@
 import React from "react";
 import { Field } from "react-final-form";
 import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 
 import Filter from "../../../components/Filters/Filter";
 
-const ClientsFilters = ({ chooseRole }) => (
-  <>
-    <Filter
-      filterParagraph="Sport type"
-    >
-      <label htmlFor="sport_type">
-        <Field
-          name="sport_type"
-          component="input"
-          type="checkbox"
-          value="climbing"
-        />
-        {" "}
-        climbing
-      </label>
-      <label htmlFor="sport_type">
-        <Field
-          name="sport_type"
-          component="input"
-          type="checkbox"
-          value="diving"
-        />
-        {" "}
-        diving
-      </label>
-      <label htmlFor="sport_type">
-        <Field
-          name="sport_type"
-          component="input"
-          type="checkbox"
-          value="skydiving"
-        />
-        {" "}
-        skydiving
-      </label>
-    </Filter>
+const ClientsFilters = ({ chooseRole }) => {
+  const { t } = useTranslation();
 
-    <Filter
-      filterParagraph="Age"
-    >
-      <label htmlFor="age">
-        From
-        {" "}
-        <Field
-          name="minAge"
-          component="input"
-          type="text"
-        />
-      </label>
-      <label htmlFor="age">
-        To
-        {" "}
-        <Field
-          name="maxAge"
-          component="input"
-          type="text"
-        />
-      </label>
-    </Filter>
+  return (
+    <>
+      <Filter
+        filterParagraph={t("clientsPage.filters.sportType.paragraph")}
+      >
+        <label htmlFor="sport_type">
+          <Field
+            name="sport_type"
+            component="input"
+            type="checkbox"
+            value="climbing"
+          />
+          {" "}
+          {t("clientsPage.filters.sportType.climbing")}
+        </label>
+        <label htmlFor="sport_type">
+          <Field
+            name="sport_type"
+            component="input"
+            type="checkbox"
+            value="diving"
+          />
+          {" "}
+          {t("clientsPage.filters.sportType.diving")}
+        </label>
+        <label htmlFor="sport_type">
+          <Field
+            name="sport_type"
+            component="input"
+            type="checkbox"
+            value="skydiving"
+          />
+          {" "}
+          {t("clientsPage.filters.sportType.skydiving")}
+        </label>
+      </Filter>
 
-    <Filter
-      filterParagraph="Experience"
-    >
-      <label htmlFor="experience">
-        From
-        {" "}
-        <Field
-          name="minExp"
-          component="input"
-          type="text"
-        />
-      </label>
-      <label htmlFor="experience">
-        To
-        {" "}
-        <Field
-          name="maxExp"
-          component="input"
-          type="text"
-        />
-      </label>
-    </Filter>
+      <Filter
+        filterParagraph={t("clientsPage.filters.age.paragraph")}
+      >
+        <label htmlFor="age">
+          {t("clientsPage.filters.from")}
+          {" "}
+          <Field
+            name="minAge"
+            component="input"
+            type="text"
+          />
+        </label>
+        <label htmlFor="age">
+          {t("clientsPage.filters.to")}
+          {" "}
+          <Field
+            name="maxAge"
+            component="input"
+            type="text"
+          />
+        </label>
+      </Filter>
 
-    { chooseRole === "coach"
-      ? (
-        <Filter
-          filterParagraph="Price"
-        >
-          <label htmlFor="price">
-            From
-            {" "}
-            <Field
-              name="minPrice"
-              component="input"
-              type="text"
-            />
-          </label>
-          <label htmlFor="price">
-            To
-            {" "}
-            <Field
-              name="maxPrice"
-              component="input"
-              type="text"
-            />
-          </label>
-        </Filter>
-      ) : ""}
+      <Filter
+        filterParagraph={t("clientsPage.filters.experience.paragraph")}
+      >
+        <label htmlFor="experience">
+          {t("clientsPage.filters.from")}
+          {" "}
+          <Field
+            name="minExp"
+            component="input"
+            type="text"
+          />
+        </label>
+        <label htmlFor="experience">
+          {t("clientsPage.filters.to")}
+          {" "}
+          <Field
+            name="maxExp"
+            component="input"
+            type="text"
+          />
+        </label>
+      </Filter>
 
-    <Filter
-      filterParagraph="Sort by"
-    >
-      <label htmlFor="continents">
-        <Field
-          name="sort_by"
-          component="input"
-          type="radio"
-          value="fromMinAge"
-        />
-        {" "}
-        Age(min first)
-      </label>
-      <label htmlFor="continents">
-        <Field
-          name="sort_by"
-          component="input"
-          type="radio"
-          value="fromMaxAge"
-        />
-        {" "}
-        Age(max first)
-      </label>
-
-      <label htmlFor="continents">
-        <Field
-          name="sort_by"
-          component="input"
-          type="radio"
-          value="fromMinExp"
-        />
-        {" "}
-        Experience(min first)
-      </label>
-      <label htmlFor="continents">
-        <Field
-          name="sort_by"
-          component="input"
-          type="radio"
-          value="fromMaxExp"
-        />
-        {" "}
-        Experience(max first)
-      </label>
-
-      {chooseRole === "coach"
+      { chooseRole === "coach"
         ? (
-          <>
-            <label htmlFor="continents">
-              <Field
-                name="sort_by"
-                component="input"
-                type="radio"
-                value="fromMinPrice"
-              />
+          <Filter
+            filterParagraph={t("clientsPage.filters.price.paragraph")}
+          >
+            <label htmlFor="price">
+              {t("clientsPage.filters.from")}
               {" "}
-              Price(min first)
-            </label>
-            <label htmlFor="continents">
               <Field
-                name="sort_by"
+                name="minPrice"
                 component="input"
-                type="radio"
-                value="fromMaxPrice"
+                type="text"
               />
-              {" "}
-              Price(max first)
             </label>
-            <label htmlFor="continents">
+            <label htmlFor="price">
+              {t("clientsPage.filters.to")}
+              {" "}
               <Field
-                name="sort_by"
+                name="maxPrice"
                 component="input"
-                type="radio"
-                value="fromMinRate"
+                type="text"
               />
-              {" "}
-              Rating(min first)
             </label>
-            <label htmlFor="continents">
-              <Field
-                name="sort_by"
-                component="input"
-                type="radio"
-                value="fromMaxRate"
-              />
-              {" "}
-              Rating(max first)
-            </label>
-          </>
-        )
-        : ""}
-    </Filter>
-  </>
-);
+          </Filter>
+        ) : ""}
+
+      <Filter
+        filterParagraph={t("clientsPage.sorting.paragraph")}
+      >
+        <label htmlFor="continents">
+          <Field
+            name="sort_by"
+            component="input"
+            type="radio"
+            value="fromMinAge"
+          />
+          {" "}
+          {t("clientsPage.sorting.fromMinAge")}
+        </label>
+        <label htmlFor="continents">
+          <Field
+            name="sort_by"
+            component="input"
+            type="radio"
+            value="fromMaxAge"
+          />
+          {" "}
+          {t("clientsPage.sorting.fromMaxAge")}
+        </label>
+
+        <label htmlFor="continents">
+          <Field
+            name="sort_by"
+            component="input"
+            type="radio"
+            value="fromMinExp"
+          />
+          {" "}
+          {t("clientsPage.sorting.fromMinExp")}
+        </label>
+        <label htmlFor="continents">
+          <Field
+            name="sort_by"
+            component="input"
+            type="radio"
+            value="fromMaxExp"
+          />
+          {" "}
+          {t("clientsPage.sorting.fromMaxExp")}
+        </label>
+
+        {chooseRole === "coach"
+          ? (
+            <>
+              <label htmlFor="continents">
+                <Field
+                  name="sort_by"
+                  component="input"
+                  type="radio"
+                  value="fromMinPrice"
+                />
+                {" "}
+                {t("clientsPage.sorting.fromMinPrice")}
+              </label>
+              <label htmlFor="continents">
+                <Field
+                  name="sort_by"
+                  component="input"
+                  type="radio"
+                  value="fromMaxPrice"
+                />
+                {" "}
+                {t("clientsPage.sorting.fromMaxPrice")}
+              </label>
+            </>
+          )
+          : ""}
+      </Filter>
+    </>
+  );
+};
 
 ClientsFilters.propTypes = {
   chooseRole: PropTypes.string,

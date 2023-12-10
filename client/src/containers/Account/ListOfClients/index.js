@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 
 import formatDate from "../../../utils/formatDate";
 import check from "../../../assets/check.png";
@@ -11,6 +12,7 @@ import "./index.scss";
 import "react-toastify/dist/ReactToastify.css";
 
 const ListOfClients = () => {
+  const { t } = useTranslation();
   const [coachClients, setCoachClients] = useState([]);
   const [currentClientStatus, setCurrentClientStatus] = useState("waiting");
   const token = localStorage.getItem("token");
@@ -66,21 +68,21 @@ const ListOfClients = () => {
     <>
       <ToastContainer />
       <div className="status">
-        <span>Status</span>
+        <span>{t("accountPage.listClients.status")}</span>
         <div className="status-btns">
           <button
             type="button"
             onClick={() => handleStatusChange("waiting")}
             className={currentClientStatus === "waiting" ? "current-status" : ""}
           >
-            Waiting
+            {t("accountPage.listClients.statusWait")}
           </button>
           <button
             type="button"
             onClick={() => handleStatusChange("accepted")}
             className={currentClientStatus === "accepted" ? "current-status" : ""}
           >
-            Accepted
+            {t("accountPage.listClients.statusAccept")}
           </button>
         </div>
       </div>
@@ -93,14 +95,14 @@ const ListOfClients = () => {
             <span>{lastname}</span>
           </div>
           <div className="client-item-detail">
-            <span>Application date:</span>
+            <span>{t("accountPage.listClients.applicationDate")}</span>
             <span>{formatDate(dateOfApplication)}</span>
           </div>
           <div className="client-item-detail">
-            <span>Status:</span>
+            <span>{t("accountPage.listClients.status")}</span>
             <span>{athleteStatus}</span>
           </div>
-          <Link to={`/clients/${id}`}>profile</Link>
+          <Link to={`/clients/${id}`}>{t("accountPage.listClients.profileLink")}</Link>
           <div className="client-item-btns">
             {athleteStatus === "waiting"
               ? (

@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 import Team from "./Team";
 import Feedbacks from "./Feedbacks";
@@ -8,22 +9,22 @@ import FeedbackForm from "./FeedbackForm";
 import Footer from "../../components/Footer";
 import mountains from "../../assets/mountains.jpg";
 
-const Home = () => (
-  <>
-    <Header />
-    <Intro
-      paragraph="Welcome to the SPORTIFY"
-      text="The world of health and safety in extreme
-        sports! Our human health tracking system is designed specifically for those who prefer
-        adrenaline-filled adventures. We will help you maximize your
-        adventure sports fun by ensuring your fitness is reliably monitored and you are safe every step of the way."
-      backgroundImage={mountains}
-    />
-    <Team />
-    <Feedbacks />
-    <FeedbackForm />
-    <Footer />
-  </>
-);
+const Home = () => {
+  const { t } = useTranslation();
+  return (
+    <>
+      <Header />
+      <Intro
+        paragraph={t("homepage.intro_paragraph")}
+        text={t("homepage.intro_sentence")}
+        backgroundImage={mountains}
+      />
+      <Team />
+      <Feedbacks />
+      <FeedbackForm />
+      <Footer />
+    </>
+  );
+};
 
 export default Home;

@@ -5,7 +5,7 @@ import { Field } from "react-final-form";
 import "./index.scss";
 
 const FormField = ({
-  name, validators, type, hasButton, viewPassword, togglePassword,
+  name, validators, type, hasButton, viewPassword, togglePassword, placeholder,
 }) => (
   <Field name={name} validate={validators}>
     {({ input, meta }) => (
@@ -13,7 +13,7 @@ const FormField = ({
         <input
           {...input}
           name={name}
-          placeholder={name}
+          placeholder={placeholder}
           className="form__block-input"
           type={type}
         />
@@ -44,6 +44,7 @@ FormField.propTypes = {
   hasButton: PropTypes.bool,
   viewPassword: PropTypes.bool,
   togglePassword: PropTypes.func,
+  placeholder: PropTypes.string,
 };
 
 export default FormField;

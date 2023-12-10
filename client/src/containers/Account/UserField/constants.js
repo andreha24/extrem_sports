@@ -1,35 +1,35 @@
 const accountFields = [
   {
     name: "name",
-    label: "Name",
+    label: "name",
   },
   {
     name: "lastname",
-    label: "Lastname",
+    label: "lastname",
   },
   {
     name: "age",
-    label: "Age",
+    label: "age",
   },
   {
     name: "experience",
-    label: "Experience",
+    label: "experience",
   },
   {
     name: "sport_type",
-    label: "Sport type",
+    label: "sportType",
   },
   {
     name: "country",
-    label: "Country",
+    label: "country",
   },
   {
     name: "city",
-    label: "City",
+    label: "city",
   },
   {
     name: "mail",
-    label: "Mail",
+    label: "mail",
   },
 ];
 

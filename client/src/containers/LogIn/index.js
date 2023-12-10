@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 import FormField from "../../components/FormWrapper/Field";
 import FormWrapper from "../../components/FormWrapper";
@@ -12,6 +13,7 @@ import setAuthToken from "../../utils/auth/setAuthToken";
 import usePassword from "../../hooks/usePassword";
 
 const Login = () => {
+  const { t } = useTranslation();
   const { isPasswordVisible, togglePassword } = usePassword();
 
   const navigate = useNavigate();
@@ -35,19 +37,21 @@ const Login = () => {
     <FormWrapper
       onSubmit={sendUserData}
       linkTo="/registration"
-      linkToName="registration"
-      paragraphName="Log In"
+      linkToName={t("regPage.paragraph")}
+      paragraphName={t("loginPage.paragraph")}
     >
       <FormField
         name="mail"
         validators={composeValidators(required, validateEmail)}
         type="text"
+        placeholder={t("loginPage.mail")}
       />
 
       <FormField
         name="password"
         validators={composeValidators(required, minLength)}
         hasButton
+        placeholder={t("loginPage.password")}
         type={isPasswordVisible ? "text" : "password"}
         togglePassword={togglePassword}
         viewPassword={isPasswordVisible}

@@ -1,110 +1,115 @@
 import React from "react";
 import { Field } from "react-final-form";
+import { useTranslation } from "react-i18next";
 
 import Filter from "../../../components/Filters/Filter";
 
-const EventFilters = () => (
-  <>
-    <Filter
-      filterParagraph="Continent"
-    >
-      <label htmlFor="continents">
-        <Field
-          name="continents"
-          component="input"
-          type="checkbox"
-          value="eurasia"
-        />
-        {" "}
-        Eurasia
-      </label>
-      <label htmlFor="continents">
-        <Field
-          name="continents"
-          component="input"
-          type="checkbox"
-          value="north_america"
-        />
-        {" "}
-        North America
-      </label>
-      <label htmlFor="continents">
-        <Field
-          name="continents"
-          component="input"
-          type="checkbox"
-          value="south_america"
-        />
-        {" "}
-        South America
-      </label>
-      <label htmlFor="continents">
-        <Field
-          name="continents"
-          component="input"
-          type="checkbox"
-          value="australia"
-        />
-        {" "}
-        Australia
-      </label>
-      <label htmlFor="continents">
-        <Field
-          name="continents"
-          component="input"
-          type="checkbox"
-          value="africa"
-        />
-        {" "}
-        Africa
-      </label>
-    </Filter>
+const EventFilters = () => {
+  const { t } = useTranslation();
 
-    <Filter
-      filterParagraph="Sort by"
-    >
-      <label htmlFor="continents">
-        <Field
-          name="sort_by"
-          component="input"
-          type="radio"
-          value="fromMinPeople"
-        />
-        {" "}
-        People(min first)
-      </label>
-      <label htmlFor="continents">
-        <Field
-          name="sort_by"
-          component="input"
-          type="radio"
-          value="fromMaxPeople"
-        />
-        {" "}
-        People(max first)
-      </label>
-      <label htmlFor="continents">
-        <Field
-          name="sort_by"
-          component="input"
-          type="radio"
-          value="earliestStartDate"
-        />
-        {" "}
-        earliest start date first
-      </label>
-      <label htmlFor="continents">
-        <Field
-          name="sort_by"
-          component="input"
-          type="radio"
-          value="furthestStartDate"
-        />
-        {" "}
-        start date from furthest
-      </label>
-    </Filter>
-  </>
-);
+  return (
+    <>
+      <Filter
+        filterParagraph={t("eventsPage.filters.continent.paragraph")}
+      >
+        <label htmlFor="continents">
+          <Field
+            name="continents"
+            component="input"
+            type="checkbox"
+            value="eurasia"
+          />
+          {" "}
+          {t("eventsPage.filters.continent.eurasia")}
+        </label>
+        <label htmlFor="continents">
+          <Field
+            name="continents"
+            component="input"
+            type="checkbox"
+            value="north_america"
+          />
+          {" "}
+          {t("eventsPage.filters.continent.north_america")}
+        </label>
+        <label htmlFor="continents">
+          <Field
+            name="continents"
+            component="input"
+            type="checkbox"
+            value="south_america"
+          />
+          {" "}
+          {t("eventsPage.filters.continent.south_america")}
+        </label>
+        <label htmlFor="continents">
+          <Field
+            name="continents"
+            component="input"
+            type="checkbox"
+            value="australia"
+          />
+          {" "}
+          {t("eventsPage.filters.continent.australia")}
+        </label>
+        <label htmlFor="continents">
+          <Field
+            name="continents"
+            component="input"
+            type="checkbox"
+            value="africa"
+          />
+          {" "}
+          {t("eventsPage.filters.continent.africa")}
+        </label>
+      </Filter>
+
+      <Filter
+        filterParagraph={t("eventsPage.sorting.paragraph")}
+      >
+        <label htmlFor="continents">
+          <Field
+            name="sort_by"
+            component="input"
+            type="radio"
+            value="fromMinPeople"
+          />
+          {" "}
+          {t("eventsPage.sorting.fromMinPeople")}
+        </label>
+        <label htmlFor="continents">
+          <Field
+            name="sort_by"
+            component="input"
+            type="radio"
+            value="fromMaxPeople"
+          />
+          {" "}
+          {t("eventsPage.sorting.fromMaxPeople")}
+        </label>
+        <label htmlFor="continents">
+          <Field
+            name="sort_by"
+            component="input"
+            type="radio"
+            value="earliestStartDate"
+          />
+          {" "}
+          {t("eventsPage.sorting.earliestStartDate")}
+        </label>
+        <label htmlFor="continents">
+          <Field
+            name="sort_by"
+            component="input"
+            type="radio"
+            value="furthestStartDate"
+          />
+          {" "}
+          {t("eventsPage.sorting.furthestStartDate")}
+        </label>
+      </Filter>
+    </>
+  );
+};
 
 export default EventFilters;

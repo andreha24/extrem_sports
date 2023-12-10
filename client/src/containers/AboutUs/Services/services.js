@@ -1,20 +1,15 @@
 const services = [
   {
-    paragraph: "Biometric monitoring",
-    text: `We provide tracking systems that monitor your biometrics such as heart rate, blood pressure,
-    blood oxygen levels and body temperature in real time. This helps you monitor your physical
-    condition and quickly respond to any changes.`,
+    id: 1,
+    block: "block1",
   },
   {
-    paragraph: "Analytics and reporting",
-    text: `We provide analytics and reporting tools that help you analyze your health and fitness data.
-    This information can be used to improve your training program and make more informed decisions
-    about your athletic performance.`,
+    id: 2,
+    block: "block2",
   },
   {
-    paragraph: "Modern technologies and equipment",
-    text: `We use advanced technology and high-quality equipment to provide accurate and reliable 
-    monitoring of your health. We are always one step ahead in developing innovative solutions.`,
+    id: 3,
+    block: "block3",
   },
 ];
 

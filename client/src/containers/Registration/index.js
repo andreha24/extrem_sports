@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Field } from "react-final-form";
 import axios from "axios";
 import { ToastContainer } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 import FormWrapper from "../../components/FormWrapper";
 import FormField from "../../components/FormWrapper/Field";
@@ -17,6 +18,7 @@ import generateUniqueFileName from "../../utils/generateUniqueFileName";
 import "./index.scss";
 
 const Registration = () => {
+  const { t } = useTranslation();
   const [selectedRole, setSelectedRole] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const { togglePassword, isPasswordVisible } = usePassword();
@@ -64,8 +66,8 @@ const Registration = () => {
     <FormWrapper
       onSubmit={sendUserData}
       linkTo="/login"
-      linkToName="Log in"
-      paragraphName="Registration"
+      linkToName={t("loginPage.paragraph")}
+      paragraphName={t("regPage.paragraph")}
     >
       <ToastContainer />
       <div className="inputs-wrapper">
@@ -74,30 +76,35 @@ const Registration = () => {
             name="name"
             validators={required}
             type="text"
+            placeholder={t("regPage.name")}
           />
 
           <FormField
             name="lastname"
             validators={required}
             type="text"
+            placeholder={t("regPage.lastname")}
           />
 
           <FormField
             name="age"
             validators={required}
             type="text"
+            placeholder={t("regPage.age")}
           />
 
           <FormField
             name="country"
             validators={required}
             type="text"
+            placeholder={t("regPage.country")}
           />
 
           <FormField
             name="city"
             validators={required}
             type="text"
+            placeholder={t("regPage.city")}
           />
         </div>
 
@@ -107,16 +114,17 @@ const Registration = () => {
             component="select"
             validate={required}
           >
-            <option value="" disabled>Type of sport</option>
-            <option value="climbing">Climbing</option>
-            <option value="skydiving">Skydiving</option>
-            <option value="diving">Diving</option>
+            <option value="" disabled>{t("regPage.sport.name")}</option>
+            <option value="climbing">{t("regPage.sport.climbing")}</option>
+            <option value="skydiving">{t("regPage.sport.skydiving")}</option>
+            <option value="diving">{t("regPage.sport.diving")}</option>
           </Field>
 
           <FormField
             name="experience"
             validators={required}
             type="text"
+            placeholder={t("regPage.experience")}
           />
 
           <Field
@@ -126,9 +134,9 @@ const Registration = () => {
             onChange={(event) => { changeRole(event.target.value); }}
             initialValue={selectedRole}
           >
-            <option value="" disabled>Role</option>
-            <option value="athlete">Athlete</option>
-            <option value="coach">Coach</option>
+            <option value="" disabled>{t("regPage.role.name")}</option>
+            <option value="athlete">{t("regPage.role.athlete")}</option>
+            <option value="coach">{t("regPage.role.coach")}</option>
           </Field>
 
           {selectedRole === "coach" ? (
@@ -136,6 +144,7 @@ const Registration = () => {
               name="price_per_lesson"
               validators={required}
               type="text"
+              placeholder={t("regPage.price")}
             />
           ) : " "}
 
@@ -143,12 +152,14 @@ const Registration = () => {
             name="mail"
             validators={composeValidators(required, validateEmail)}
             type="text"
+            placeholder={t("regPage.mail")}
           />
 
           <FormField
             name="password"
             validators={composeValidators(required, minLength)}
             hasButton
+            placeholder={t("regPage.password")}
             type={isPasswordVisible ? "text" : "password"}
             togglePassword={togglePassword}
             viewPassword={isPasswordVisible}

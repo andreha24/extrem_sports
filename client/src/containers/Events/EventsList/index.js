@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 
 import checkRole from "../../../utils/auth/checkRole";
 import EventForm from "../EventForm";
@@ -10,6 +11,7 @@ import "./index.scss";
 
 const EventsList = React.memo(({ filtersValues }) => {
   const currentRole = checkRole();
+  const { t } = useTranslation();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [allEvents, setAllEvents] = useState([]);
 
@@ -61,12 +63,12 @@ const EventsList = React.memo(({ filtersValues }) => {
               onClick={changeFormView}
               className="create-event-btn"
             >
-              Create new event
+              {t("eventsPage.eventList.createEventBtn")}
             </button>
           ) : ""}
-        <h1>Events</h1>
+        <h1>{t("eventsPage.paragraph")}</h1>
         <div className="events">
-          {allEvents.length === 0 ? <div>0 finds</div> : ""}
+          {allEvents.length === 0 ? <div>{t("eventsPage.eventList.noMatches")}</div> : ""}
           {allEvents.map(({
             id, name, preview, people, registeredUsersCount,
           }) => (
@@ -74,13 +76,13 @@ const EventsList = React.memo(({ filtersValues }) => {
               <img src={preview} alt="event" />
               <span className="events-item-name">{name}</span>
               <p>
-                number of participants:
+                {t("eventsPage.eventList.people")}
                 {" "}
                 {registeredUsersCount}
                 /
                 {people}
               </p>
-              <Link to={`/events/${id}`}>See more</Link>
+              <Link to={`/events/${id}`}>{t("eventsPage.eventList.seeMore")}</Link>
             </div>
           ))}
         </div>

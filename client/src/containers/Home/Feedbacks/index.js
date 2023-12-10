@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import Marquee from "react-fast-marquee";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 
 import formatDate from "../../../utils/formatDate";
 
 import "./index.scss";
 
 const Feedbacks = () => {
+  const { t } = useTranslation();
   const [feedbacks, setFeedbacks] = useState([]);
 
   useEffect(() => {
@@ -21,7 +23,7 @@ const Feedbacks = () => {
 
   return (
     <div className="feedbacks-wrapper">
-      <h1 className="feedbacks-wrapper__paragraph">Feedbacks</h1>
+      <h1 className="feedbacks-wrapper__paragraph">{t("homepage.feedbacks.paragraph")}</h1>
 
       <Marquee className="feedbacks-wrapper__content" gradientWidth={100} gradient speed={25}>
         {feedbacks.map(({

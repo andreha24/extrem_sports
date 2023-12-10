@@ -2,6 +2,7 @@ import React from "react";
 import { Form, Field } from "react-final-form";
 import axios from "axios";
 import { ToastContainer } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 import toastError from "../../../utils/toast/toastError";
 import toastSuccess from "../../../utils/toast/toastSuccess";
@@ -10,6 +11,7 @@ import paperPlane from "../../../assets/paper-plane.png";
 import "./index.scss";
 
 const FeedbackForm = () => {
+  const { t } = useTranslation();
   const token = localStorage.getItem("token");
 
   const sendFeedback = (values) => {
@@ -35,13 +37,13 @@ const FeedbackForm = () => {
         onSubmit={sendFeedback}
         render={({ handleSubmit }) => (
           <form onSubmit={handleSubmit} className="feedback-form">
-            <span className="feedback-form-paragraph">Send feedback to our service</span>
+            <span className="feedback-form-paragraph">{t("homepage.feedbacks.form_paragraph")}</span>
             <Field name="feedback">
               {({ input, meta }) => (
                 <div className="feedback-block">
                   <input
                     {...input}
-                    placeholder="send feedback"
+                    placeholder={t("homepage.feedbacks.placeholder")}
                     className="feedback-block-input"
                     type="text"
                   />

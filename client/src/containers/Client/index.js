@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { ToastContainer } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 import Header from "../../components/Header";
 import StarsRating from "../../components/StarsRating";
@@ -17,6 +18,7 @@ import "./index.scss";
 import "react-toastify/dist/ReactToastify.css";
 
 const Client = () => {
+  const { t } = useTranslation();
   const currentRole = CheckRole();
   const [userData, setUserData] = useState({});
   const [rating, setRating] = useState(0);
@@ -167,26 +169,26 @@ const Client = () => {
 
         <div className="user-info">
           <span>
-            Name:
+            {t("clientPage.name")}
             {userData.name}
           </span>
           <span>
-            Lastname:
+            {t("clientPage.lastname")}
             {userData.lastname}
           </span>
           <span>
-            Role:
+            {t("clientPage.role")}
             {userData.role}
           </span>
           {userData.role === "coach" ? (
             <>
               <span>
-                Price:
+                {t("clientPage.price")}
                 {userData.price}
                 $
               </span>
               <span>
-                Rating:
+                {t("clientPage.rating")}
                 <StarsRating
                   ratingChanged={ratingChanged}
                   initialValue={userData.rating}
@@ -195,39 +197,45 @@ const Client = () => {
             </>
           ) : ""}
           <span>
-            Age:
+            {t("clientPage.age")}
             {userData.age}
           </span>
           <span>
-            Country:
+            {t("clientPage.country")}
             {userData.country}
           </span>
           <span>
-            City:
+            {t("clientPage.city")}
             {userData.city}
           </span>
           <span>
-            Specialized in:
+            {t("clientPage.specialized")}
             {userData.sport_type}
           </span>
           <span>
-            Experience:
+            {t("clientPage.experience")}
             {userData.experience}
+            {" "}
             years
           </span>
           <span>
-            Contact to me:
+            {t("clientPage.contact")}
             {" "}
             {userData.mail}
           </span>
           <div className="user-info-btns">
             {userData.role === "coach" ? (
               <>
-                <button type="button" onClick={() => sendApplication(userId)}>Application for a lesson</button>
-                <button type="button" onClick={changeFeedbackFormView}>Feedback</button>
+                <button
+                  type="button"
+                  onClick={() => sendApplication(userId)}
+                >
+                  {t("clientPage.lessonApplicationBtn")}
+                </button>
+                <button type="button" onClick={changeFeedbackFormView}>{t("clientPage.feedbackParagraph")}</button>
               </>
             ) : ""}
-            <button type="button" onClick={changeReportFormView}>Report</button>
+            <button type="button" onClick={changeReportFormView}>{t("clientPage.reportParagraph")}</button>
             {/* eslint-disable-next-line no-nested-ternary */}
             {currentRole === "admin" ? (
               userData.is_banned
@@ -240,13 +248,13 @@ const Client = () => {
       <SendingForm
         onSubmit={sendReport(userData.id)}
         closeForm={changeReportFormView}
-        blockName="Report"
+        blockName={t("clientPage.reportParagraph")}
         isFormOpen={isReportFormOpen}
       />
       <SendingForm
         onSubmit={sendCoachFeedback(userData.id)}
         closeForm={changeFeedbackFormView}
-        blockName="Feedback"
+        blockName={t("clientPage.feedbackParagraph")}
         isFormOpen={isFeedbackFormOpen}
       />
       {userData.role === "coach" ? <CoachComments coachId={userId} /> : ""}

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { CSSTransition } from "react-transition-group";
 
+import PageWrapper from "../../components/PageWrapper";
 import Header from "../../components/Header";
 import EventsList from "./EventsList";
 import Filters from "../../components/Filters";
@@ -23,7 +24,7 @@ const Events = () => {
   };
 
   return (
-    <>
+    <PageWrapper>
       <Header />
       <div className="event-list-wrapper">
         <img src={filterIcon} onClick={toggleFilters} className="event-list-wrapper-img" alt="filter-icon" />
@@ -43,7 +44,7 @@ const Events = () => {
         <EventsList filtersValues={filters} />
       </div>
       <Footer />
-    </>
+    </PageWrapper>
   );
 };
 

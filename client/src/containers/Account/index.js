@@ -5,6 +5,7 @@ import axios from "axios";
 import { format } from "date-fns";
 import { CSSTransition } from "react-transition-group";
 import { ToastContainer } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 import PageWrapper from "../../components/PageWrapper";
 import Header from "../../components/Header";
@@ -22,6 +23,7 @@ import generateUniqueFileName from "../../utils/generateUniqueFileName";
 import "./index.scss";
 
 const Account = () => {
+  const { t } = useTranslation();
   const [isFormReadonly, setIsFormReadonly] = useState(true);
   const [viewClientsList, setViewClientsList] = useState(false);
   const [userInfo, setUserInfo] = useState({});
@@ -96,10 +98,10 @@ const Account = () => {
         ? (
           <div className="link-log-wrapper">
             <div className="link-log">
-              <span>You need to log in for use this page</span>
+              <span>{t("accountPage.noRegBlock.phrase")}</span>
               <span>
-                go to
-                <Link to="/login" className="link-log-btn">Login</Link>
+                {t("accountPage.noRegBlock.beforeBtn")}
+                <Link to="/login" className="link-log-btn">{t("accountPage.noRegBlock.btn")}</Link>
               </span>
             </div>
           </div>
@@ -127,7 +129,7 @@ const Account = () => {
                     <UserField
                       name="role"
                       type="text"
-                      label="Role"
+                      label={t("accountPage.role")}
                       initialValue={userInfo.role}
                       disabled={isFormReadonly}
                     />
@@ -137,7 +139,7 @@ const Account = () => {
                         <UserField
                           name="price"
                           type="text"
-                          label="Price"
+                          label={t("accountPage.price")}
                           initialValue={userInfo.price}
                           disabled={isFormReadonly}
                         />
@@ -150,7 +152,7 @@ const Account = () => {
                         key={name}
                         name={name}
                         type="text"
-                        label={label}
+                        label={t(`accountPage.${label}`)}
                         initialValue={userInfo[name]}
                         disabled={isFormReadonly}
                       />
@@ -159,7 +161,7 @@ const Account = () => {
                     <UserField
                       name="reg_date"
                       type="text"
-                      label="Reg date"
+                      label={t("accountPage.regDate")}
                       initialValue={regDate ? format(regDate, "dd-MM-yyyy") : ""}
                       disabled
                     />
@@ -170,10 +172,11 @@ const Account = () => {
                       disabled={invalid && !isFormReadonly}
                       className="user-form__btn"
                     >
-                      {isFormReadonly ? "Edit" : "Save"}
+                      {isFormReadonly ? t("accountPage.editBtn") : t("accountPage.saveBtn")}
                     </button>
                     {userInfo.role === "coach"
-                      ? <button type="button" onClick={handleClientListView}>List of Clients</button> : ""}
+                      ? <button type="button" onClick={handleClientListView}>{t("accountPage.listClients.btn")}</button>
+                      : ""}
                   </form>
                 )}
               />

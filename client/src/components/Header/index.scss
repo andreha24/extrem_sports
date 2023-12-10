@@ -183,4 +183,29 @@
     transform: translateY(-100%);
     transition: opacity 500ms, transform 500ms;
   }
+
+  .language-btns{
+    display: flex;
+    gap: 5px;
+    position: absolute;
+    right: 55px;
+
+    @media (min-width: 768px) {
+      right: 85px;
+    }
+
+    @media (min-width: 992px) {
+      right: 135px;
+    }
+
+    button{
+      background: none;
+      border: 0;
+      cursor: pointer;
+    }
+
+    .active{
+      font-weight: bold;
+    }
+  }
 }

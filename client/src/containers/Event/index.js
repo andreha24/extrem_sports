@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { CSSTransition } from "react-transition-group";
 import { ToastContainer } from "react-toastify";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 
 import PageWrapper from "../../components/PageWrapper";
 import Header from "../../components/Header";
@@ -17,6 +18,7 @@ import toastSuccess from "../../utils/toast/toastSuccess";
 import "./index.scss";
 
 const Event = () => {
+  const { t } = useTranslation();
   const currentRole = checkRole();
   const [event, setEvent] = useState({});
   const [viewUsersList, setViewUsersList] = useState(false);
@@ -90,17 +92,17 @@ const Event = () => {
               onClick={() => deleteEvent(eventId)}
               className="event-del-btn"
             >
-              delete event
+              {t("eventPage.delEvent")}
             </button>
           ) : ""}
         <img src={event.preview} className="event-img" alt="event" />
         <div className="event-details">
           <div className="event-detail">
-            <span>Name:</span>
+            <span>{t("eventPage.name")}</span>
             <span>{event.name}</span>
           </div>
           <div className="event-detail description">
-            <span>Description:</span>
+            <span>{t("eventPage.description")}</span>
             <span>
               Dive into the exciting world of vertical challenges with our exciting rock climbing event! Get together
               with like-minded people and outdoor enthusiasts to overcome vertical walls and conquer high mountain
@@ -110,26 +112,26 @@ const Event = () => {
             </span>
           </div>
           <div className="event-detail">
-            <span>Continent:</span>
+            <span>{t("eventPage.continent")}</span>
             <span>{event.continent}</span>
           </div>
           <div className="event-detail">
-            <span>Country:</span>
+            <span>{t("eventPage.country")}</span>
             <span>{event.country}</span>
           </div>
           <div className="event-detail">
-            <span>City:</span>
+            <span>{t("eventPage.city")}</span>
             <span>{event.city}</span>
           </div>
           <div className="event-detail people">
-            <span>Take part:</span>
+            <span>{t("eventPage.takePart")}</span>
             <span>
               {event.registeredUsers?.length}
               /
               {event.people}
             </span>
             {event.registeredUsers?.length !== 0
-              ? <button type="submit" onClick={changeListView}>list of registered users</button> : ""}
+              ? <button type="submit" onClick={changeListView}>{t("eventPage.listUsersBtn")}</button> : ""}
           </div>
           <CSSTransition
             in={viewUsersList}
@@ -142,10 +144,10 @@ const Event = () => {
             </ListWrapper>
           </CSSTransition>
           <div className="event-detail">
-            <span>Start date:</span>
+            <span>{t("eventPage.startDate")}</span>
             <span>{event.start_date ? formatDate(event.start_date) : "N/A"}</span>
           </div>
-          <button type="button" onClick={addUserIntoEvent} className="get-place-btn">Get a place</button>
+          <button type="button" onClick={addUserIntoEvent} className="get-place-btn">{t("eventPage.getPlace")}</button>
         </div>
       </div>
       <Footer />

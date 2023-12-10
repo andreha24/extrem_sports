@@ -2,12 +2,14 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 
 import StarsRating from "../../../components/StarsRating";
 
 import "./index.scss";
 
 const ClientsList = ({ filtersValues, chooseRole, handleRole }) => {
+  const { t } = useTranslation();
   const [clientsList, setClientsList] = useState([]);
 
   useEffect(() => {
@@ -64,14 +66,14 @@ const ClientsList = ({ filtersValues, chooseRole, handleRole }) => {
           onClick={() => handleRole("athlete")}
           className={chooseRole === "athlete" ? "current-role" : ""}
         >
-          Athletes
+          {t("clientsPage.athletesParagraph")}
         </button>
         <button
           type="button"
           onClick={() => handleRole("coach")}
           className={chooseRole === "coach" ? "current-role" : ""}
         >
-          Trainers
+          {t("clientsPage.trainersParagraph")}
         </button>
       </div>
       <div className="users-list">
@@ -95,13 +97,13 @@ const ClientsList = ({ filtersValues, chooseRole, handleRole }) => {
                   {city}
                 </span>
                 <span>
-                  Specialized in
+                  {t("clientsPage.clientsList.specialized")}
                   {" "}
                   {/* eslint-disable-next-line camelcase */}
                   {sport_type}
                 </span>
                 <span>
-                  Experience -
+                  {t("clientsPage.clientsList.experience")}
                   {" "}
                   {experience}
                   {" "}
@@ -111,7 +113,7 @@ const ClientsList = ({ filtersValues, chooseRole, handleRole }) => {
                   ? (
                     <>
                       <span>
-                        Price -
+                        {t("clientsPage.clientsList.price")}
                         {" "}
                         {price}
                         {" "}
@@ -119,7 +121,7 @@ const ClientsList = ({ filtersValues, chooseRole, handleRole }) => {
                       </span>
                       {" "}
                       <span>
-                        Rating -
+                        {t("clientsPage.clientsList.rating")}
                         {" "}
                         <StarsRating
                           initialValue={rating}
@@ -131,7 +133,7 @@ const ClientsList = ({ filtersValues, chooseRole, handleRole }) => {
                   ) : ""}
               </div>
             </div>
-            <Link to={`/clients/${id}`} className="check-profile">check profile</Link>
+            <Link to={`/clients/${id}`} className="check-profile">{t("clientsPage.clientsList.details")}</Link>
           </div>
         ))}
       </div>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { CSSTransition } from "react-transition-group";
 import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 
 import PostForm from "./PostForm";
 import formatDateAndTime from "../../utils/formatDateAndTime";
@@ -12,6 +13,7 @@ import deleteIcon from "../../assets/garbage.png";
 import "./index.scss";
 
 const Posts = ({ user, userId }) => {
+  const { t } = useTranslation();
   const [isAddFormOpen, setIsAddFormOpen] = useState(false);
   const [postsId, setPostsId] = useState([]);
   const [posts, setPosts] = useState([]);
@@ -97,7 +99,7 @@ const Posts = ({ user, userId }) => {
 
   return (
     <div className="posts-container">
-      <span className="posts-container-paragraph">Posts</span>
+      <span className="posts-container-paragraph">{t("accountPage.posts.paragraph")}</span>
       { !user
         && (
         <button
@@ -116,7 +118,7 @@ const Posts = ({ user, userId }) => {
       >
         <PostForm changeFormView={changeAddFormView} onSubmit={addPost} buttonName="Add post" />
       </CSSTransition>
-      {posts.length === 0 ? <div style={{ fontSize: "20px" }}>No posts yet</div>
+      {posts.length === 0 ? <div style={{ fontSize: "20px" }}>{t("accountPage.posts.noPosts")}</div>
         : (
           <div className="posts">
             {posts.map(({
@@ -163,7 +165,7 @@ const Posts = ({ user, userId }) => {
                     {text}
                   </span>
                   <span>
-                    publication date:
+                    {t("accountPage.posts.publicDate")}
                     {formatDateAndTime(dateOfCreation)}
                   </span>
                 </div>

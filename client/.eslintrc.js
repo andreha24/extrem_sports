@@ -32,6 +32,7 @@ module.exports = {
     "no-param-reassign": ["error", { props: false }],
     "react/require-default-props": "off",
     "react/no-array-index-key": "off",
+    "linebreak-style": "off",
     "react/jsx-props-no-spreading": "off",
     "jsx-a11y/click-events-have-key-events": "off",
     "jsx-a11y/no-noninteractive-element-interactions": "off",
