@@ -10,6 +10,7 @@ import { useTranslation } from "react-i18next";
 import PageWrapper from "../../components/PageWrapper";
 import Header from "../../components/Header";
 import Posts from "../../components/Posts";
+import MyHistory from "./MyHistory";
 import ListOfClients from "./ListOfClients";
 import accountFields from "./UserField/constants";
 import Footer from "../../components/Footer";
@@ -26,14 +27,10 @@ const Account = () => {
   const { t } = useTranslation();
   const [isFormReadonly, setIsFormReadonly] = useState(true);
   const [viewClientsList, setViewClientsList] = useState(false);
+  const [viewHistory, setViewHistory] = useState(false);
   const [userInfo, setUserInfo] = useState({});
   const [selectedFile, setSelectedFile] = useState(null);
   const token = localStorage.getItem("token");
-
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    setSelectedFile(file);
-  };
 
   useEffect(() => {
     axios.get("http://localhost:5000/api/authUser", {
@@ -48,6 +45,15 @@ const Account = () => {
         localStorage.clear();
       });
   }, [token]);
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    setSelectedFile(file);
+  };
+
+  const changeViewHistory = () => {
+    setViewHistory((prev) => !prev);
+  };
 
   const changeUserData = (values) => {
     let photoName = userInfo.photo;
@@ -174,9 +180,11 @@ const Account = () => {
                     >
                       {isFormReadonly ? t("accountPage.editBtn") : t("accountPage.saveBtn")}
                     </button>
+                    <button type="button" onClick={changeViewHistory}>{t("accountPage.history.seeHistoryBtn")}</button>
                     {userInfo.role === "coach"
                       ? <button type="button" onClick={handleClientListView}>{t("accountPage.listClients.btn")}</button>
                       : ""}
+                    <button type="button">Delete account</button>
                   </form>
                 )}
               />
@@ -191,6 +199,12 @@ const Account = () => {
                 <ListOfClients />
               </ListWrapper>
             </CSSTransition>
+            {viewHistory
+              && (
+              <ListWrapper closeList={changeViewHistory}>
+                <MyHistory sportType={userInfo.sport_type} />
+              </ListWrapper>
+              )}
             <Posts />
           </>
         )}

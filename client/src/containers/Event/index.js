@@ -112,6 +112,10 @@ const Event = () => {
             </span>
           </div>
           <div className="event-detail">
+            <span>{t("eventPage.sportType")}</span>
+            <span>{event.sportType}</span>
+          </div>
+          <div className="event-detail">
             <span>{t("eventPage.continent")}</span>
             <span>{event.continent}</span>
           </div>

@@ -37,6 +37,16 @@ const accountPageTrans = {
   comments: {
     paragraph: "Коментарі",
   },
+  history: {
+    seeHistoryBtn: "Переглянути історію результатів",
+    emptyHistory: "Історія порожня",
+    yourResults: "Ваші результати в",
+    results: "Результат, метри",
+    date: "Дата тренування",
+    crateResult: "Створити новий результат",
+    add: "Додати",
+    result: "результат",
+  },
 };
 
 export default accountPageTrans;

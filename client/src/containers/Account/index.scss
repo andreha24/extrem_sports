@@ -105,6 +105,10 @@
       }
     }
   }
+
+  button{
+    @include btn-theme();
+  }
 }
 .client-list-animation-enter {
   opacity: 0;

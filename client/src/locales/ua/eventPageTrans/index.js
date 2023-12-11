@@ -4,6 +4,7 @@ const eventPageTrans = {
   continent: "Континент:",
   country: "Країна:",
   city: "Місто:",
+  sportType: "Вид спорту:",
   takePart: "Приймають участь:",
   startDate: "Дата початку:",
   getPlace: "Прийняти участь",

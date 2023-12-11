@@ -20,7 +20,6 @@ const ReportsList = ({ userId, closeList }) => {
       },
     })
       .then((response) => {
-        console.log(response.data);
         setReports(response.data);
       })
       .catch((err) => {

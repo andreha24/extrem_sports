@@ -17,6 +17,10 @@
 
   &-photo {
     width: 300px;
+
+    @media (min-width: 992px) {
+      width: 400px;
+    }
   }
 
   .user-info{

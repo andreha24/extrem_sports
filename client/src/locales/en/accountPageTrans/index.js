@@ -34,6 +34,16 @@ const accountPageTrans = {
     addBtn: "Add post",
     editBtn: "Edit post",
   },
+  history: {
+    seeHistoryBtn: "See results history",
+    emptyHistory: "History is empty",
+    yourResults: "Your results in",
+    results: "Result, meters",
+    date: "Training date",
+    crateResult: "Create new result",
+    add: "Add",
+    result: "result",
+  },
 };
 
 export default accountPageTrans;

@@ -89,8 +89,27 @@ class UserControllers {
 
   async getUserHistory(req, res, next) {
     try {
-      const {userId} = req.body;
-      await userService.getUserHistory(userId);
+      const token = req.headers.authorization.split(" ")[1];
+      res.json(await userService.getUserHistory(token));
+    } catch (e) {
+      next(e)
+    }
+  }
+
+  async addNewResult(req, res, next) {
+    try {
+      const token = req.headers.authorization.split(" ")[1];
+      const { result, dateOfResult } = req.body;
+      res.json(await userService.addNewResult(result, dateOfResult, token));
+    } catch (e) {
+      next(e)
+    }
+  }
+
+  async deleteResult(req, res, next) {
+    try {
+      const { id } = req.params;
+      res.json(await userService.deleteResult(id));
     } catch (e) {
       next(e)
     }
@@ -169,8 +188,6 @@ class UserControllers {
       next(e)
     }
   }
-
-
 }
 
 module.exports = new UserControllers();

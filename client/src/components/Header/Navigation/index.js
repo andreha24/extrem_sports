@@ -25,12 +25,12 @@ const Navigation = ({
       i18: "clients",
     },
     {
-      to: "/account",
-      i18: "account",
-    },
-    {
       to: "/the_best",
       i18: "the_best",
+    },
+    {
+      to: "/account",
+      i18: "account",
     },
   ];
 

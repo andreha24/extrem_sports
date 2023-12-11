@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 const tokenService = require('../service/tokenService');
 const googleBucketService = require("../service/googleBucketService");
 const UserDto = require('../dtos/userDto');
+const ResultDto = require('../dtos/resultDto');
 const ApiError = require("../exeptions/apiErrors");
 const dbConfig = require("../dbConnection");
 
@@ -186,59 +187,74 @@ class UserService {
     }
   }
 
-  async getAllUsersWithFilters(role, sport_type, minAge, maxAge, minExp, maxExp, minPrice, maxPrice, sort_by){
-    const pool = await sql.connect(dbConfig);
-    let query = `SELECT * FROM [User] WHERE role = '${role}' AND is_banned = 0`;
+  async getAllUsersWithFilters(role, sport_type, minAge, maxAge, minExp, maxExp, minPrice, maxPrice, sort_by) {
+    try {
+      const pool = await sql.connect(dbConfig);
+      let query = `SELECT * FROM [User] WHERE role = '${role}' AND is_banned = 0`;
 
-    if (sport_type !== undefined) {
-      const allSportTypes = sport_type.split(',').map(g => `'${g}'`).join(', ');
-      query += ` AND (sport_type IN (${allSportTypes}))`;
-    }
-
-    if (minAge !== undefined || maxAge !== undefined) {
-      minAge === undefined ? minAge  = 0 : minAge;
-      maxAge === undefined ? maxAge = 100 : maxAge;
-      query += ` AND (age BETWEEN ${minAge} AND ${maxAge})`;
-    }
-
-    if (minPrice !== undefined || maxPrice !== undefined) {
-      minPrice === undefined ? minPrice  = 0 : minPrice;
-      maxPrice === undefined ? maxPrice = 1000000 : maxPrice;
-      query += ` AND (price BETWEEN ${minPrice} AND ${maxPrice})`;
-    }
-
-    if (minExp !== undefined || maxExp !== undefined) {
-      minExp === undefined ? minExp  = 0 : minExp;
-      maxExp === undefined ? maxExp = 100 : maxExp;
-      query += ` AND (experience BETWEEN ${minExp} AND ${maxExp})`;
-    }
-
-    const sortMap = {
-      fromMinAge: 'age',
-      fromMaxAge: 'age DESC',
-      fromMinExp: 'experience',
-      fromMaxExp: 'experience DESC',
-      fromMinPrice: 'price',
-      fromMaxPrice: 'price DESC',
-      fromMinRate: 'rating',
-      fromMaxRate: 'rating DESC',
-    };
-
-    if (sort_by !== undefined && sortMap[sort_by] !== undefined) {
-      sort_by = sortMap[sort_by];
-      query += ` ORDER BY ${sort_by}`;
-    }
-    
-    const filteringUsers = await pool.request().query(query);
-
-    return await Promise.all(filteringUsers.recordset.map(async (user) => {
-      if (user.photo) {
-        const imageUrl = await googleBucketService.getImage(user.photo);
-        return {...user, photo: imageUrl};
+      if (sport_type !== undefined) {
+        const allSportTypes = sport_type.split(',').map(g => `'${g}'`).join(', ');
+        query += ` AND (sport_type IN (${allSportTypes}))`;
       }
-      return filteringUsers.recordset;
-    }));
+
+      if (minAge !== undefined || maxAge !== undefined) {
+        minAge === undefined ? (minAge = 0) : minAge;
+        maxAge === undefined ? (maxAge = 100) : maxAge;
+        query += ` AND (age BETWEEN ${minAge} AND ${maxAge})`;
+      }
+
+      if (minPrice !== undefined || maxPrice !== undefined) {
+        minPrice === undefined ? (minPrice = 0) : minPrice;
+        maxPrice === undefined ? (maxPrice = 1000000) : maxPrice;
+        query += ` AND (price BETWEEN ${minPrice} AND ${maxPrice})`;
+      }
+
+      if (minExp !== undefined || maxExp !== undefined) {
+        minExp === undefined ? (minExp = 0) : minExp;
+        maxExp === undefined ? (maxExp = 100) : maxExp;
+        query += ` AND (experience BETWEEN ${minExp} AND ${maxExp})`;
+      }
+
+      const sortMap = {
+        fromMinAge: 'age',
+        fromMaxAge: 'age DESC',
+        fromMinExp: 'experience',
+        fromMaxExp: 'experience DESC',
+        fromMinPrice: 'price',
+        fromMaxPrice: 'price DESC',
+        fromMinRate: 'rating',
+        fromMaxRate: 'rating DESC',
+      };
+
+      if (sort_by !== undefined && sortMap[sort_by] !== undefined) {
+        sort_by = sortMap[sort_by];
+        query += ` ORDER BY ${sort_by}`;
+      }
+
+      const filteringUsers = await pool.request().query(query);
+
+      return await Promise.all(filteringUsers.recordset.map(async (user) => {
+        if (user.photo) {
+          user.photo = await googleBucketService.getImage(user.photo);
+        }
+
+        let userRating = 0;
+        const userRatingArr = await pool.request().query(`SELECT ratingValue FROM [Coach_ratings] WHERE coachId = ${user.id}`);
+        if (userRatingArr.recordset.length > 0) {
+          userRating =
+            userRatingArr.recordset.reduce((acc, currentValue) => acc + currentValue.ratingValue, 0) /
+            userRatingArr.recordset.length;
+        }
+
+        user.rating = userRating;
+        return user;
+      }));
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   }
+
 
   //todo
   async deleteUser(userId){
@@ -251,12 +267,40 @@ class UserService {
     }
   }
 
-  //todo
-  async getUserHistory(userId){
+  async getUserHistory(token){
     try {
       const pool = await sql.connect(dbConfig);
-      // todo order by
-      await pool.request().query(`SELECT * FROM User_History WHERE Id = ${userId}`);
+      const userId = await tokenService.getUserIdFromToken(token);
+      const resultsHistory = await pool.request().query(`SELECT * FROM [Users_history] WHERE userId = ${userId} ORDER BY dateOfTrain DESC`);
+      return resultsHistory.recordset;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+
+  async addNewResult(result, dateOfResult, token){
+    try {
+      const pool = await sql.connect(dbConfig);
+      const userId = await tokenService.getUserIdFromToken(token);
+      await pool.request().query(`INSERT INTO [Users_History] (result, dateOfTrain, userId) VALUES (${result}, '${dateOfResult}', ${userId})`);
+      const newResult = await pool.request()
+        .query(`SELECT * FROM [Users_history] WHERE userId = ${userId} AND result = ${result} AND dateOfTrain = '${dateOfResult}'`)
+      
+      return new ResultDto(newResult.recordset[0]);
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+
+
+  async deleteResult(id){
+    try {
+      const pool = await sql.connect(dbConfig);
+      await pool.request().query(`DELETE FROM [Users_History] WHERE id = ${id}`);
+
+      return "Result deleted";
     } catch (error) {
       console.error(error);
       throw error;
