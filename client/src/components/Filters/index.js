@@ -16,12 +16,24 @@ const Filters = ({
   return (
     <Form
       onSubmit={sendFilters}
-      render={({ handleSubmit }) => (
+      render={({ handleSubmit, form: { reset } }) => (
         <form onSubmit={handleSubmit} className={className}>
           {closeFilters && <button type="button" onClick={closeFilters} className="close-all-filters">X</button>}
           <span className="filters-paragraph">{t("filterBlock.name")}</span>
           {children}
-          <button type="submit" className="apply-filters-btn">{t("filterBlock.button")}</button>
+          <div className="filters-btns">
+            <button type="submit" className="apply-filters-btn">{t("filterBlock.button")}</button>
+            <button
+              type="button"
+              onClick={() => {
+                reset();
+                updateFilters({});
+              }}
+              className="apply-filters-btn"
+            >
+              {t("filterBlock.resetButton")}
+            </button>
+          </div>
         </form>
       )}
     />

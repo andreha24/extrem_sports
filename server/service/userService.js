@@ -370,6 +370,29 @@ class UserService {
       throw error;
     }
   }
+
+  async getReports(id) {
+    try {
+      const pool = await sql.connect(dbConfig);
+      const reports = await pool.request().query(`SELECT
+        ur.id AS id,
+        ur.reason,
+        ur.dateOfCreation,
+        u_sender.id AS senderId,
+        u_sender.name AS senderName,
+        u_sender.lastname AS senderLastname
+      FROM [User_reports] ur
+      JOIN [User] u_sender ON ur.senderId = u_sender.id
+      JOIN [User] u_recipient ON ur.recipientId = u_recipient.id
+      WHERE u_recipient.id = ${id};`);
+
+      return reports.recordset;
+
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
 }
 
 

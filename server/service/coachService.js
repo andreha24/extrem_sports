@@ -110,6 +110,26 @@ class CoachService {
       throw error;
     }
   }
+
+  async getTopCoaches(sport_type) {
+    try {
+      const pool = await sql.connect(dbConfig);
+      const betterCoaches = await pool
+        .request()
+        .query(`SELECT TOP 5 U.id, U.name, U.lastname, U.role, AVG(CR.ratingValue) AS avgRating
+              FROM [User] U
+              JOIN [Coach_ratings] CR ON U.id = CR.coachId
+              WHERE U.role = 'coach' AND U.sport_type = '${sport_type}'
+              GROUP BY U.id, U.name, U.lastname, U.role, U.sport_type
+              ORDER BY avgRating DESC;
+            `);
+
+      return betterCoaches.recordset;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
 }
 
 

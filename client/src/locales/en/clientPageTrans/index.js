@@ -19,6 +19,12 @@ const clientPageTrans = {
     noComments: "No comments yet",
     date: "Date of creation: ",
   },
+  reportList: {
+    button: "Reports list",
+    sender: "Sender",
+    reason: "Reason",
+    date: "Date of creation",
+  },
 };
 
 export default clientPageTrans;

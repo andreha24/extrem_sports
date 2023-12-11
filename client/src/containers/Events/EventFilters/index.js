@@ -65,6 +65,41 @@ const EventFilters = () => {
       </Filter>
 
       <Filter
+        filterParagraph={t("eventsPage.filters.sportType.paragraph")}
+      >
+        <label htmlFor="sportType">
+          <Field
+            name="sport_type"
+            component="input"
+            type="checkbox"
+            value="climbing"
+          />
+          {" "}
+          {t("eventsPage.filters.sportType.climbing")}
+        </label>
+        <label htmlFor="continents">
+          <Field
+            name="sport_type"
+            component="input"
+            type="checkbox"
+            value="diving"
+          />
+          {" "}
+          {t("eventsPage.filters.sportType.diving")}
+        </label>
+        <label htmlFor="continents">
+          <Field
+            name="sport_type"
+            component="input"
+            type="checkbox"
+            value="skydiving"
+          />
+          {" "}
+          {t("eventsPage.filters.sportType.skydiving")}
+        </label>
+      </Filter>
+
+      <Filter
         filterParagraph={t("eventsPage.sorting.paragraph")}
       >
         <label htmlFor="continents">

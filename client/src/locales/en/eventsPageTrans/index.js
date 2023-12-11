@@ -9,6 +9,12 @@ const eventsPageTrans = {
       australia: "Australia",
       africa: "Africa",
     },
+    sportType: {
+      paragraph: "Sport type",
+      climbing: "climbing",
+      diving: "diving",
+      skydiving: "skydiving",
+    },
   },
   sorting: {
     paragraph: "Sorting by",

@@ -9,6 +9,7 @@ import StarsRating from "../../components/StarsRating";
 import Posts from "../../components/Posts";
 import SendingForm from "./SendingForm";
 import CoachComments from "./CoachComments";
+import ReportsList from "./ReportsList";
 import Footer from "../../components/Footer";
 import toastSuccess from "../../utils/toast/toastSuccess";
 import toastError from "../../utils/toast/toastError";
@@ -24,6 +25,7 @@ const Client = () => {
   const [rating, setRating] = useState(0);
   const [isReportFormOpen, setIsReportFormOpen] = useState(false);
   const [isFeedbackFormOpen, setIsFeedbackFormOpen] = useState(false);
+  const [reportsView, setReportsView] = useState(false);
   const { userId } = useParams();
   const token = localStorage.getItem("token");
 
@@ -33,6 +35,10 @@ const Client = () => {
 
   const changeFeedbackFormView = () => {
     setIsFeedbackFormOpen((prev) => !prev);
+  };
+
+  const changeReportsView = () => {
+    setReportsView((prev) => !prev);
   };
 
   useEffect(() => {
@@ -237,14 +243,18 @@ const Client = () => {
             ) : ""}
             <button type="button" onClick={changeReportFormView}>{t("clientPage.reportParagraph")}</button>
             {/* eslint-disable-next-line no-nested-ternary */}
-            {currentRole === "admin" ? (
-              userData.is_banned
-                ? <button type="button" onClick={() => unbanUser(userId)}>Unban</button>
-                : <button type="button" onClick={() => banUser(userId)}>Ban</button>
-            ) : ""}
+            {currentRole === "admin" && (
+              <>
+                {userData.is_banned
+                  ? <button type="button" onClick={() => unbanUser(userId)}>Unban</button>
+                  : <button type="button" onClick={() => banUser(userId)}>Ban</button>}
+                <button type="button" onClick={changeReportsView}>{t("clientPage.reportList.button")}</button>
+              </>
+            )}
           </div>
         </div>
       </div>
+      {reportsView && <ReportsList userId={userId} closeList={changeReportsView} />}
       <SendingForm
         onSubmit={sendReport(userData.id)}
         closeForm={changeReportFormView}

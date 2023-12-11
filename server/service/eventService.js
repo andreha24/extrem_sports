@@ -33,7 +33,7 @@ class EventService {
     }
   }
 
-  async getEventsWithFilters(continents, sortingValue){
+  async getEventsWithFilters(continents, sport_types, sortingValue){
     const pool = await sql.connect(dbConfig);
     let query = `SELECT [Events].*, 
              (SELECT COUNT(DISTINCT [User].id) 
@@ -45,6 +45,11 @@ class EventService {
     if (continents !== undefined) {
       const allContinents = continents.split(',').map(g => `'${g}'`).join(', ');
       query += ` AND (continent IN (${allContinents}))`;
+    }
+
+    if (sport_types !== undefined) {
+      const allSportTypes = sport_types.split(',').map(g => `'${g}'`).join(', ');
+      query += ` AND (sportType IN (${allSportTypes}))`;
     }
 
     if (sortingValue !== undefined){
@@ -96,7 +101,7 @@ class EventService {
     }
   }
 
-  async addEvent(name, description, continent, country, city, startDate, people, img){
+  async addEvent(name, description, continent, country, city, sport_type, startDate, people, img){
     const pool = await sql.connect(dbConfig);
     const event = await sql.query`SELECT * FROM [Events] WHERE name = ${name}`;
 
@@ -104,8 +109,8 @@ class EventService {
       throw ApiError.BadRequest(`Соревнование ${name} уже существует`);
     }
 
-    await pool.request().query(`INSERT INTO [Events] (name, description, country, city, start_date, people, continent, preview) 
-    VALUES ('${name}','${description}', '${country}', '${city}', '${startDate}', ${people}, '${continent}', '${img}' )`);
+    await pool.request().query(`INSERT INTO [Events] (name, description, country, city, start_date, people, continent, preview, sportType) 
+    VALUES ('${name}','${description}', '${country}', '${city}', '${startDate}', ${people}, '${continent}', '${img}', '${sport_type}' )`);
 
     return "Event added";
   }

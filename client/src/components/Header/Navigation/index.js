@@ -28,6 +28,10 @@ const Navigation = ({
       to: "/account",
       i18: "account",
     },
+    {
+      to: "/the_best",
+      i18: "the_best",
+    },
   ];
 
   return (

@@ -4,6 +4,7 @@
   padding: 1rem;
   border-bottom: 1px solid;
   align-items: center;
+  position: relative;
 
   @media (min-width: 992px) {
     padding: var(--general--padding-992);
@@ -188,14 +189,11 @@
     display: flex;
     gap: 5px;
     position: absolute;
-    right: 55px;
-
-    @media (min-width: 768px) {
-      right: 85px;
-    }
+    right: 15px;
+    bottom: 5px;
 
     @media (min-width: 992px) {
-      right: 135px;
+      right: 50px;
     }
 
     button{

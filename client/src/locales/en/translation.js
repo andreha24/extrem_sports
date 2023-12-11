@@ -6,6 +6,7 @@ import eventPageTrans from "./eventPageTrans";
 import accountPageTrans from "./accountPageTrans";
 import clientPageTrans from "./clientPageTrans";
 import regPageTrans from "./regPageTrans";
+import theBestTrans from "./theBestTrans";
 
 const translationsEn = {
   header: {
@@ -15,6 +16,7 @@ const translationsEn = {
       events: "Events",
       clients: "Clients",
       account: "Account",
+      the_best: "The best",
     },
     btns: {
       login: "Log in",
@@ -24,10 +26,10 @@ const translationsEn = {
   filterBlock: {
     name: "Filters",
     button: "Apply filters",
+    resetButton: "Reset filters",
   },
   homepage: homePageTrans,
   aboutUsPage: aboutUsTrans,
-
   eventsPage: eventsPageTrans,
   clientsPage: clientsPageTrans,
   eventPage: eventPageTrans,
@@ -39,6 +41,7 @@ const translationsEn = {
     password: "password",
   },
   regPage: regPageTrans,
+  theBestPage: theBestTrans,
 };
 
 export default translationsEn;

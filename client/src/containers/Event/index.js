@@ -28,6 +28,7 @@ const Event = () => {
   useEffect(() => {
     axios.get(`http://localhost:5000/events/event/${eventId}`)
       .then((response) => {
+        console.log(response.data);
         setEvent(response.data);
       })
       .catch((error) => {
@@ -80,6 +81,9 @@ const Event = () => {
       });
   };
 
+  if (!event) {
+    navigate("*");
+  }
   return (
     <PageWrapper>
       <ToastContainer />
@@ -104,11 +108,7 @@ const Event = () => {
           <div className="event-detail description">
             <span>{t("eventPage.description")}</span>
             <span>
-              Dive into the exciting world of vertical challenges with our exciting rock climbing event! Get together
-              with like-minded people and outdoor enthusiasts to overcome vertical walls and conquer high mountain
-              peaks. Discover the excitement and adrenaline of every climb and enjoy the incredible views from above.
-              This event is designed to bring together people who share a passion for adventure and create unique
-              memories of conquering heights together in an atmosphere of mutual support and inspiration.
+              {event.description}
             </span>
           </div>
           <div className="event-detail">

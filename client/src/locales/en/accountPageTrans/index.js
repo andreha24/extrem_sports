@@ -29,6 +29,10 @@ const accountPageTrans = {
     paragraph: "Posts",
     noPosts: "No posts yet",
     publicDate: "publication date:",
+    topic: "Topic:",
+    text: "Text:",
+    addBtn: "Add post",
+    editBtn: "Edit post",
   },
 };
 

@@ -161,6 +161,16 @@ class UserControllers {
     }
   }
 
+  async getReports(req, res, next){
+    try {
+      const { id } = req.params;
+      res.json(await userService.getReports(id));
+    } catch (e) {
+      next(e)
+    }
+  }
+
+
 }
 
 module.exports = new UserControllers();

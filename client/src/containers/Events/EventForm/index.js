@@ -15,6 +15,7 @@ import "./index.scss";
 const EventForm = ({ changeFormView }) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [selectedContinent, setSelectedContinent] = useState(null);
+  const [selectedSport, setSelectedSport] = useState(null);
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -23,6 +24,10 @@ const EventForm = ({ changeFormView }) => {
 
   const changeContinent = (value) => {
     setSelectedContinent(value);
+  };
+
+  const changeSport = (value) => {
+    setSelectedSport(value);
   };
 
   const addEvent = (values) => {
@@ -69,6 +74,7 @@ const EventForm = ({ changeFormView }) => {
               name="name"
               type="text"
               validators={required}
+              placeholder="name"
             />
             <FormField
               name="description"
@@ -89,6 +95,18 @@ const EventForm = ({ changeFormView }) => {
               <option value="australia">Australia</option>
               <option value="africa">Africa</option>
             </Field>
+            <Field
+              name="sport_type"
+              component="select"
+              validate={required}
+              initialValue={selectedSport}
+              onChange={(event) => { changeSport(event.target.value); }}
+            >
+              <option value="" disabled>Sport Type</option>
+              <option value="climbing">climbing</option>
+              <option value="diving">diving</option>
+              <option value="skydiving">skydiving</option>
+            </Field>
             <FormField
               name="country"
               type="text"
@@ -103,6 +121,7 @@ const EventForm = ({ changeFormView }) => {
               name="people"
               type="text"
               validators={required}
+              placeholder="people"
             />
             <FormField
               name="start_date"

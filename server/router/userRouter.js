@@ -10,6 +10,7 @@ router.get("/authUser", userController.getAuthUser)
   .delete("/deleteUser", userController.deleteUser)
   .get("/userHistory", userController.getUserHistory)
   .post("/addReport", userController.addReport)
+  .get("/getReports/:id", userController.getReports)
   .post("/addCommentToService", userController.addCommentToService)
   .post("/addCommentToCoach", userController.addCommentToCoach);
 

@@ -1,7 +1,15 @@
 @import "src/styles/mixins";
 
+.filters-btns{
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 90%;
+}
 .apply-filters-btn{
-  @include btn-theme();
+  @include btn-theme($theme: white, $padding: 5px, $border: 2px solid, $background-hover: bisque);
+  border-radius: 0;
+  width: 100%;
 }
 
 .filters-form__tablet{

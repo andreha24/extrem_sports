@@ -60,6 +60,15 @@ class CoachControllers {
       next(e);
     }
   }
+
+  async getTopCoaches(req, res, next){
+    try {
+      const { sport_type } = req.query;
+      res.json(await coachService.getTopCoaches(sport_type));
+    } catch (e) {
+      next(e);
+    }
+  }
 }
 
 module.exports = new CoachControllers();

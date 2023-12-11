@@ -23,8 +23,8 @@ class EventControllers {
 
   async getEventsWithFilters(req, res, next){
     try {
-      const { continents, sort_by } = req.query;
-      const filteringReady = await eventService.getEventsWithFilters(continents, sort_by);
+      const { continents, sport_types, sort_by } = req.query;
+      const filteringReady = await eventService.getEventsWithFilters(continents, sport_types, sort_by);
       res.json(filteringReady);
     } catch (e) {
       next(e);
@@ -33,8 +33,8 @@ class EventControllers {
 
   async addEvent(req, res, next){
     try {
-      const { name, description, continent, country, city, start_date, people, img } = req.body;
-      res.json(await eventService.addEvent(name, description, continent, country, city, start_date, people, img));
+      const { name, description, continent, country, city, sport_type, start_date, people, img } = req.body;
+      res.json(await eventService.addEvent(name, description, continent, country, city, sport_type, start_date, people, img));
     } catch (e) {
       next(e);
     }

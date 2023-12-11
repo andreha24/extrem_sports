@@ -14,7 +14,7 @@ const FeedbackForm = () => {
   const { t } = useTranslation();
   const token = localStorage.getItem("token");
 
-  const sendFeedback = (values) => {
+  const sendFeedback = (values, form) => {
     axios.post("http://localhost:5000/api/addCommentToService", { text: values.feedback }, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -28,6 +28,7 @@ const FeedbackForm = () => {
           toastError("You need to login");
         }
       });
+    form.change("feedback", "");
   };
 
   return (
@@ -48,7 +49,11 @@ const FeedbackForm = () => {
                     type="text"
                   />
                   {meta.error && meta.touched && <span>{meta.error}</span>}
-                  <button type="submit"><img src={paperPlane} alt="plane" /></button>
+                  <button
+                    type="submit"
+                  >
+                    <img src={paperPlane} alt="plane" />
+                  </button>
                 </div>
               )}
             </Field>

@@ -1,3 +1,13 @@
+import aboutUsTrans from "./aboutUsTrans";
+import homePage from "./homePage";
+import eventsPageTrans from "./eventsPageTrans";
+import clientsPageTrans from "./clientsPageTrans";
+import eventPageTrans from "./eventPageTrans";
+import accountPageTrans from "./accountPageTrans";
+import clientPageTrans from "./clientPageTrans";
+import regPageTrans from "./regPageTrans";
+import theBestTrans from "./theBestTrans";
+
 const translationsUa = {
   header: {
     nav: {
@@ -6,248 +16,32 @@ const translationsUa = {
       events: "Події",
       clients: "Клієнти",
       account: "Профіль",
+      the_best: "Найкращі",
     },
     btns: {
       login: "Увійти",
       logout: "Вийти",
     },
   },
-  homepage: {
-    intro_paragraph: "Ласкаво просимо до SPORTIFY",
-    intro_sentence: `Світ здоров'я та безпеки в екстремальних видах спорту! Наша система відстеження здоров'я людини
-     розроблена спеціально для тих, хто віддає перевагу адреналіновим пригодам. Ми допоможемо вам максимізувати ваші
-     пригодницькі види спорту задоволення, забезпечуючи надійний моніторинг вашої фізичної форми, а ви в безпеці на 
-     кожному кроці.`,
-    team: {
-      paragraph: "Наша команда",
-      teammate1: {
-        name: "Андрій Шерстюк",
-        position: "Засновник компанії",
-        text: `Наша місія - надихати та реалізовувати ваші амбіції. Ми віддані якості, надійності та цілісності в 
-          усьому, що ми робимо, і прагнемо бути частиною вашого шляху до успіху.`,
-      },
-      teammate2: {
-        name: "Белла Панчер",
-        position: "Маркетинг",
-        text: `Давайте разом створимо унікальну маркетингову стратегію, яка підкреслить ваші сильні сторони та 
-         допоможе вам досягти довгострокового успіху.`,
-      },
-      teammate3: {
-        name: "Ірина Матюшенко",
-        position: "Скелелазіння",
-        text: `Запрошую вас приєднатися до нашої команди скелелазів, де ви знайдете спільноту однодумців і захоплюючі
-         пригоди на скелі.`,
-      },
-      teammate4: {
-        name: "Михайло Микольчук",
-        position: "Дайвінг",
-        text: `Приєднуйтесь до нас, щоб відкрити для себе пишність підводного світу та стати частиною спільноти людей,
-         які поділяють вашу пристрасть до дайвінгу. Пориньмо разом у нові горизонти!`,
-      },
-    },
-    feedbacks: {
-      paragraph: "Відгуки",
-      form_paragraph: "Надішліть відгук до нашого сервісу",
-      placeholder: "відправити відгук",
-    },
-  },
-  aboutUsPage: {
-    intro_paragraph: "Про нас",
-    intro_sentence: `Світ здоров'я та безпеки в екстремальних видах спорту! Наша система відстеження здоров'я людини 
-     розроблена спеціально для тих, хто віддає перевагу пригодам, повним адреналіну. Ми допоможемо вам отримати 
-     максимальне задоволення від занять пригодницьким спортом, забезпечивши надійний моніторинг вашої фізичної форми 
-     та безпеку на кожному кроці.`,
-    ourService: {
-      paragraph: "Наші послуги",
-      block1: {
-        paragraph: "Біометричний моніторинг",
-        text: `Ми надаємо системи відстеження, які відстежують ваші біометричні дані, такі як пульс, артеріальний тиск,
-         рівень кисню в крові та температура тіла в режимі реального часу. Це допомагає контролювати свій фізичний стан
-         і швидко реагувати на будь-які зміни.`,
-      },
-      block2: {
-        paragraph: "Аналітика та звітність",
-        text: `Ми надаємо інструменти аналітики та звітності, які допомагають вам аналізувати дані про своє здоров’я 
-         та фізичну форму. Цю інформацію можна використати для покращення вашої програми тренувань і прийняття більш 
-         обґрунтованих рішень щодо ваших спортивних результатів.`,
-      },
-      block3: {
-        paragraph: "Сучасні технології та обладнання",
-        text: `Ми використовуємо передові технології та високоякісне обладнання, щоб забезпечити точний і надійний 
-         моніторинг вашого здоров'я. Ми завжди на крок попереду в розробці інноваційних рішень.`,
-      },
-    },
-  },
+  homepage: homePage,
+  aboutUsPage: aboutUsTrans,
   filterBlock: {
     name: "Фільтри",
     button: "Застосувати фільтри",
+    resetButton: "Скинути фільтри",
   },
-  eventsPage: {
-    paragraph: "Події",
-    filters: {
-      continent: {
-        paragraph: "Континент",
-        eurasia: "Євразія",
-        north_america: "Північна Америка",
-        south_america: "Південна Америка",
-        australia: "Австралія",
-        africa: "Афріка",
-      },
-    },
-    sorting: {
-      paragraph: "Сортування за",
-      fromMinPeople: "Учасники(мін. кількість)",
-      fromMaxPeople: "Учасники(макс. кількість)",
-      earliestStartDate: "спочатку найраніша дата початку",
-      furthestStartDate: "дата початку від найдальшої",
-    },
-    eventList: {
-      createEventBtn: "Створити подію",
-      noMatches: "Немає збігів",
-      people: "Кількість учасників:",
-      seeMore: "Побачити більше",
-    },
-  },
-  clientsPage: {
-    trainersParagraph: "Тренери",
-    athletesParagraph: "Атлети",
-    bannedListBtn: "Заблоковані користувачі",
-    filters: {
-      from: "Від",
-      to: "До",
-      sportType: {
-        paragraph: "Вид спорту",
-        climbing: "скелелазіння",
-        diving: "дайвінг",
-        skydiving: "стрибки з парашутом",
-      },
-      age: {
-        paragraph: "Вік",
-      },
-      experience: {
-        paragraph: "Досвід",
-      },
-      price: {
-        paragraph: "Ціна",
-      },
-    },
-    sorting: {
-      paragraph: "Сорутвати за",
-      fromMinAge: "Від наймолодших",
-      fromMaxAge: "Від найстарших",
-      fromMinExp: "Від меншого досвіду",
-      fromMaxExp: "Від більшого досвіду",
-      fromMinPrice: "Від найдешевших",
-      fromMaxPrice: "Від найдорожчих",
-    },
-    clientsList: {
-      specialized: "Спеціалізується на",
-      experience: "Досвід",
-      price: "Ціна",
-      rating: "Рейтинг",
-      details: "Переглянути акаунт",
-    },
-  },
-  eventPage: {
-    name: "Назва:",
-    description: "Опис:",
-    continent: "Континент:",
-    country: "Країна:",
-    city: "Місто:",
-    takePart: "Приймають участь:",
-    startDate: "Дата початку:",
-    getPlace: "Прийняти участь",
-    listUsersBtn: "список учасників",
-    seeProfile: "Профіль",
-    delEvent: "видалити подію",
-  },
-  accountPage: {
-    noRegBlock: {
-      phrase: "Вам потрібно увійти, щоб використовувати цю сторінку",
-      beforeBtn: "перейти на",
-      btn: "Вхід",
-    },
-    role: "Посада",
-    name: "Ім'я",
-    lastname: "Прізвище",
-    age: "Вік",
-    experience: "Досвід",
-    price: "Ціна",
-    sportType: "Вид спорту",
-    country: "Країна",
-    city: "Місто",
-    mail: "Пошта",
-    regDate: "Дата реєстрації",
-    editBtn: "Редагувати",
-    saveBtn: "Зберегти",
-    listClients: {
-      btn: "Список клієнтів",
-      status: "Статус:",
-      statusAccept: "Прийняті",
-      statusWait: "Очікують",
-      applicationDate: "Дата заяви",
-      profileLink: "профіль",
-    },
-    posts: {
-      paragraph: "Пости",
-      noPosts: "Постів поки немає",
-      publicDate: "Дата публікації:",
-    },
-    comments: {
-      paragraph: "Коментарі",
-    },
-  },
-  clientPage: {
-    role: "Посада:",
-    name: "Ім'я:",
-    lastname: "Прізвище:",
-    age: "Вік:",
-    rating: "Рейтинг:",
-    experience: "Досвід:",
-    price: "Ціна:",
-    country: "Країна:",
-    city: "Місто:",
-    specialized: "Спеціалізація в ",
-    contact: "Зв'яжіться зі мною:",
-    lessonApplicationBtn: "Заява на заняття",
-    sendBtn: "Надіслати",
-    feedbackParagraph: "Відгук",
-    reportParagraph: "Скарга",
-    comments: {
-      paragraph: "Коментарі",
-      noComments: "Ще немає коментарів",
-      date: "Дата створення",
-    },
-  },
+  eventsPage: eventsPageTrans,
+  clientsPage: clientsPageTrans,
+  eventPage: eventPageTrans,
+  accountPage: accountPageTrans,
+  clientPage: clientPageTrans,
   loginPage: {
     paragraph: "Увійти",
     mail: "пошта",
     password: "пароль",
   },
-  regPage: {
-    paragraph: "Реєстрація",
-    mail: "пошта",
-    password: "пароль",
-    role: {
-      name: "Посада",
-      athlete: "спортсмен",
-      coach: "тренер",
-    },
-    sport: {
-      name: "Тип спорту",
-      climbing: "скелелазіння",
-      diving: "дайвінг",
-      skydiving: "парашутизм",
-    },
-    name: "ім'я",
-    lastname: "прізвище",
-    age: "вік",
-    experience: "досвід",
-    price: "ціна",
-    country: "країна",
-    city: "місто",
-  },
-
+  regPage: regPageTrans,
+  theBestPage: theBestTrans,
 };
 
 export default translationsUa;

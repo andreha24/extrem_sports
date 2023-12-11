@@ -27,9 +27,9 @@ const Feedbacks = () => {
 
       <Marquee className="feedbacks-wrapper__content" gradientWidth={100} gradient speed={25}>
         {feedbacks.map(({
-          id, name, lastname, description, photo, date,
+          name, lastname, description, photo, date,
         }) => (
-          <div key={id} className="feedbacks-wrapper__content__block">
+          <div key={date} className="feedbacks-wrapper__content__block">
             <img src={photo} alt="user" />
             <div className="username-wrapper">
               <span>{name}</span>

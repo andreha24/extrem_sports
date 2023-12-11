@@ -1,4 +1,4 @@
-@mixin btn-theme($theme: DarkGray, $padding: 5px, $border: 2px solid, $background-hover: bisque) {
+@mixin btn-theme($theme: white, $padding: 5px, $border: 2px solid, $background-hover: bisque) {
   background: $theme;
   text-decoration: none;
   color: black;

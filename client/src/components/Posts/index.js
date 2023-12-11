@@ -116,7 +116,7 @@ const Posts = ({ user, userId }) => {
         classNames="post-form-animation"
         unmountOnExit
       >
-        <PostForm changeFormView={changeAddFormView} onSubmit={addPost} buttonName="Add post" />
+        <PostForm changeFormView={changeAddFormView} onSubmit={addPost} buttonName={t("accountPage.posts.addBtn")} />
       </CSSTransition>
       {posts.length === 0 ? <div style={{ fontSize: "20px" }}>{t("accountPage.posts.noPosts")}</div>
         : (
@@ -136,7 +136,7 @@ const Posts = ({ user, userId }) => {
                     changeFormView={() => clearEditFormView(id)}
                     initialValues={{ topic, text }}
                     onSubmit={editPost(id)}
-                    buttonName="Edit post"
+                    buttonName={t("accountPage.posts.editBtn")}
                   />
                 </CSSTransition>
               ) : (

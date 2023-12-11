@@ -8,6 +8,7 @@ import Event from "./containers/Event";
 import AllUsers from "./containers/AllUsers";
 import Client from "./containers/Client";
 import Account from "./containers/Account";
+import TheBest from "./containers/TheBest";
 import Login from "./containers/LogIn";
 import Registration from "./containers/Registration";
 import NotFound from "./containers/NotFound";
@@ -27,6 +28,7 @@ const App = () => {
       <Route path="/clients" element={<AllUsers />} />
       <Route path="/clients/:userId" element={<Client />} />
       <Route path="/account" element={<Account />} />
+      <Route path="/the_best" element={<TheBest />} />
       <Route path="/registration" element={<Registration />} />
       <Route path="/login" element={<Login />} />
       <Route path="*" element={<NotFound />} />

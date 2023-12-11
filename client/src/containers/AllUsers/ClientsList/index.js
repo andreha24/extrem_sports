@@ -13,14 +13,18 @@ const ClientsList = ({ filtersValues, chooseRole, handleRole }) => {
   const [clientsList, setClientsList] = useState([]);
 
   useEffect(() => {
-    axios.get(`http://localhost:5000/unAuth/allUsers/?role=${chooseRole}`)
-      .then((response) => {
-        setClientsList(response.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, [chooseRole]);
+    const isEmptyObject = Object.keys(filtersValues).length === 0;
+
+    if (isEmptyObject) {
+      axios.get(`http://localhost:5000/unAuth/allUsers/?role=${chooseRole}`)
+        .then((response) => {
+          setClientsList(response.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [chooseRole, filtersValues]);
 
   useEffect(() => {
     const queryParams = new URLSearchParams();

@@ -20,20 +20,29 @@ const EventsList = React.memo(({ filtersValues }) => {
   };
 
   useEffect(() => {
-    axios.get("http://localhost:5000/events/allEvents")
-      .then((response) => {
-        setAllEvents(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
+    // Check if filtersValues is an empty object
+    const isEmptyObject = Object.keys(filtersValues).length === 0;
+
+    if (isEmptyObject) {
+      axios.get("http://localhost:5000/events/allEvents")
+        .then((response) => {
+          setAllEvents(response.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }, [filtersValues]);
   // eslint-disable-next-line consistent-return
   useEffect(() => {
     const queryParams = new URLSearchParams();
 
     if (filtersValues.continents && filtersValues.continents.length > 0) {
       queryParams.append("continents", filtersValues.continents.join(","));
+    }
+
+    if (filtersValues.sport_type && filtersValues.sport_type.length > 0) {
+      queryParams.append("sport_types", filtersValues.sport_type.join(","));
     }
 
     if (filtersValues.sort_by) {
