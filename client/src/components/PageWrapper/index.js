@@ -3,14 +3,15 @@ import PropTypes from "prop-types";
 
 import "./index.scss";
 
-const PageWrapper = ({ children }) => (
-  <div className="page-wrapper">
+const PageWrapper = ({ children, className }) => (
+  <div className={`page-wrapper ${className}`}>
     {children}
   </div>
 );
 
 PageWrapper.propTypes = {
   children: PropTypes.node,
+  className: PropTypes.string,
 };
 
 export default PageWrapper;

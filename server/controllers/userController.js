@@ -71,8 +71,8 @@ class UserControllers {
 
   async deleteUser(req, res, next) {
     try {
-      const { userId } = req.body;
-      await userService.deleteUser(userId);
+      const token = req.headers.authorization.split(" ")[1];
+      res.json(await userService.deleteUser(token));
     } catch (e) {
       next(e)
     }

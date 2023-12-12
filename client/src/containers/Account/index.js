@@ -17,6 +17,7 @@ import Footer from "../../components/Footer";
 import UserField from "./UserField";
 import checkToken from "../../utils/auth/checkToken";
 import ListWrapper from "../../components/ListWrapper";
+import DeleteModal from "./DeleteModal";
 import toastSuccess from "../../utils/toast/toastSuccess";
 import toastError from "../../utils/toast/toastError";
 import generateUniqueFileName from "../../utils/generateUniqueFileName";
@@ -28,6 +29,7 @@ const Account = () => {
   const [isFormReadonly, setIsFormReadonly] = useState(true);
   const [viewClientsList, setViewClientsList] = useState(false);
   const [viewHistory, setViewHistory] = useState(false);
+  const [viewModal, setViewModal] = useState(false);
   const [userInfo, setUserInfo] = useState({});
   const [selectedFile, setSelectedFile] = useState(null);
   const token = localStorage.getItem("token");
@@ -44,7 +46,7 @@ const Account = () => {
       .catch(() => {
         localStorage.clear();
       });
-  }, [token]);
+  }, []);
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -53,6 +55,10 @@ const Account = () => {
 
   const changeViewHistory = () => {
     setViewHistory((prev) => !prev);
+  };
+
+  const changeModalView = () => {
+    setViewModal((prev) => !prev);
   };
 
   const changeUserData = (values) => {
@@ -97,119 +103,136 @@ const Account = () => {
 
   const regDate = userInfo.reg_date ? new Date(userInfo.reg_date) : null;
   return (
-    <PageWrapper>
-      <ToastContainer style={{ width: "330px" }} />
-      <Header />
-      {checkToken() === null
-        ? (
-          <div className="link-log-wrapper">
-            <div className="link-log">
-              <span>{t("accountPage.noRegBlock.phrase")}</span>
-              <span>
-                {t("accountPage.noRegBlock.beforeBtn")}
-                <Link to="/login" className="link-log-btn">{t("accountPage.noRegBlock.btn")}</Link>
-              </span>
-            </div>
-          </div>
-        )
-        : (
-          <>
-            <div className="account-wrapper">
-              <div className="img-wrapper">
-                {!isFormReadonly
-                  && (
-                    <div className="file-upload">
-                      {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
-                      <label>
-                        <input type="file" onChange={handleFileChange} name="file" />
-                        <span>{selectedFile === null ? "Choose photo if you want to change" : "New photo added"}</span>
-                      </label>
-                    </div>
-                  )}
-                <img key={userInfo.photoUrl} src={userInfo.photoUrl} className="account-wrapper__photo" alt="user" />
+    <>
+      {viewModal && <DeleteModal closeModal={changeModalView} token={token} />}
+      <PageWrapper className={viewModal ? "blur" : ""}>
+        <ToastContainer style={{ width: "330px" }} />
+        <Header />
+        {checkToken() === null
+          ? (
+            <div className="link-log-wrapper">
+              <div className="link-log">
+                <span>{t("accountPage.noRegBlock.phrase")}</span>
+                <span>
+                  {t("accountPage.noRegBlock.beforeBtn")}
+                  <Link to="/login" className="link-log-btn">{t("accountPage.noRegBlock.btn")}</Link>
+                </span>
               </div>
-              <Form
-                onSubmit={changeUserData}
-                render={({ handleSubmit, invalid }) => (
-                  <form onSubmit={handleSubmit} className="account-form">
-                    <UserField
-                      name="role"
-                      type="text"
-                      label={t("accountPage.role")}
-                      initialValue={userInfo.role}
-                      disabled={isFormReadonly}
-                    />
-
-                    {userInfo.role === "coach" ? (
-                      <div className="price-wrapper">
-                        <UserField
-                          name="price"
-                          type="text"
-                          label={t("accountPage.price")}
-                          initialValue={userInfo.price}
-                          disabled={isFormReadonly}
-                        />
-                        <span>$</span>
+            </div>
+          )
+          : (
+            <>
+              <div className="account-wrapper">
+                <div className="img-wrapper">
+                  {!isFormReadonly
+                    && (
+                      <div className="file-upload">
+                        {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
+                        <label>
+                          <input type="file" onChange={handleFileChange} name="file" />
+                          <span>
+                            {selectedFile === null ? "Choose photo if you want to change" : "New photo added"}
+                          </span>
+                        </label>
                       </div>
-                    ) : ""}
-
-                    {accountFields.map(({ name, label }) => (
+                    )}
+                  <img key={userInfo.photoUrl} src={userInfo.photoUrl} className="account-wrapper__photo" alt="user" />
+                </div>
+                <Form
+                  onSubmit={changeUserData}
+                  render={({ handleSubmit, invalid }) => (
+                    <form onSubmit={handleSubmit} className="account-form">
                       <UserField
-                        key={name}
-                        name={name}
+                        name="role"
                         type="text"
-                        label={t(`accountPage.${label}`)}
-                        initialValue={userInfo[name]}
+                        label={t("accountPage.role")}
+                        initialValue={userInfo.role}
                         disabled={isFormReadonly}
                       />
-                    ))}
 
-                    <UserField
-                      name="reg_date"
-                      type="text"
-                      label={t("accountPage.regDate")}
-                      initialValue={regDate ? format(regDate, "dd-MM-yyyy") : ""}
-                      disabled
-                    />
+                      {userInfo.role === "coach" ? (
+                        <div className="price-wrapper">
+                          <UserField
+                            name="price"
+                            type="text"
+                            label={t("accountPage.price")}
+                            initialValue={userInfo.price}
+                            disabled={isFormReadonly}
+                          />
+                          <span>$</span>
+                        </div>
+                      ) : ""}
 
-                    <button
-                      onClick={() => setIsFormReadonly((prev) => !prev)}
-                      type={isFormReadonly ? "submit" : "button"}
-                      disabled={invalid && !isFormReadonly}
-                      className="user-form__btn"
-                    >
-                      {isFormReadonly ? t("accountPage.editBtn") : t("accountPage.saveBtn")}
-                    </button>
-                    <button type="button" onClick={changeViewHistory}>{t("accountPage.history.seeHistoryBtn")}</button>
-                    {userInfo.role === "coach"
-                      ? <button type="button" onClick={handleClientListView}>{t("accountPage.listClients.btn")}</button>
-                      : ""}
-                    <button type="button">Delete account</button>
-                  </form>
+                      {accountFields.map(({ name, label }) => (
+                        <UserField
+                          key={name}
+                          name={name}
+                          type="text"
+                          label={t(`accountPage.${label}`)}
+                          initialValue={userInfo[name]}
+                          disabled={isFormReadonly}
+                        />
+                      ))}
+
+                      <UserField
+                        name="reg_date"
+                        type="text"
+                        label={t("accountPage.regDate")}
+                        initialValue={regDate ? format(regDate, "dd-MM-yyyy") : ""}
+                        disabled
+                      />
+
+                      <button
+                        onClick={() => setIsFormReadonly((prev) => !prev)}
+                        type={isFormReadonly ? "submit" : "button"}
+                        disabled={invalid && !isFormReadonly}
+                        className="user-form__btn"
+                      >
+                        {isFormReadonly ? t("accountPage.editBtn") : t("accountPage.saveBtn")}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={changeViewHistory}
+                      >
+                        {t("accountPage.history.seeHistoryBtn")}
+                      </button>
+                      {userInfo.role === "coach"
+                        ? (
+                          <button
+                            type="button"
+                            onClick={handleClientListView}
+                          >
+                            {t("accountPage.listClients.btn")}
+                          </button>
+                        )
+                        : ""}
+                      <button type="button" onClick={changeModalView}>{t("accountPage.deleteAcc")}</button>
+                    </form>
+                  )}
+                />
+              </div>
+              <CSSTransition
+                in={viewClientsList}
+                timeout={500}
+                classNames="client-list-animation"
+                unmountOnExit
+              >
+                <ListWrapper closeList={handleClientListView}>
+                  <ListOfClients />
+                </ListWrapper>
+              </CSSTransition>
+              {viewHistory
+                && (
+                  <ListWrapper closeList={changeViewHistory}>
+                    <MyHistory sportType={userInfo.sport_type} />
+                  </ListWrapper>
                 )}
-              />
-            </div>
-            <CSSTransition
-              in={viewClientsList}
-              timeout={500}
-              classNames="client-list-animation"
-              unmountOnExit
-            >
-              <ListWrapper closeList={handleClientListView}>
-                <ListOfClients />
-              </ListWrapper>
-            </CSSTransition>
-            {viewHistory
-              && (
-              <ListWrapper closeList={changeViewHistory}>
-                <MyHistory sportType={userInfo.sport_type} />
-              </ListWrapper>
-              )}
-            <Posts />
-          </>
-        )}
-      <Footer />
-    </PageWrapper>
+              <Posts />
+            </>
+          )}
+        <Footer />
+      </PageWrapper>
+    </>
   );
 };
 

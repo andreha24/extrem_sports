@@ -255,12 +255,13 @@ class UserService {
     }
   }
 
-
-  //todo
-  async deleteUser(userId){
+  async deleteUser(token){
     try {
       const pool = await sql.connect(dbConfig);
+      const userId = await tokenService.getUserIdFromToken(token);
       await pool.request().query(`DELETE FROM [User] WHERE id = ${userId}`);
+
+      return "Account deleted";
     } catch (error) {
       console.error(error);
       throw error;
@@ -293,7 +294,6 @@ class UserService {
       throw error;
     }
   }
-
 
   async deleteResult(id){
     try {

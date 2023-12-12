@@ -84,16 +84,23 @@ const MyHistory = ({ sportType }) => {
                 <tr key={id} style={{ background: id === maxResultId ? "lightgreen" : "" }}>
                   <td>{result}</td>
                   <td>{formatDate(dateOfTrain)}</td>
-                  <td><button type="button" onClick={() => deleteResult(id)}>Delete</button></td>
+                  <td>
+                    <button
+                      type="button"
+                      onClick={() => deleteResult(id)}
+                    >
+                      {t("accountPage.history.delete")}
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
-          {viewHistoryForm
-            ? <HistoryForm changeHistoryList={changeHistoryList} closeList={changeHistoryView} />
-            : <button type="button" onClick={changeHistoryView}>{t("accountPage.history.crateResult")}</button>}
         </>
       )}
+      {viewHistoryForm
+        ? <HistoryForm changeHistoryList={changeHistoryList} closeList={changeHistoryView} />
+        : <button type="button" onClick={changeHistoryView}>{t("accountPage.history.crateResult")}</button>}
     </div>
   );
 };

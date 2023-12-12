@@ -17,6 +17,7 @@ const accountPageTrans = {
   regDate: "Reg date",
   editBtn: "Edit",
   saveBtn: "Save",
+  deleteAcc: "Delete account",
   listClients: {
     btn: "List of clients",
     status: "Status:",
@@ -43,6 +44,12 @@ const accountPageTrans = {
     crateResult: "Create new result",
     add: "Add",
     result: "result",
+    delete: "Delete",
+  },
+  modal: {
+    phrase: "Are you sure?",
+    yes: "Yes",
+    no: "No",
   },
 };
 

@@ -17,6 +17,7 @@ const accountPageTrans = {
   regDate: "Дата реєстрації",
   editBtn: "Редагувати",
   saveBtn: "Зберегти",
+  deleteAcc: "Видалити акаунт",
   listClients: {
     btn: "Список клієнтів",
     status: "Статус:",
@@ -46,6 +47,12 @@ const accountPageTrans = {
     crateResult: "Створити новий результат",
     add: "Додати",
     result: "результат",
+    delete: "Видалити",
+  },
+  modal: {
+    phrase: "Ви впевнені?",
+    yes: "Так",
+    no: "Ні",
   },
 };
 

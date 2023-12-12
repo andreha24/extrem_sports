@@ -20,6 +20,7 @@ const HistoryForm = ({ changeHistoryList, closeList }) => {
     })
       .then((response) => {
         changeHistoryList(response.data);
+        closeList();
       })
       .catch((err) => {
         console.log(err);
