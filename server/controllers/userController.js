@@ -80,7 +80,8 @@ class UserControllers {
 
   async changeUserData(req, res, next) {
     try {
-      const {name, lastname, mail, role, price, country, city, age, experience, sport_type, reg_date, photo, token} = req.body;
+      const token = req.headers.authorization.split(" ")[1];
+      const {name, lastname, mail, role, price, country, city, age, experience, sport_type, reg_date, photo} = req.body;
       res.json(await userService.changeUserInfo(name, lastname, mail, role, price, country, city, age, experience, sport_type, reg_date, photo, token));
     } catch (e) {
       next(e)

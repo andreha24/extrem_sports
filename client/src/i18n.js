@@ -22,7 +22,7 @@ i18n
     lng: "en",
     fallbackLng: "ua",
     interpolation: {
-      escapeValue: false, // not needed for react as it escapes by default
+      escapeValue: false,
     },
   });
 

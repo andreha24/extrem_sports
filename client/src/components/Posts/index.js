@@ -11,6 +11,7 @@ import editIcon from "../../assets/edit-icon.png";
 import deleteIcon from "../../assets/garbage.png";
 
 import "./index.scss";
+import toastSuccess from "../../utils/toast/toastSuccess";
 
 const Posts = ({ user, userId }) => {
   const { t } = useTranslation();
@@ -52,9 +53,10 @@ const Posts = ({ user, userId }) => {
   };
 
   const addPost = (values) => {
-    axios.post("http://localhost:5000/post/addPost", {
-      ...values,
-      token,
+    axios.post("http://localhost:5000/post/addPost", values, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     })
       .then((response) => {
         setPosts((prev) => [response.data.post, ...prev]);
@@ -89,7 +91,8 @@ const Posts = ({ user, userId }) => {
 
   const deletePost = (postId) => {
     axios.delete(`http://localhost:5000/post/deletePost/${postId}`)
-      .then(() => {
+      .then((response) => {
+        toastSuccess(response.data.message);
         setPosts((prev) => prev.filter((post) => post.id !== postId));
       })
       .catch((err) => {

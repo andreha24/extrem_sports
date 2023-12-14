@@ -15,10 +15,11 @@ class UserService {
     const hashPassword = await bcrypt.hash(password, 3);
     const candidate = await pool
       .request()
-      .query(`SELECT * FROM [User] WHERE mail = '${mail}' AND password = '${password}'`);
+      .query(`SELECT * FROM [User] WHERE mail = '${mail}'`);
 
     if (candidate.recordset.length > 0) {
-      throw ApiError.BadRequest(`Пользователь с почтовым адресом ${mail} уже существует`);
+      throw ApiError.BadRequest(`The user with ${mail} already registered`);
+      return "The user with ${mail} already registered";
     }
 
     // Check if price is a valid number
@@ -28,6 +29,8 @@ class UserService {
       .request()
       .query(`INSERT INTO [User] (name, lastname, age, experience, sport_type, role, country, city, mail, password, photo, price)
       VALUES ('${name}','${lastname}', ${age}, ${experience}, '${sport_type}', '${role}', '${country}', '${city}', '${mail}', '${hashPassword}', '${img}', ${validPrice})`);
+
+    return "User registered";
   }
 
 

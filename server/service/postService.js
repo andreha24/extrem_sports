@@ -57,7 +57,10 @@ class PostService {
     try {
       const pool = await sql.connect(dbConfig);
       await pool.request().query(`DELETE FROM [Posts] WHERE id = ${postId}`);
-      return postId;
+      return {
+        postId: postId,
+        message: "Post deleted"
+      };
     } catch (error) {
       console.error(error);
       throw error;

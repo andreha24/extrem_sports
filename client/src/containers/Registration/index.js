@@ -42,6 +42,7 @@ const Registration = () => {
     const formData = new FormData();
     formData.append("img", selectedFile, userData.img);
 
+    console.log(userData);
     axios
       .post("http://localhost:5000/api/registration", userData)
       .then(() => {
