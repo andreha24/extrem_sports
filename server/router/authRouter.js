@@ -7,7 +7,7 @@ const userController = require("../controllers/userController");
 router.post("/registration",
   body("mail").isEmail(),
   body("password").isLength({ min: 8, max: 32 }),
-  userController.registration)
-    .post("/login", userController.login)
+  userController.registration) //
+    .post("/login", userController.login) //
 
 module.exports = router;

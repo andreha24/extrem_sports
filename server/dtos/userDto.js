@@ -12,5 +12,7 @@ module.exports = class UserDto {
     this.is_banned = user.is_banned;
     this.photo = user.photo;
     this.price = user.price;
+    this.weight = user.weight;
+    this.height = user.height;
   }
 }

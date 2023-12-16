@@ -77,6 +77,7 @@ const MyHistory = ({ sportType }) => {
               <tr>
                 <th>{t("accountPage.history.results")}</th>
                 <th>{t("accountPage.history.date")}</th>
+                <th>Details</th>
               </tr>
             </thead>
             <tbody>
@@ -84,6 +85,11 @@ const MyHistory = ({ sportType }) => {
                 <tr key={id} style={{ background: id === maxResultId ? "lightgreen" : "" }}>
                   <td>{result}</td>
                   <td>{formatDate(dateOfTrain)}</td>
+                  <td>
+                    <button type="button">
+                      Open
+                    </button>
+                  </td>
                   <td>
                     <button
                       type="button"

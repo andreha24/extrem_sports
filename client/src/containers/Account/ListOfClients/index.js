@@ -32,9 +32,10 @@ const ListOfClients = () => {
   }, [currentClientStatus]);
 
   const applyClient = (clientId) => {
-    axios.patch("http://localhost:5000/coach/acceptClient", {
-      token,
-      clientId,
+    axios.patch(`http://localhost:5000/coach/acceptClient/${clientId}`, {}, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     })
       .then((response) => {
         console.log(response.data);

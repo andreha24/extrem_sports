@@ -5,11 +5,12 @@ const tokenService = require('../service/tokenService');
 const googleBucketService = require("../service/googleBucketService");
 const UserDto = require('../dtos/userDto');
 const ResultDto = require('../dtos/resultDto');
+const serviceDto = require('../dtos/serviceCommentDto');
 const ApiError = require("../exeptions/apiErrors");
 const dbConfig = require("../dbConnection");
 
 class UserService {
-  async registration(name, lastname, age, experience, sport_type, country, city, mail, password, role, img, price) {
+  async registration(name, lastname, age, experience, sport_type, country, city, mail, password, role, img, price, weight, height) {
     const pool = await sql.connect(dbConfig);
 
     const hashPassword = await bcrypt.hash(password, 3);
@@ -19,16 +20,17 @@ class UserService {
 
     if (candidate.recordset.length > 0) {
       throw ApiError.BadRequest(`The user with ${mail} already registered`);
-      return "The user with ${mail} already registered";
+      return `The user with ${mail} already registered`;
     }
 
     // Check if price is a valid number
-    const validPrice = !isNaN(price) ? price : 0; // You can set a default value or handle it based on your requirements
+    const validPrice = !isNaN(price) ? price : 0; // Set a default value
 
     await pool
       .request()
-      .query(`INSERT INTO [User] (name, lastname, age, experience, sport_type, role, country, city, mail, password, photo, price)
-      VALUES ('${name}','${lastname}', ${age}, ${experience}, '${sport_type}', '${role}', '${country}', '${city}', '${mail}', '${hashPassword}', '${img}', ${validPrice})`);
+      .query(`INSERT INTO [User] (name, lastname, age, experience, sport_type, role, country, city, mail, password, photo, price, weight, height)
+      VALUES ('${name}','${lastname}', ${age}, ${experience}, '${sport_type}', '${role}', '${country}', '${city}', '${mail}', 
+      '${hashPassword}', '${img}', ${validPrice}, ${weight}, ${height})`);
 
     return "User registered";
   }
@@ -51,13 +53,13 @@ class UserService {
     return tokenService.generateToken({...userDto});
   }
 
-  async changeUserInfo(name, lastname, mail, role, price, country, city, age, experience, sport_type, reg_date, photo, token) {
+  async changeUserInfo(name, lastname, mail, role, price, country, city, age, experience, sport_type, reg_date, weight, height, photo, token) {
     try {
       const pool = await sql.connect(dbConfig);
       const userId = await tokenService.getUserIdFromToken(token);
       let query = `UPDATE [User] SET name = '${name}'
       , lastname = '${lastname}', age = ${age}, experience = ${experience}, sport_type = '${sport_type}', role='${role}', 
-      country = '${country}', city = '${city}', mail = '${mail}', photo = '${photo}'`;
+      country = '${country}', city = '${city}', mail = '${mail}', photo = '${photo}', weight = ${weight}, height = ${height}`;
 
       if(price !== undefined) {
         query += `, price =${price} WHERE id = ${userId}`;
@@ -159,7 +161,6 @@ class UserService {
     try {
       const pool = await sql.connect(dbConfig);
 
-      // Select users with their ratings (if available) from Coach_ratings
       const allUsers = await pool.request().query(`
       SELECT u.*
       FROM [User] u
@@ -244,6 +245,7 @@ class UserService {
         let userRating = 0;
         const userRatingArr = await pool.request().query(`SELECT ratingValue FROM [Coach_ratings] WHERE coachId = ${user.id}`);
         if (userRatingArr.recordset.length > 0) {
+          //calculate average rating
           userRating =
             userRatingArr.recordset.reduce((acc, currentValue) => acc + currentValue.ratingValue, 0) /
             userRatingArr.recordset.length;
@@ -275,21 +277,53 @@ class UserService {
     try {
       const pool = await sql.connect(dbConfig);
       const userId = await tokenService.getUserIdFromToken(token);
+      // get userData
+      const userData = await pool.request().query(`SELECT * FROM [User] WHERE id=${userId}`);
+      // get user results
       const resultsHistory = await pool.request().query(`SELECT * FROM [Users_history] WHERE userId = ${userId} ORDER BY dateOfTrain DESC`);
-      return resultsHistory.recordset;
+      // Add coefficients and phrases to each history object
+      return resultsHistory.recordset.map((entry) => {
+        const heartbeatCoefficient = entry.heartbeat * 0.4;
+        const oxygenCoefficient = entry.oxygen * 0.3;
+        const temperatureCoefficient = entry.temperature * 0.3;
+        const weightCoefficient = userData.recordset[0].weight * 0.2;
+        const heightCoefficient = userData.recordset[0].height * 0.1;
+
+        const coefficient = heartbeatCoefficient + oxygenCoefficient + temperatureCoefficient + weightCoefficient + heightCoefficient;
+        // Implement the determineCategory function, which will return a phrase depending on the coefficient
+        const category = determineCategory(coefficient);
+
+        return {
+          ...entry,
+          coefficient,
+          category,
+        };
+      });
+
+      function determineCategory(coefficient) {
+        if (coefficient < 50) {
+          return 'danger';
+        } else if (coefficient >= 50 && coefficient < 75) {
+          return 'normal';
+        } else {
+          return 'good';
+        }
+      }
     } catch (error) {
       console.error(error);
       throw error;
     }
   }
 
-  async addNewResult(result, dateOfResult, token){
+
+  async addNewResult(result, heartbeat, oxygen, temperature, dateOfResult, token){
     try {
       const pool = await sql.connect(dbConfig);
       const userId = await tokenService.getUserIdFromToken(token);
-      await pool.request().query(`INSERT INTO [Users_History] (result, dateOfTrain, userId) VALUES (${result}, '${dateOfResult}', ${userId})`);
+      await pool.request().query(`INSERT INTO [Users_History] (result, dateOfTrain, userId, heartbeat, oxygen, temperature)
+        VALUES (${result}, '${dateOfResult}', ${userId}, ${heartbeat}, ${oxygen}, ${temperature})`);
       const newResult = await pool.request()
-        .query(`SELECT * FROM [Users_history] WHERE userId = ${userId} AND result = ${result} AND dateOfTrain = '${dateOfResult}'`)
+        .query(`SELECT * FROM [Users_history] WHERE userId = ${userId} AND result = ${result} AND dateOfTrain = '${dateOfResult}'`);
       
       return new ResultDto(newResult.recordset[0]);
     } catch (error) {
@@ -301,7 +335,7 @@ class UserService {
   async deleteResult(id){
     try {
       const pool = await sql.connect(dbConfig);
-      await pool.request().query(`DELETE FROM [Users_History] WHERE id = ${id}`);
+      await pool.request().query(`DELETE FROM [Users_history] WHERE id = ${id}`);
 
       return "Result deleted";
     } catch (error) {
@@ -369,7 +403,25 @@ class UserService {
       await pool.request().query(`INSERT INTO [Service_comments] (user_id, description) 
       VALUES (${userId},'${text}')`);
 
-      return 'Feedback sent';
+      const newComment = await pool.request()
+        .query(`SELECT * FROM [Service_comments] WHERE user_id = ${userId} AND description = '${text}'`);
+
+      return {
+        comment : new serviceDto(newComment.recordset[0]),
+        message: 'Feedback sent',
+      };
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+
+  async deleteCommentFromService(id){
+    try {
+      const pool = await sql.connect(dbConfig);
+      await pool.request().query(`DELETE FROM [Service_comments] WHERE user_id = ${id}`);
+
+      return 'Comment deleted';
     } catch (error) {
       console.error(error);
       throw error;

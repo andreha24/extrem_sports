@@ -10,8 +10,9 @@ class UserControllers {
       if (!errors.isEmpty()) {
         return next(ApiError.BadRequest("Ошибка при валидации", errors.array()));
       }
-      const { name, lastname, age, role, experience, sport_type, country, city, mail, password, img, price_per_lesson } = req.body;
-      const userData = await userService.registration(name, lastname, +age, +experience, sport_type, country, city, mail, password, role, img, +price_per_lesson );
+      const { name, lastname, age, role, experience, sport_type, country, city, mail, password, img, price_per_lesson, weight, height } = req.body;
+      console.log(req.body);
+      const userData = await userService.registration(name, lastname, +age, +experience, sport_type, country, city, mail, password, role, img, +price_per_lesson, weight, height);
       return res.json(userData);
     } catch (e) {
       next(e);
@@ -81,8 +82,8 @@ class UserControllers {
   async changeUserData(req, res, next) {
     try {
       const token = req.headers.authorization.split(" ")[1];
-      const {name, lastname, mail, role, price, country, city, age, experience, sport_type, reg_date, photo} = req.body;
-      res.json(await userService.changeUserInfo(name, lastname, mail, role, price, country, city, age, experience, sport_type, reg_date, photo, token));
+      const {name, lastname, mail, role, price, country, city, age, experience, sport_type, reg_date, photo, weight, height} = req.body;
+      res.json(await userService.changeUserInfo(name, lastname, mail, role, price, country, city, age, experience, sport_type, reg_date, weight, height, photo, token));
     } catch (e) {
       next(e)
     }
@@ -100,8 +101,8 @@ class UserControllers {
   async addNewResult(req, res, next) {
     try {
       const token = req.headers.authorization.split(" ")[1];
-      const { result, dateOfResult } = req.body;
-      res.json(await userService.addNewResult(result, dateOfResult, token));
+      const { result, heartbeat, oxygen, temperature, dateOfResult } = req.body;
+      res.json(await userService.addNewResult(result, heartbeat, oxygen, temperature, dateOfResult, token));
     } catch (e) {
       next(e)
     }
@@ -166,6 +167,15 @@ class UserControllers {
       const {text} = req.body;
       const token = req.headers.authorization.split(" ")[1];
       return res.json(await userService.addCommentToService(token, text));
+    } catch (e) {
+      next(e)
+    }
+  }
+
+  async deleteCommentFromService(req, res, next){
+    try {
+      const { id } = req.params;
+      return res.json(await userService.deleteCommentFromService(id));
     } catch (e) {
       next(e)
     }

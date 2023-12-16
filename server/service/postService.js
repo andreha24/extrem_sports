@@ -46,7 +46,7 @@ class PostService {
       await pool.request().query(`UPDATE [Posts] SET topic = '${topic}', text = '${text}' WHERE id = ${postId}`);
       const editedPost = await pool.request().query(`SELECT * FROM [Posts] WHERE id = ${postId}`);
       const postDto = new PostDto(editedPost.recordset[0]);
-      return { post: postDto };
+      return { post: postDto, message: "Post edited" };
     } catch (error) {
       console.error(error);
       throw error;

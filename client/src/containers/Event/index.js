@@ -46,9 +46,10 @@ const Event = () => {
       toastError("You need to log in");
       return;
     }
-    axios.post("http://localhost:5000/events/addUserToEvent", {
-      token,
-      eventId,
+    axios.post(`http://localhost:5000/events/addUserToEvent/${eventId}`, {}, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     })
       .then((response) => {
         toastSuccess(response.data.message);

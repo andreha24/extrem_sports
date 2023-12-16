@@ -49,9 +49,10 @@ const Client = () => {
   }, [rating]);
 
   const sendApplication = (coachId) => {
-    axios.post("http://localhost:5000/coach/addClient", {
-      coachId,
-      token,
+    axios.post(`http://localhost:5000/coach/addClient/${coachId}`, {}, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     })
       .then((response) => {
         toastSuccess(response.data);
@@ -68,9 +69,12 @@ const Client = () => {
   const ratingChanged = (newRating) => {
     setRating(newRating);
     axios.post("http://localhost:5000/coach/addRating", {
-      token,
       userId,
       newRating,
+    }, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     })
       .then((response) => {
         toastSuccess(response.data);

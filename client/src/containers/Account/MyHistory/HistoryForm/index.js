@@ -45,6 +45,33 @@ const HistoryForm = ({ changeHistoryList, closeList }) => {
           <div className="history-form-item">
             <FormField
               validators={required}
+              name="heartbeat"
+              type="text"
+              placeholder="heartbeat"
+            />
+          </div>
+
+          <div className="history-form-item">
+            <FormField
+              validators={required}
+              name="oxygen"
+              type="text"
+              placeholder="oxygen"
+            />
+          </div>
+
+          <div className="history-form-item">
+            <FormField
+              validators={required}
+              name="temperature"
+              type="text"
+              placeholder="temperature"
+            />
+          </div>
+
+          <div className="history-form-item">
+            <FormField
+              validators={required}
               name="dateOfResult"
               type="date"
               placeholder="training date"

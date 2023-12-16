@@ -51,9 +51,10 @@ class EventControllers {
 
   async addUserToEvent(req, res, next){
     try {
-      const { token, eventId } = req.body;
+      const token = req.headers.authorization.split(" ")[1];
+      const { id } = req.params;
       const userId = tokenService.getUserIdFromToken(token);
-      return res.json(await eventService.addUserToEvent(+eventId, +userId));
+      return res.json(await eventService.addUserToEvent(+id, +userId));
     } catch (e) {
       next(e);
     }
