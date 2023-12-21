@@ -22,12 +22,20 @@ const Filters = ({
           <span className="filters-paragraph">{t("filterBlock.name")}</span>
           {children}
           <div className="filters-btns">
-            <button type="submit" className="apply-filters-btn">{t("filterBlock.button")}</button>
+            <button
+              type="submit"
+              className="apply-filters-btn"
+              onClick={closeFilters}
+            >
+              {t("filterBlock.button")}
+            </button>
             <button
               type="button"
               onClick={() => {
                 reset();
                 updateFilters({});
+                // eslint-disable-next-line no-unused-expressions
+                closeFilters && closeFilters();
               }}
               className="apply-filters-btn"
             >

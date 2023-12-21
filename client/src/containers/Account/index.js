@@ -46,7 +46,7 @@ const Account = () => {
       .catch(() => {
         localStorage.clear();
       });
-  }, []);
+  }, [userInfo]);
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -75,7 +75,11 @@ const Account = () => {
       token,
     };
 
-    axios.patch("http://localhost:5000/api/changeUserData", newData)
+    axios.patch("http://localhost:5000/api/changeUserData", newData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
       .then((response) => {
         setUserInfo(response.data.updated);
         toastSuccess(response.data.message);

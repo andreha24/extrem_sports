@@ -21,7 +21,7 @@ const FeedbackForm = () => {
       },
     })
       .then((response) => {
-        toastSuccess(response.data);
+        toastSuccess(response.data.message);
       })
       .catch((err) => {
         if (err.request.status === 401) {
@@ -33,7 +33,7 @@ const FeedbackForm = () => {
 
   return (
     <div className="feedback-form-wrapper">
-      <ToastContainer />
+      <ToastContainer style={{ width: "330px" }} />
       <Form
         onSubmit={sendFeedback}
         render={({ handleSubmit }) => (

@@ -42,11 +42,10 @@ const Registration = () => {
     const formData = new FormData();
     formData.append("img", selectedFile, userData.img);
 
-    console.log(userData);
     axios
       .post("http://localhost:5000/api/registration", userData)
-      .then(() => {
-        toastSuccess("User registration successful");
+      .then((response) => {
+        toastSuccess(response.message);
         navigate("/login");
       })
       .catch((error) => {
@@ -70,7 +69,7 @@ const Registration = () => {
       linkToName={t("loginPage.paragraph")}
       paragraphName={t("regPage.paragraph")}
     >
-      <ToastContainer />
+      <ToastContainer style={{ width: "330px" }} />
       <div className="inputs-wrapper">
         <div className="inputs-wrapper__block">
           <FormField
@@ -95,21 +94,36 @@ const Registration = () => {
           />
 
           <FormField
+            name="weight"
+            validators={required}
+            type="text"
+            placeholder={t("regPage.weight")}
+          />
+
+          <FormField
+            name="height"
+            validators={required}
+            type="text"
+            placeholder={t("regPage.height")}
+          />
+
+          <FormField
             name="country"
             validators={required}
             type="text"
             placeholder={t("regPage.country")}
           />
 
+        </div>
+
+        <div className="inputs-wrapper__block">
           <FormField
             name="city"
             validators={required}
             type="text"
             placeholder={t("regPage.city")}
           />
-        </div>
 
-        <div className="inputs-wrapper__block">
           <Field
             name="sport_type"
             component="select"

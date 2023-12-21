@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import formatDate from "../../../utils/formatDate";
 import check from "../../../assets/check.png";
 import clear from "../../../assets/clear.png";
+import toastSuccess from "../../../utils/toast/toastSuccess";
 
 import "./index.scss";
 import "react-toastify/dist/ReactToastify.css";
@@ -38,7 +39,7 @@ const ListOfClients = () => {
       },
     })
       .then((response) => {
-        console.log(response.data);
+        toastSuccess(response.data);
         setCoachClients((prev) => prev.filter((client) => client.id !== clientId));
       })
       .catch((err) => {
@@ -53,7 +54,7 @@ const ListOfClients = () => {
       },
     })
       .then((response) => {
-        console.log(response.data);
+        toastSuccess(response.data);
         setCoachClients((prev) => prev.filter((client) => client.id !== id));
       })
       .catch((err) => {
@@ -67,7 +68,7 @@ const ListOfClients = () => {
 
   return (
     <>
-      <ToastContainer />
+      <ToastContainer style={{ width: "330px" }} />
       <div className="status">
         <span>{t("accountPage.listClients.status")}</span>
         <div className="status-btns">

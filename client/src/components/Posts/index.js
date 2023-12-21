@@ -73,7 +73,7 @@ const Posts = ({ user, userId }) => {
       id,
     })
       .then((response) => {
-        console.log(response.data);
+        toastSuccess(response.data.message);
         setPosts((prev) => prev.map((post) => {
           if (post.id === response.data.post.id) {
             return response.data.post;

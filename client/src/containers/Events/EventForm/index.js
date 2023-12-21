@@ -64,7 +64,7 @@ const EventForm = ({ changeFormView }) => {
 
   return (
     <>
-      <ToastContainer />
+      <ToastContainer style={{ width: "330px" }} />
       <Form
         onSubmit={addEvent}
         render={({ handleSubmit }) => (
@@ -80,6 +80,7 @@ const EventForm = ({ changeFormView }) => {
               name="description"
               type="text"
               validators={required}
+              placeholder="description"
             />
             <Field
               name="continent"
@@ -111,11 +112,13 @@ const EventForm = ({ changeFormView }) => {
               name="country"
               type="text"
               validators={required}
+              placeholder="country"
             />
             <FormField
               name="city"
               type="text"
               validators={required}
+              placeholder="city"
             />
             <FormField
               name="people"

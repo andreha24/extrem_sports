@@ -69,7 +69,7 @@ const TableCoaches = () => {
               <td>{name}</td>
               <td>{lastname}</td>
               <td>{avgRating}</td>
-              <td><Link to={`/clients/${id}`}>{t("theBestPage.details")}</Link></td>
+              <td><Link to={`/clients/${id}`} className="details-link">{t("theBestPage.details")}</Link></td>
             </tr>
           ))}
         </tbody>

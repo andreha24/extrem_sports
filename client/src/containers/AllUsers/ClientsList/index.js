@@ -11,6 +11,7 @@ import "./index.scss";
 const ClientsList = ({ filtersValues, chooseRole, handleRole }) => {
   const { t } = useTranslation();
   const [clientsList, setClientsList] = useState([]);
+  const [visible, setVisible] = useState(3);
 
   useEffect(() => {
     const isEmptyObject = Object.keys(filtersValues).length === 0;
@@ -62,6 +63,10 @@ const ClientsList = ({ filtersValues, chooseRole, handleRole }) => {
     }
   }, [filtersValues]);
 
+  const seeMoreUsers = () => {
+    setVisible((prev) => prev + 6);
+  };
+
   return (
     <div className="users-container">
       <div className="role-btns">
@@ -81,7 +86,7 @@ const ClientsList = ({ filtersValues, chooseRole, handleRole }) => {
         </button>
       </div>
       <div className="users-list">
-        {clientsList.map(({
+        {clientsList.slice(0, visible).map(({
           // eslint-disable-next-line camelcase
           id, name, lastname, photo, sport_type, country, city, experience, price, rating,
         }) => (
@@ -141,6 +146,8 @@ const ClientsList = ({ filtersValues, chooseRole, handleRole }) => {
           </div>
         ))}
       </div>
+      {clientsList.length > visible
+        ? <button type="button" onClick={seeMoreUsers} className="load-more">Load more</button> : ""}
     </div>
   );
 };

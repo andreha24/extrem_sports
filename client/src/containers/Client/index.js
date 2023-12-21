@@ -80,7 +80,6 @@ const Client = () => {
         toastSuccess(response.data);
       })
       .catch((err) => {
-        console.log(err);
         if (err.request.status === 401) {
           toastError("You need to log in");
           return;
@@ -172,7 +171,7 @@ const Client = () => {
 
   return (
     <>
-      <ToastContainer />
+      <ToastContainer style={{ width: "330px" }} />
       <Header />
       <div className="user-container">
         <img src={userData.photo} className="user-container-photo" alt="user" />

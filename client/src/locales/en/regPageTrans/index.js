@@ -20,6 +20,8 @@ const regPageTrans = {
   price: "price",
   country: "country",
   city: "city",
+  weight: "weight",
+  height: "height",
 };
 
 export default regPageTrans;

@@ -101,19 +101,42 @@ class EventService {
     }
   }
 
-  async addEvent(name, description, continent, country, city, sport_type, startDate, people, img){
-    const pool = await sql.connect(dbConfig);
-    const event = await sql.query`SELECT * FROM [Events] WHERE name = ${name}`;
+  async addEvent(name, description, continent, country, city, sport_type, startDate, people, img) {
+    try {
+      const pool = await sql.connect(dbConfig);
 
-    if (event.recordset.length > 0) {
-      throw ApiError.BadRequest(`Соревнование ${name} уже существует`);
+      const existingEvent = await pool
+        .request()
+        .input('name', sql.NVarChar, name)
+        .query('SELECT * FROM [Events] WHERE name = @name');
+
+      if (existingEvent.recordset.length > 0) {
+        throw ApiError.BadRequest(`Соревнование ${name} уже существует`);
+      }
+
+      await pool
+        .request()
+        .input('name', sql.NVarChar, name)
+        .input('description', sql.NVarChar, description)
+        .input('country', sql.NVarChar, country)
+        .input('city', sql.NVarChar, city)
+        .input('startDate', sql.DateTime, startDate)
+        .input('people', sql.Int, people)
+        .input('continent', sql.NVarChar, continent)
+        .input('img', sql.NVarChar, img)
+        .input('sport_type', sql.NVarChar, sport_type)
+        .query(`
+        INSERT INTO [Events] (name, description, country, city, start_date, people, continent, preview, sportType)
+        VALUES (@name, @description, @country, @city, @startDate, @people, @continent, @img, @sport_type)
+      `);
+
+      return "Event added";
+    } catch (error) {
+      console.error(error);
+      throw error;
     }
-
-    await pool.request().query(`INSERT INTO [Events] (name, description, country, city, start_date, people, continent, preview, sportType) 
-    VALUES ('${name}','${description}', '${country}', '${city}', '${startDate}', ${people}, '${continent}', '${img}', '${sport_type}' )`);
-
-    return "Event added";
   }
+
 
   async removeEvent(eventId){
     try {

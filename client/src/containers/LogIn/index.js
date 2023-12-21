@@ -2,6 +2,7 @@ import React from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { ToastContainer } from "react-toastify";
 
 import FormField from "../../components/FormWrapper/Field";
 import FormWrapper from "../../components/FormWrapper";
@@ -9,8 +10,8 @@ import required from "../../utils/validators/isRequired";
 import minLength from "../../utils/validators/minLength";
 import validateEmail from "../../utils/validators/validateEmail";
 import composeValidators from "../../utils/validators/composeValidators";
-import setAuthToken from "../../utils/auth/setAuthToken";
 import usePassword from "../../hooks/usePassword";
+import toastError from "../../utils/toast/toastError";
 
 const Login = () => {
   const { t } = useTranslation();
@@ -23,13 +24,11 @@ const Login = () => {
       .then((response) => {
         const token = response.data;
         localStorage.setItem("token", token);
-        setAuthToken(token);
-        alert("Welcome");
         navigate("/");
       })
       .catch((error) => {
         console.error("Error login user", error);
-        alert("Incorrect mail or password");
+        toastError("Incorrect mail or password");
       });
   };
 
@@ -40,6 +39,7 @@ const Login = () => {
       linkToName={t("regPage.paragraph")}
       paragraphName={t("loginPage.paragraph")}
     >
+      <ToastContainer style={{ width: "330px" }} />
       <FormField
         name="mail"
         validators={composeValidators(required, validateEmail)}

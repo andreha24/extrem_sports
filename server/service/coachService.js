@@ -58,23 +58,17 @@ class CoachService {
   }
 
   async addClient(coachId, token){
-    try {
-      if ( token === null){
-        throw ApiError.UnauthorizedError();
-      }
-
-      const clientId = await tokenService.getUserIdFromToken(token);
-      const pool = await sql.connect(dbConfig);
-      const applicant = await pool.request().query(`SELECT * FROM [Coach_clients] WHERE coachId = ${coachId} AND athleteId = ${clientId}`);
-      if (applicant.recordset.length > 0) {
-        return `You already registered`;
-      }
-      await pool.request().query(`INSERT INTO [Coach_clients] (coachId, athleteId) VALUES (${coachId}, ${clientId})`);
-      return `Application sent`;
-    } catch (error) {
-      console.error(error);
-      throw error;
+    if(token === 'null'){
+      throw ApiError.UnauthorizedError();
     }
+    const clientId = tokenService.getUserIdFromToken(token);
+    const pool = await sql.connect(dbConfig);
+    const applicant = await pool.request().query(`SELECT * FROM [Coach_clients] WHERE coachId = ${coachId} AND athleteId = ${clientId}`);
+    if (applicant.recordset.length > 0) {
+      return `You already sent application`;
+    }
+    await pool.request().query(`INSERT INTO [Coach_clients] (coachId, athleteId) VALUES (${coachId}, ${clientId})`);
+    return `Application sent`;
   }
 
   async acceptClient(coachId, clientId){
@@ -92,7 +86,7 @@ class CoachService {
   async addCoachRating(rating, token, coachId) {
     try {
       const pool = await sql.connect(dbConfig);
-      if(token === null){
+      if(token === 'null'){
         throw ApiError.UnauthorizedError();
       }
       const valuer = await tokenService.getUserIdFromToken(token);

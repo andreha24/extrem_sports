@@ -12,6 +12,14 @@ const accountFields = [
     label: "age",
   },
   {
+    name: "weight",
+    label: "weight",
+  },
+  {
+    name: "height",
+    label: "height",
+  },
+  {
     name: "experience",
     label: "experience",
   },

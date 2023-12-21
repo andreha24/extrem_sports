@@ -7,6 +7,7 @@ const userController = require("../controllers/userController");
 
 router.get("/authUser", userController.getAuthUser) //
   .get("/userHistory", userController.getUserHistory) //
+  .get("/userHistory/result/:id", userController.getUserResult) //
   .post("/addResult", userController.addNewResult) //
   .delete("/deleteResult/:id", userController.deleteResult) //
   .post("/addReport", userController.addReport) //

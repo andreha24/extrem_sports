@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
 
 import HistoryForm from "./HistoryForm";
+import ResultDetails from "./ResultDetails";
 import formatDate from "../../../utils/formatDate";
 import toastSuccess from "../../../utils/toast/toastSuccess";
 
@@ -14,7 +15,7 @@ const MyHistory = ({ sportType }) => {
   const token = localStorage.getItem("token");
   const [history, setHistory] = useState([]);
   const [viewHistoryForm, setViewHistoryForm] = useState(false);
-  const [maxResultId, setMaxResultId] = useState(null);
+  const [selectedResultId, setSelectedResultId] = useState(null);
 
   useEffect(() => {
     axios.get("http://localhost:5000/api/userHistory", {
@@ -24,15 +25,11 @@ const MyHistory = ({ sportType }) => {
     })
       .then((response) => {
         setHistory(response.data);
-
-        const maxResult = Math.max(...response.data.map((item) => item.result));
-        const maxResultItem = response.data.find((item) => item.result === maxResult);
-        setMaxResultId(maxResultItem.id);
       })
       .catch((err) => {
         console.log(err);
       });
-  }, [token]);
+  }, []);
 
   const deleteResult = (id) => {
     axios.delete(`http://localhost:5000/api/deleteResult/${id}`, {
@@ -55,55 +52,61 @@ const MyHistory = ({ sportType }) => {
 
   const changeHistoryList = (newResult) => {
     setHistory((prev) => [newResult, ...prev]);
-
-    if (newResult.result > Math.max(...history.map((item) => item.result))) {
-      setMaxResultId(newResult.id);
-    }
   };
 
   return (
     <div className="history-wrapper">
-      {history.length === 0 ? (
-        <p>{t("accountPage.history.emptyHistory")}</p>
-      ) : (
-        <>
-          <span>
-            {t("accountPage.history.yourResults")}
-            {" "}
-            {sportType}
-          </span>
-          <table className="history-table">
-            <thead>
-              <tr>
-                <th>{t("accountPage.history.results")}</th>
-                <th>{t("accountPage.history.date")}</th>
-                <th>Details</th>
-              </tr>
-            </thead>
-            <tbody>
-              {history.map(({ id, result, dateOfTrain }) => (
-                <tr key={id} style={{ background: id === maxResultId ? "lightgreen" : "" }}>
-                  <td>{result}</td>
-                  <td>{formatDate(dateOfTrain)}</td>
-                  <td>
-                    <button type="button">
-                      Open
-                    </button>
-                  </td>
-                  <td>
-                    <button
-                      type="button"
-                      onClick={() => deleteResult(id)}
-                    >
-                      {t("accountPage.history.delete")}
-                    </button>
-                  </td>
+      {/* eslint-disable-next-line no-nested-ternary */}
+      {selectedResultId
+        ? (
+          <ResultDetails
+            id={selectedResultId}
+            onClose={() => setSelectedResultId(null)}
+          />
+        )
+        : history.length === 0 ? (
+          <p>{t("accountPage.history.emptyHistory")}</p>
+        ) : (
+          <>
+            <span>
+              {t("accountPage.history.yourResults")}
+              {" "}
+              {sportType}
+            </span>
+            <table className="history-table">
+              <thead>
+                <tr>
+                  <th>{t("accountPage.history.results")}</th>
+                  <th>{t("accountPage.history.date")}</th>
+                  <th>{t("accountPage.history.details")}</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </>
-      )}
+              </thead>
+              <tbody>
+                {history.map(({
+                  id, result, dateOfTrain, category,
+                }) => (
+                  <tr key={id} style={{ backgroundColor: category }}>
+                    <td>{result}</td>
+                    <td>{formatDate(dateOfTrain)}</td>
+                    <td>
+                      <button type="button" onClick={() => setSelectedResultId(id)}>
+                        {t("accountPage.history.open")}
+                      </button>
+                    </td>
+                    <td>
+                      <button
+                        type="button"
+                        onClick={() => deleteResult(id)}
+                      >
+                        {t("accountPage.history.delete")}
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </>
+        )}
       {viewHistoryForm
         ? <HistoryForm changeHistoryList={changeHistoryList} closeList={changeHistoryView} />
         : <button type="button" onClick={changeHistoryView}>{t("accountPage.history.crateResult")}</button>}

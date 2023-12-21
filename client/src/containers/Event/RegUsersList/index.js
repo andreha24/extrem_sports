@@ -9,15 +9,17 @@ const RegUsersList = ({ users }) => {
   const { t } = useTranslation();
 
   return (
-    users?.map(({ id, name, lastname }) => (
-      <div key={id} className="registered-user">
-        <div>
-          <span>{name}</span>
-          <span className="registered-user-lastname">{lastname}</span>
+    <div className="registered-users">
+      {users?.map(({ id, name, lastname }) => (
+        <div key={id} className="registered-user">
+          <div>
+            <span>{name}</span>
+            <span className="registered-user-lastname">{lastname}</span>
+          </div>
+          <Link to={`/clients/${id}`} className="registered-user-link">{t("eventPage.seeProfile")}</Link>
         </div>
-        <Link to={`/clients/${id}`}>{t("eventPage.seeProfile")}</Link>
-      </div>
-    ))
+      ))}
+    </div>
   );
 };
 

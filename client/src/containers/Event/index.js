@@ -28,7 +28,6 @@ const Event = () => {
   useEffect(() => {
     axios.get(`http://localhost:5000/events/event/${eventId}`)
       .then((response) => {
-        console.log(response.data);
         setEvent(response.data);
       })
       .catch((error) => {
@@ -87,7 +86,7 @@ const Event = () => {
   }
   return (
     <PageWrapper>
-      <ToastContainer />
+      <ToastContainer style={{ width: "330px" }} />
       <Header />
       <div className="event">
         {currentRole === "admin"

@@ -32,7 +32,16 @@ class UserService {
       VALUES ('${name}','${lastname}', ${age}, ${experience}, '${sport_type}', '${role}', '${country}', '${city}', '${mail}', 
       '${hashPassword}', '${img}', ${validPrice}, ${weight}, ${height})`);
 
-    return "User registered";
+
+    const user = await pool
+      .request()
+      .query(`SELECT * FROM [User] WHERE mail = '${mail}'`);
+    const userDto = new UserDto(user.recordset[0])
+
+    return {
+      user: userDto,
+      message: "User registered",
+    }
   }
 
 
@@ -147,6 +156,8 @@ class UserService {
         }
 
         userData.rating = userRating;
+        pool.close();
+
         return userData;
       } else {
         return null;
@@ -302,6 +313,52 @@ class UserService {
 
       function determineCategory(coefficient) {
         if (coefficient < 50) {
+          return 'red';
+        } else if (coefficient >= 50 && coefficient < 75) {
+          return 'yellow';
+        } else {
+          return 'lightgreen';
+        }
+      }
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+
+  async getUserResult(token, id) {
+    try {
+      const pool = await sql.connect(dbConfig);
+      const userId = await tokenService.getUserIdFromToken(token);
+      const userData = await pool.request().query(`SELECT * FROM [User] WHERE id=${userId}`);
+      console.log(userData.recordset);
+      const result = await pool
+        .request()
+        .query(`SELECT * FROM [Users_history] WHERE userId = ${userId} AND id = ${id}`);
+
+      const entry = result.recordset[0];
+
+      // Calculate coefficient
+      const heartbeatCoefficient = entry.heartbeat * 0.4;
+      const oxygenCoefficient = entry.oxygen * 0.3;
+      const temperatureCoefficient = entry.temperature * 0.3;
+      const weightCoefficient = userData.recordset[0].weight * 0.2;
+      const heightCoefficient = userData.recordset[0].height * 0.1;
+
+      const coefficient =
+        heartbeatCoefficient + oxygenCoefficient + temperatureCoefficient + weightCoefficient + heightCoefficient;
+
+      // Determine category
+      const category = determineCategory(coefficient);
+
+      return {
+        ...entry,
+        coefficient,
+        category,
+      };
+
+      function determineCategory(coefficient) {
+        if (coefficient < 50) {
           return 'danger';
         } else if (coefficient >= 50 && coefficient < 75) {
           return 'normal';
@@ -314,7 +371,6 @@ class UserService {
       throw error;
     }
   }
-
 
   async addNewResult(result, heartbeat, oxygen, temperature, dateOfResult, token){
     try {
@@ -379,35 +435,53 @@ class UserService {
     }
   }
 
-  async addReport(recipientId, token, reason){
+  async addReport(recipientId, token, reason) {
     try {
       const pool = await sql.connect(dbConfig);
       const senderId = await tokenService.getUserIdFromToken(token);
-      const checkSenderId = await pool.request().query(`SELECT * FROM [User_reports] WHERE senderId = ${senderId}`);
-      if(checkSenderId.recordset.length > 0){
-        throw ApiError.BadRequest("You have already filed a complaint against the user");
+
+      const checkSenderId = await pool
+        .request()
+        .input('senderId', sql.Int, senderId)
+        .query('SELECT * FROM [User_reports] WHERE senderId = @senderId');
+
+      if (checkSenderId.recordset.length > 0) {
+        throw ApiError.BadRequest('You have already filed a complaint against the user');
       }
-      await pool.request().query(`INSERT INTO [User_reports] (reason, senderId, recipientId) 
-      VALUES ('${reason}', ${senderId}, ${recipientId})`);
-      return "Report sent";
+
+      await pool
+        .request()
+        .input('reason', sql.NVarChar, reason)
+        .input('senderId', sql.Int, senderId)
+        .input('recipientId', sql.Int, recipientId)
+        .query('INSERT INTO [User_reports] (reason, senderId, recipientId) VALUES (@reason, @senderId, @recipientId)');
+
+      return 'Report sent';
     } catch (error) {
       console.error(error);
       throw error;
     }
   }
 
-  async addCommentToService(token, text){
+  async addCommentToService(token, text) {
     try {
       const userId = tokenService.getUserIdFromToken(token);
       const pool = await sql.connect(dbConfig);
-      await pool.request().query(`INSERT INTO [Service_comments] (user_id, description) 
-      VALUES (${userId},'${text}')`);
 
-      const newComment = await pool.request()
-        .query(`SELECT * FROM [Service_comments] WHERE user_id = ${userId} AND description = '${text}'`);
+      await pool
+        .request()
+        .input('userId', sql.Int, userId)
+        .input('text', sql.NVarChar, text)
+        .query('INSERT INTO [Service_comments] (user_id, description) VALUES (@userId, @text)');
+
+      const newComment = await pool
+        .request()
+        .input('userId', sql.Int, userId)
+        .input('text', sql.NVarChar, text)
+        .query('SELECT * FROM [Service_comments] WHERE user_id = @userId AND description = @text');
 
       return {
-        comment : new serviceDto(newComment.recordset[0]),
+        comment: new serviceDto(newComment.recordset[0]),
         message: 'Feedback sent',
       };
     } catch (error) {
@@ -419,7 +493,7 @@ class UserService {
   async deleteCommentFromService(id){
     try {
       const pool = await sql.connect(dbConfig);
-      await pool.request().query(`DELETE FROM [Service_comments] WHERE user_id = ${id}`);
+      await pool.request().query(`DELETE FROM [Service_comments] WHERE id = ${id}`);
 
       return 'Comment deleted';
     } catch (error) {
@@ -432,29 +506,35 @@ class UserService {
     try {
       const pool = await sql.connect(dbConfig);
       const senderId = await tokenService.getUserIdFromToken(token);
-      const checkSenderId = await pool.request().query(`SELECT * FROM [Coach_comments] WHERE senderId = ${senderId}`);
+
+      const checkSenderId = await pool
+        .request()
+        .input('senderId', sql.Int, senderId)
+        .query('SELECT * FROM [Coach_comments] WHERE senderId = @senderId');
 
       if (checkSenderId.recordset.length > 0) {
-        throw ApiError.BadRequest("You have already left a comment");
+        throw ApiError.BadRequest('You have already left a comment');
       }
 
-      await pool.request().query(`
-      INSERT INTO [Coach_comments] (text, senderId, coachId) 
-      VALUES ('${text}', ${senderId}, ${coachId})
-    `);
+      await pool
+        .request()
+        .input('text', sql.NVarChar, text)
+        .input('senderId', sql.Int, senderId)
+        .input('coachId', sql.Int, coachId)
+        .query('INSERT INTO [Coach_comments] (text, senderId, coachId) VALUES (@text, @senderId, @coachId)');
 
-      return "Comment sent";
+      return 'Comment sent';
     } catch (error) {
       console.error(error);
       throw error;
     }
-  };
+  }
 
   async getLastServiceComments() {
     try {
       const pool = await sql.connect(dbConfig);
       const commentsQuery = await pool.request().query(
-        `SELECT TOP 6 sc.description, sc.date, u.name, u.lastname, u.photo
+        `SELECT TOP 6 sc.id, sc.description, sc.date, u.name, u.lastname, u.photo
       FROM [Service_comments] sc
       JOIN [User] u ON sc.user_id = u.id
       ORDER BY sc.date DESC;`);
