@@ -105,9 +105,8 @@
         }
       }
     }
-
-    .load-more{
-      @include btn-theme();
-    }
+  }
+  .load-more{
+    @include btn-theme();
   }
 }
